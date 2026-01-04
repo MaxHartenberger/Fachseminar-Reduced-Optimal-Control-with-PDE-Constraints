@@ -8,62 +8,9 @@ Erstellt ein FEM Full Order Model (FOM) für das stationäre elliptische Problem
 Die Funktion `discretize` liefert ein `model`-Objekt wie im Referenzprojekt.
 """
 
-import fenics as fenics
+import fenics
 import numpy as np
 from scipy.sparse import csr_matrix, diags, identity
-
-
-# Lightweight replacements for `methods.collection` and `model.model`
-class Collection:
-    """Minimal container (attribute access) used in place of the original `collection`.
-    Behaves like an empty object where attributes can be set dynamically.
-    """
-
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-    def as_dict(self):
-        return self.__dict__.copy()
-
-    def __repr__(self):
-        return f"Collection({self.__dict__})"
-
-
-class Model:
-    """Small wrapper that holds pde/cost/time/space/options.
-    The original `model` class in the reference repo offers many methods; here we
-    only provide a lightweight container so the discretizer can return a single
-    object. If you later need solver methods, add them to this class or replace
-    the class with the project's real `model` implementation.
-    """
-
-    def __init__(self, pde, cost, time, space, options=None):
-        self.pde = pde
-        self.cost = cost
-        self.time = time
-        self.space = space
-        self.options = options
-
-    def __repr__(self):
-        return f"Model(pde={len(self.pde.__dict__)} attrs, cost={len(self.cost.__dict__)}, time={self.time}, space={self.space})"
-
-    # minimal convenience accessors
-    @property
-    def pde_obj(self):
-        return self.pde
-
-    @property
-    def cost_obj(self):
-        return self.cost
-
-    @property
-    def time_obj(self):
-        return self.time
-
-    @property
-    def space_obj(self):
-        return self.space
 
 
 def discretize(dx=50):
@@ -71,19 +18,8 @@ def discretize(dx=50):
     options = Collection()
     options.factorize = True
 
-    # time placeholder for stationary problem: single time slice K=1
-    time = Collection()
-    time.t0 = 0.0
-    time.T = 0.0
-    time.K = 1
-    time.dt = 1.0
-    time.t_v = np.array([0.0])
-    time.D = np.ones(time.K)
-    time.D_diag = diags(time.D)
-    time.cost_zero = 1.0
 
     # space discretization (unit square)
-    space = Collection()
     L = 1.0
     lower_left = fenics.Point(0.0, 0.0)
     upper_right = fenics.Point(L, L)
@@ -129,12 +65,9 @@ def discretize(dx=50):
     pde.M = M
 
     # products: L2 and H10 (energy) and H1
-    L2_form = fenics.assemble(y * v * fenics.dx)
-    L2 = csr_matrix(fenics.as_backend_type(L2_form).mat().getValuesCSR()[::-1])
-    H10_form = fenics.assemble(fenics.dot(fenics.nabla_grad(y), fenics.nabla_grad(v)) * fenics.dx)
-    H10 = csr_matrix(fenics.as_backend_type(H10_form).mat().getValuesCSR()[::-1])
-    H1 = H10 + L2
-    pde.state_products = {'H1': H1, 'L2': L2, 'H10': H10}
+    H10 = A_diff  # H10 is the stiffness matrix
+    H1 = H10 + M
+    pde.state_products = {'H1': H1, 'L2': M, 'H10': H10}
 
     # input product (identity for control coefficients)
     pde.input_product = identity(n_u)

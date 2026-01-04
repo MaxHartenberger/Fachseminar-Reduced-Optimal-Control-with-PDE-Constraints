@@ -1,0 +1,70 @@
+University of Konstanz Summer Semester 2023
+Department Mathematics and Statistics
+Jun-Prof. Dr. B. Azmi
+M. Kartmann
+Optimization IV - PDE-constrained Optimization
+Exercise Sheet 2
+Submission Deadline: May 10th00:00h
+Exercise 1. (10 points)
+In this exercise we will look into discretization by Galerkin projection. Galerkin projections are used as an
+analytical to prove existence of weak solutions for parabolic PDEs (see the corresponding chapter in the lecture
+notes), but also to derive finite element discretizations or projection-based reduced-order models.
+We consider here the case of a linear coercive elliptic PDE: find y∈Vsuch that
+a(y, v) =l(v)∀v∈V. (1)
+with a continuous, coerive bilinear form aon some separable Hilbert space Vand a continuous linear form
+l. Choosing a finite-dimensional subspace Vh= span( ϕ1, . . . , ϕ n)⊂Vwe can define the Galerkin projection
+yh∈Vhofyas the solution of the following problem: find yh=Pn
+i=1ϕiyi∈Vh
+a(yh, v) =l(v)∀v∈Vh. (2)
+1. The solution yhcan be identified with its DoF (degrees of freedom) vector y∈Rn. Show that an
+implementable form of (2) is given as
+Ay=l. (3)
+for arrays A∈Rn×nandl∈Rn. Why is this linear system uniquely solvable?
+2. Consider now the special case V=H1(Ω) for a Lipschitz domain Ω ⊂R2. Find discrete expressions for
+•∥yh∥L2(Ω);
+•⟨yh, ph⟩H1(Ω)for some ph∈Vh:
+•R
+˜Ωyh(x) dx for some ˜Ω⊂Ω.
+Interpret these expressions as (bi-)linear forms and apply the same reasoning as o´ ın the first part.
+Exercise 2. (10 points)
+In this exercise we will solve a linear-quadratic optimal control problem. Consider the domain Ω = [0 ,1]2and
+the problem
+min
+y∈H1
+0(Ω),
+u∈L2(Ω)1
+2Z
+Ω(y−yd)2dx +σ
+2Z
+Ωu2dx (4)
+s.t.Z
+Ω∇y· ∇vdx =Z
+Ωuvdx∀v∈H1
+0(Ω) (5)
+foryd∈L2(Ω). Since we do not know anything about optimization in function spaces so far, we will first
+discretize the problem and the apply methods from finite-dimensional optimization to solve the discrete version.
+This is called the first-discretize-then-optimize (DBO) approach.
+a) Discretizing (4)-(5) with the Galerkin approach by choosing finite dimensional subspaces Vh⊂H1
+0(Ω)
+andUh⊂L2(Ω) that are spanned by a finite number of basis functions yields a finite dimensional
+(dim(Vh) +dim(Uh)) linear-quadratic optimization problem. State the form of this optimization problem
+depending on the corresponding matrices for the L2(Ω) and H1
+0(Ω)-products.
+b) Derive the first order optimality conditions for the finite dimensional optimization problem and show that
+there is a unique solution.1
+c) Use FeniCS to assemble the (bi-)linear forms in the function space problem, giving you the matrices for
+the finite dimensional problem. Do not forget to clear the dirichlet dofs in the matrices and the vectors.
+1This is a problem in finite dimension, you may of course use results from prior Optimization classes. You may also use the
+formal Lagrange technique.
+1
+
+d) Let Sbe the solution operator to the constraint (5). Generate the targets yd=S(ud) for
+•ud≡1;
+•ud(x1, x2) = sin(2 πx1) cos(2 πx2).
+e) Set up the first order optimality conditions of the finite dimensional problem using the matrices2that you
+obtained in the previous step. Compute and visualize the optimal states and controls to the discretized
+optimization problem with yd=S(ud) for ud≡1 and ud(x1, x2) = sin(2 πx1) cos(2 πx2) for
+σ∈ {10,1,10−1,10−2,10−3,10−4,10−5}.
+What do you observe?
+2Having the matrices in sparse format saves some amount of time. It is not mandatory for the exercise, but feel free to test it!
+2

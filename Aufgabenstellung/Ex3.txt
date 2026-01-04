@@ -1,0 +1,77 @@
+University of Konstanz Summer Semester 2025
+Department Mathematics and Statistics
+Jun-Prof. Dr. B. Azmi
+M. Kartmann
+Optimization IV - PDE-constrained Optimization
+Exercise Sheet 3
+Submission Deadline: May 28th, 00:00h
+On this sheet we will solve a linear-quadratic elliptic optimal control problem by the so-called control reduced
+approach. In this formulation, the PDE constraint is eliminated by the solution operator S, which leads to an
+unconstrained optimiaztion problem in the control space U(see below). This is different to so-called all-at-once
+approach, which we discussed on the last sheet in a discretize-then-optimize setting. There the PDE constraint
+was not eliminated, but the whole optimality system (including Lagrange multipliers) was directly solved.
+Exercise 1. (Programming, 20 points) In this exercise we will solve the optimal control problem
+min
+u∈UadF(u) : =1
+2∥Su−yd∥2
+H+β
+2∥u∥2
+U,
+where y=Su∈Vsolves −∆y=Bu in Ω,
+y= 0 on ∂Ω
+where Ω ⊂R2,Uad=U=H=L2(Ω),V=H1(Ω) , β >0,B∈L∞(Ω) and yd∈H. Follow these steps to
+solve the problem:
+1. Discretize the spaces V,HandUusing piecewise lienar Finite Elements with N∈Ndegrees of freedom
+and create a class that solves y=Su∈RN, where u∈RNis an input vector, corresponding to the dofs
+of the FE function uh∈Vh(Note that for sake of readability Sdenotes in this case the solution operator
+of the discretized PDE). You can use the class developed in the previous exercises.
+2. In the same class add a function that reads zas an input vector and evaluates the adjoint variable pas
+weak solution of −∆p=zin Ω
+p= 0 on ∂Ω.(1)
+Remember to use only (sparse) matrices, which are already preassembled. The output will be a vector
+p∈RNobtained by spsolve from scipy.sparse.linalg .
+3. Create a function that reads the coefficients of u∈Vhas an input vector and evaluates the cost
+F(u) =1
+2∥Su−yd∥2
+H+β
+2∥u∥2
+U.
+Both the norms in the sum need to be discretized and evaluated in vectorial form.
+4. Create a function that reads the vector uas an input and evaluates the gradient of the cost
+∇F(u) =B∗p(Su−yd) +βu,
+where B∗is the adjoint operator corresponding to B(in the case of indicator functions, Bis self-adjoint,
+i.e.B=B∗). The notation p(Su−yd) means the adjoint variable evaluated using z=Su−yd(in vectorial
+form).
+5. Once you have the above functions to evaluate the cost function Fand its gradient ∇Fsolve the mini-
+mization problem (in vectorial form)
+min
+u∈RNF(u)
+using each of the methods indicated below.
+Solve for Ω = [0 ,1]2,β= 10−3,B=χωwhere ωis the circle centered in 0.5 of radius 0.1 and yd(x1, x2) =
+0.5−max(|x1−0.5|,|x2−0.5|) using the Barzilai-Borwein gradient method (see Algorithm 1). Plot ∥∇F (uk)∥U
+as a function of the iteration kin semilogarithmic scale.
+1
+
+Algorithm 1: Barzilai-Borwein gradient method [1]
+Data: Initial iterates u−1= 0 and u0=∇F(0). Overall tolerance τ= 10−8
+k←0
+while ∥∇F (uk)∥U> τdo
+sk←uk−uk−1
+dk← ∇F (uk)− ∇F (uk−1)
+ifkis even then
+αk=(dk,dk)H
+(sk,dk)H
+else
+αk=(sk,dk)H
+(sk,sk)H
+uk+1←uk−1
+αk∇F(uk)
+k←k+ 1
+Note: the inner product ( ·,·)Hshould be discretized in RN. In particular, observe that
+(u, d)H=u⊤Md,
+where u, M and dare, respectively, the component vector of u, the mass matrix and the component vector of
+d.
+References
+[1] B. Azmi, K. Kunisch Analysis of the Barzilai-Borwein Step-Sizes for Problems in Hilbert Spaces , Springer
+Verlag, 2020.
+2

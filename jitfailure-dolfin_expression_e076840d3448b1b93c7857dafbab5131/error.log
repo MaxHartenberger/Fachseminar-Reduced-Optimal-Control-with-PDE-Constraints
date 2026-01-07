@@ -1,3 +1,0 @@
-/usr/bin/ld: cannot find /lib64/libpthread.so.0: No such file or directory
-/usr/bin/ld: cannot find /usr/lib64/libpthread_nonshared.a: No such file or directory
-collect2: error: ld returned 1 exit status

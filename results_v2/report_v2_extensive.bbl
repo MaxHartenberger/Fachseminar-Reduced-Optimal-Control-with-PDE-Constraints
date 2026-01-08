@@ -1,0 +1,16 @@
+\begin{thebibliography}{1}
+
+\bibitem{BarzilaiBorwein1988}
+{\sc J.~Barzilai and J.~M. Borwein}, {\em Two-point step size gradient
+  methods}, IMA Journal of Numerical Analysis, 8 (1988), pp.~141--148.
+
+\bibitem{BeckTeboulle2009}
+{\sc A.~Beck and M.~Teboulle}, {\em A fast iterative shrinkage-thresholding
+  algorithm for linear inverse problems}, SIAM Journal on Imaging Sciences, 2
+  (2009), pp.~183--202.
+
+\bibitem{Nesterov2004}
+{\sc Y.~Nesterov}, {\em Introductory Lectures on Convex Optimization},
+  Springer, 2004.
+
+\end{thebibliography}

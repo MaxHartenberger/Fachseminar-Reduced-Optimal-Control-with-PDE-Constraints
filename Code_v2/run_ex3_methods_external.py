@@ -2,6 +2,17 @@
 # -*- coding: utf-8 -*-
 """
 Runner to compare BB, GD(1/L), Nesterov on the external-mesh reduced OC model.
+
+Discretization & Optimizer Notes (Ex3 style)
+--------------------------------------------
+- Spaces: V=P1 with homogeneous Dirichlet for state/adjoint; U=H=L2 with P1
+    coefficients (no BCs) and inner product via the control mass MU.
+- Control region: B=χ_ω implemented by dx(omega_id, subdomain_data=subdomains)
+    in the model; Dirichlet BCs applied to A only, with RHS zeroing at boundary DOFs.
+- Gradient: ∇F(u) = MU^{-1} B^T p + β u with adjoint solve A p = M (y - y_d).
+- Stepsizes: GD uses α=1/L with L estimated by power iteration on the Hessian;
+    BB alternates BB1/BB2 using MU-induced norms; Nesterov uses 1/L with optional restart.
+
 Saves convergence plots; optional interactive display.
 """
 import os
@@ -14,6 +25,7 @@ from Code_v2.optimizers import bb, gd_fixed, nesterov
 
 
 def build_model(mesh_cells_xdmf: str, omega_id: int, beta: float):
+    """Construct the external-mesh reduced model with control region tag `omega_id` and Tikhonov β."""
     return ReducedOCModelExternal(mesh_cells_xdmf=mesh_cells_xdmf, omega_id=omega_id, beta=beta)
 
 
@@ -31,6 +43,7 @@ def main():
     model = build_model(mesh_cells_xdmf=args.mesh_cells_xdmf, omega_id=args.omega_id, beta=args.beta)
 
     n = model.n
+    # Initialize at u0 = ∇F(0) and estimate Lipschitz L for GD/Nesterov.
     u0 = model.grad_U(np.zeros(n))
     L = model.estimate_L(iters=30, tol=1e-6)
 

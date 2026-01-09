@@ -41,6 +41,20 @@ which creates a pyramid-like target profile. Here, $\beta>0$ is a Tikhonov param
   \int_{\Omega} \nabla y\cdot\nabla v\,dx = \int_{\Omega} \chi_{\omega}\,u\,v\,dx,\quad \forall v\in H_0^1(\Omega).
 \end{equation}
 
+\paragraph{Control region and indicator.}
+Let the control region be the closed disk
+\begin{equation}
+  \omega \;=\; \big\{ x\in\Omega : \|x - c\|_2 \le r \big\},\quad c=\big(\tfrac{1}{2},\tfrac{1}{2}\big),\; r\in\big(0,\tfrac{1}{2}\big).
+\end{equation}
+Its characteristic (indicator) function $\chi_{\omega}:\Omega\to\{0,1\}$ is
+\begin{equation}
+  \chi_{\omega}(x) \,=\, \begin{cases}
+    1, & x\in \omega, \\
+    0, & x\notin \omega.
+  \end{cases}
+\end{equation}
+Consequently, for any integrable $\phi$ we have $\int_{\Omega} \chi_{\omega}\,\phi\,dx = \int_{\omega} \phi\,dx$, so the right-hand side of the weak form restricts the control action to $\omega$.
+
 \section{Discretization}
 We use conforming $P1$ finite elements on a triangular mesh of $\Omega$, denoted by $\mathcal{T}_h$. The state space $V_h\subset H_0^1(\Omega)$ and the control space $U_h\subset L^2(\Omega)$ share the same $P1$ basis (no boundary conditions applied to $U_h$). Let $A\in\mathbb{R}^{n\times n}$ be the stiffness matrix, $M\in\mathbb{R}^{n\times n}$ the mass matrix on $V_h$, $M_U\in\mathbb{R}^{n\times n}$ the $L^2$ mass on $U_h$, and $B\in\mathbb{R}^{n\times n}$ the discrete control operator for $\chi_{\omega}$. With Dirichlet boundary conditions applied to $A$ only, the reduced mapping is
 \begin{equation}
@@ -68,6 +82,21 @@ The implementation in \texttt{Code/reduced\_oc\_model.py} assembles $A$, $M_U$, 
   \item inner products \texttt{dot\_U} and \texttt{norm\_U};
   \item \texttt{estimate\_L()} for a gradient Lipschitz bound.
 \end{itemize}
+
+\section{Matrix Summary}
+The FE discretization produces the following matrices (see the separate \href{run:report\_discretization.pdf}{Discretization Note} for exact code line references and details):
+\begin{center}
+\begin{tabular}{llp{0.55\textwidth}}
+\hline
+	extbf{Matrix} & \textbf{Symbol} & \textbf{Definition} \\
+\hline
+Stiffness & $A$ & $A_{ij} = \int_{\Omega} \nabla\varphi_i\!\cdot\!\nabla\varphi_j\,dx$ (Dirichlet BCs applied). \\
+State Mass & $M$ & $M_{ij} = \int_{\Omega} \varphi_i\,\varphi_j\,dx$. \\
+Control Mass & $M_U$ & $(M_U)_{ij} = \int_{\Omega} \varphi_i\,\varphi_j\,dx$ (inner product in $U_h$). \\
+Control Coupling & $B$ & $B_{ij} = \int_{\omega} \varphi_i\,\varphi_j\,dx$ (restriction by $\chi_{\omega}$). \\
+\hline
+\end{tabular}
+\end{center}
 
 \section{Optimization Methods}
 All methods work in the control space $(U_h,\langle\cdot,\cdot\rangle_{M_U})$ with $\nabla F(u)$ as above.

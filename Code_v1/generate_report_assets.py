@@ -15,8 +15,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Code.reduced_oc_model import ReducedOCModel
-from Code.optimizers import bb, gd_fixed, nesterov
+from Code_v1.reduced_oc_model import ReducedOCModel
+from Code_v1.optimizers import bb, gd_fixed, nesterov
 
 
 def ensure_outdir(path: str):

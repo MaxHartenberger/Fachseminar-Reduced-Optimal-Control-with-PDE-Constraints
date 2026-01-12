@@ -8,6 +8,7 @@ Outputs under mesh/out/ by default:
 - mesh.msh (Gmsh)
 - mesh_cells.xdmf  (triangles + subdomain tags)
 - mesh_facets.xdmf (lines + boundary tags)
+Additionally saves a mesh PNG under plots/ by default.
 
 Physical IDs (2D):
 - 1: domain (full square)
@@ -19,13 +20,15 @@ Physical IDs (1D facets):
 import argparse
 import os
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-def build_mesh(cx=0.5, cy=0.5, r=0.1, h=0.03, refine_circle=True, outdir="mesh/out"):
+def build_mesh(cx=0.5, cy=0.5, r=0.1, h=0.03, refine_circle=True, outdir="mesh/out", plots_dir="plots"):
     import gmsh
     import meshio
 
     os.makedirs(outdir, exist_ok=True)
+    os.makedirs(plots_dir, exist_ok=True)
     gmsh.initialize()
     gmsh.model.add("unit_square_with_circle")
 
@@ -104,8 +107,27 @@ def build_mesh(cx=0.5, cy=0.5, r=0.1, h=0.03, refine_circle=True, outdir="mesh/o
                                  cells=[("line", line)],
                                  cell_data={"facets": [line_data]}))
 
+    # Save a PNG of the triangular mesh
+    try:
+        _plot_mesh_png(points=msh.points, triangles=tri, outpath=os.path.join(plots_dir, "mesh.png"))
+    except Exception as e:
+        print(f"Warning: could not save mesh PNG: {e}")
+
     gmsh.finalize()
     print(f"Written: {msh_path}\n  -> {outdir}/mesh_cells.xdmf\n  -> {outdir}/mesh_facets.xdmf")
+
+
+def _plot_mesh_png(points, triangles, outpath: str):
+    import matplotlib.tri as mtri
+    tri = mtri.Triangulation(points[:, 0], points[:, 1], triangles)
+    plt.figure(figsize=(5, 5))
+    plt.triplot(tri, color='0.4', linewidth=0.5)
+    plt.title('Mesh of $[0,1]^2$')
+    plt.xlabel('x'); plt.ylabel('y')
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.tight_layout()
+    plt.savefig(outpath, dpi=150, bbox_inches='tight')
+    plt.close()
 
 
 if __name__ == "__main__":
@@ -116,5 +138,6 @@ if __name__ == "__main__":
     ap.add_argument("--h", type=float, default=0.03)
     ap.add_argument("--no-refine-circle", action="store_true")
     ap.add_argument("--outdir", default="mesh/out")
+    ap.add_argument("--plots-dir", default="plots")
     args = ap.parse_args()
-    build_mesh(args.cx, args.cy, args.r, args.h, not args.no_refine_circle, args.outdir)
+    build_mesh(args.cx, args.cy, args.r, args.h, not args.no_refine_circle, args.outdir, args.plots_dir)

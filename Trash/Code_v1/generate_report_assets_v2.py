@@ -8,7 +8,6 @@ Generate figures for the external-mesh Ex3 reduced optimal control problem:
 - Optimized control u_opt
 - Corresponding state y(u_opt)
 - Convergence plots (grad norm, cost)
-- Write LaTeX report (report_v2.tex) using these figures
 
 Outputs PNGs into results_v2/ by default.
 """
@@ -16,8 +15,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Code_v2.reduced_oc_model_external import ReducedOCModelExternal
-from Code_v2.optimizers import bb, gd_fixed, nesterov
+from Code.reduced_oc_model import ReducedOCModelExternal
+from Code.optimizers import bb, gd_fixed, nesterov
 
 
 def ensure_outdir(path: str):
@@ -78,47 +77,6 @@ def build_mask_function(V, subdomains, omega_id):
     return fe.interpolate(mask, V)
 
 
-def write_report_tex(outdir: str):
-    tex = r"""
-\documentclass[11pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{graphicx}
-\usepackage{geometry}
-\geometry{margin=1in}
-\title{Optimization Methods with External Mesh (Code\_v2)}
-\author{Fachseminar Report}
-\date{\today}
-\begin{document}
-\maketitle
-\section*{Overview}
-This report summarizes the Ex3 reduced optimal control problem using an external mesh with a circular control region.
-\section{Problem and Discretization}
-We consider $\Omega=(0,1)^2$, $y$ solving $-\Delta y=\chi_{\omega}u$ with $y=0$ on $\partial\Omega$, and objective $F(u)=\tfrac{1}{2}\|y-y_d\|^2+\tfrac{\beta}{2}\|u\|^2$. Finite elements: CG1 for state/control; operators assembled from XDMF subdomain tags.
-\section{Optimization Methods}
-Barzilai--Borwein, fixed-step GD with $\alpha=1/L$, and Nesterov acceleration are applied in the control space with inner product induced by $M_U$.
-\section{Figures}
-\begin{figure}[h!]\centering
-\includegraphics[width=0.45\textwidth]{mesh.png}\hfill
-\includegraphics[width=0.45\textwidth]{omega.png}
-\caption{Mesh and circular $\omega$.}\end{figure}
-\begin{figure}[h!]\centering
-\includegraphics[width=0.45\textwidth]{y_d.png}\hfill
-\includegraphics[width=0.45\textwidth]{u_opt.png}
-\caption{Target $y_d$ and optimized control $u_*$.}\end{figure}
-\begin{figure}[h!]\centering
-\includegraphics[width=0.45\textwidth]{y_opt.png}\hfill
-\includegraphics[width=0.45\textwidth]{grad_norm.png}
-\caption{State $y(u_*)$ and gradient norm convergence.}\end{figure}
-\begin{figure}[h!]\centering
-\includegraphics[width=0.45\textwidth]{cost.png}
-\caption{Objective convergence.}\end{figure}
-\end{document}
-"""
-    with open(os.path.join(outdir, 'report_v2.tex'), 'w') as f:
-        f.write(tex)
 
 
 def main(mesh_cells_xdmf='mesh/out/mesh_cells.xdmf', omega_id=2, beta=1e-3, outdir='results_v2'):
@@ -172,8 +130,6 @@ def main(mesh_cells_xdmf='mesh/out/mesh_cells.xdmf', omega_id=2, beta=1e-3, outd
     plt.title('Cost Convergence')
     plt.tight_layout(); plt.savefig(os.path.join(outdir, 'cost.png'), dpi=150, bbox_inches='tight')
     plt.close()
-
-    write_report_tex(outdir)
 
 
 if __name__ == '__main__':

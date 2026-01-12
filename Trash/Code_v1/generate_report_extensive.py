@@ -14,8 +14,8 @@ import argparse
 
 import numpy as np
 
-from Code_v2.reduced_oc_model_external import ReducedOCModelExternal
-from Code_v2.optimizers import bb, gd_fixed, nesterov
+from Code.reduced_oc_model import ReducedOCModelExternal
+from Code.optimizers import bb, gd_fixed, nesterov
 
 
 def ensure_dir(p: str):
@@ -226,7 +226,7 @@ def main(mesh_cells_xdmf: str, omega_id: int, beta: float, r: float, outdir: str
     ensure_dir(outdir)
     # Optionally regenerate figures
     if regen_figs:
-        from Code_v2.generate_report_assets_v2 import main as gen
+        from Trash.Code_v1.generate_report_assets_v2 import main as gen
         gen(mesh_cells_xdmf=mesh_cells_xdmf, omega_id=omega_id, beta=beta, outdir=outdir)
     # Write macros and refs
     write_auto_macros(outdir, beta=beta, r=r, mesh_cells_xdmf=mesh_cells_xdmf)

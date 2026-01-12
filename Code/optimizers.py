@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Copied from Code_v1/optimizers.py to keep API stable.
+Optimizers for reduced OC: Barzilai–Borwein, fixed-step GD (alpha=1/L), Nesterov.
+Require a model exposing: cost(u), grad_U(u), norm_U(x), dot_U(a,b), estimate_L().
 """
 import numpy as np
 
 
 def bb(model, u0=None, tol=1e-8, max_iter=1000):
+    """Barzilai–Borwein in U with inner product from model."""
     n = model.n
     if u0 is None:
         u_m1 = np.zeros(n)
@@ -47,6 +49,7 @@ def bb(model, u0=None, tol=1e-8, max_iter=1000):
 
 
 def gd_fixed(model, u0=None, tol=1e-8, max_iter=1000, L=None):
+    """Gradient descent with fixed step alpha=1/L (L estimated if None)."""
     n = model.n
     if u0 is None:
         u = model.grad_U(np.zeros(n))
@@ -75,6 +78,7 @@ def gd_fixed(model, u0=None, tol=1e-8, max_iter=1000, L=None):
 
 
 def nesterov(model, u0=None, tol=1e-8, max_iter=1000, L=None, restart=False):
+    """Nesterov acceleration (FISTA-style) with step 1/L. Optional restart if cost increases."""
     n = model.n
     if u0 is None:
         u = model.grad_U(np.zeros(n))

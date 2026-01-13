@@ -1,0 +1,22 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Python caches
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Trash
+Trash/

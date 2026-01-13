@@ -66,6 +66,46 @@ def plot_function(fun, title: str, outpath: str):
     plt.savefig(outpath, dpi=150, bbox_inches='tight')
     plt.close()
 
+def plot_function_3d(fun, title: str, outpath: str):
+    import matplotlib.tri as mtri
+    from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
+    import fenics as fe
+    V = fun.function_space()
+    mesh = V.mesh()
+    coords = mesh.coordinates(); cells = mesh.cells()
+    tri = mtri.Triangulation(coords[:, 0], coords[:, 1], cells)
+    v2d = fe.vertex_to_dof_map(V)
+    vals = fun.vector().get_local()[v2d]
+    fig = plt.figure(figsize=(7, 5))
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_trisurf(tri, vals, cmap='viridis', linewidth=0.1, antialiased=True)
+    fig.colorbar(surf, shrink=0.7, aspect=12)
+    ax.set_title(title)
+    ax.set_xlabel('x'); ax.set_ylabel('y'); ax.set_zlabel('value')
+    ax.view_init(elev=30, azim=40)
+    plt.tight_layout()
+    fig.savefig(outpath, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+
+def plot_function_3d(fun, title: str, outpath: str):
+    import matplotlib.tri as mtri
+    import fenics as fe
+    V = fun.function_space()
+    mesh = V.mesh()
+    coords = mesh.coordinates(); cells = mesh.cells()
+    tri = mtri.Triangulation(coords[:, 0], coords[:, 1], cells)
+    v2d = fe.vertex_to_dof_map(V)
+    vals = fun.vector().get_local()[v2d]
+    fig = plt.figure(figsize=(7, 5))
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_trisurf(tri, vals, cmap='viridis', linewidth=0.1, antialiased=True)
+    fig.colorbar(surf, ax=ax, shrink=0.7)
+    ax.set_title(title)
+    ax.set_xlabel('x'); ax.set_ylabel('y'); ax.set_zlabel('value')
+    plt.tight_layout()
+    plt.savefig(outpath, dpi=150, bbox_inches='tight')
+    plt.close()
+
 def build_mask_function(V, subdomains, omega_id):
     import fenics as fe
     DG0 = fe.FunctionSpace(V.mesh(), 'DG', 0)
@@ -101,10 +141,15 @@ def main():
     plot_mesh(model.mesh, os.path.join(args.plots_dir, 'mesh.png'))
     omega_fun = build_mask_function(model.V, model.subdomains, args.omega_id)
     plot_function(omega_fun, r'Control region $\omega$', os.path.join(args.plots_dir, 'omega.png'))
+    # Additional 2D sketch of control region
+    plot_function(omega_fun, r'Control region $\omega$ (2D sketch)', os.path.join(args.plots_dir, 'control_region_2d.png'))
     import fenics as fe
     yd_fun = fe.Function(model.V)
     yd_fun.vector().set_local(model.y_d); yd_fun.vector().apply('insert')
     plot_function(yd_fun, r'Target $y_d$', os.path.join(args.plots_dir, 'y_d.png'))
+    plot_function_3d(yd_fun, r'Target $y_d$ (3D)', os.path.join(args.plots_dir, 'y_d_3d.png'))
+    # 3D plot of target
+    plot_function_3d(yd_fun, r'Target $y_d$ (3D)', os.path.join(args.plots_dir, 'y_d_3d.png'))
 
     n = model.n
     # Initialize at u0 = ∇F(0) and estimate Lipschitz L for GD/Nesterov.
@@ -115,14 +160,32 @@ def main():
     u_gd, h_gd = gd_fixed(model, u0=u0, tol=1e-8, max_iter=500, L=L)
     u_ne, h_ne = nesterov(model, u0=u0, tol=1e-8, max_iter=500, L=L, restart=True)
 
+    # 3D plots for each algorithm: control u and resulting state y(u)
+    u_bb_fun = to_function(model.V, u_bb)
+    y_bb_fun = to_function(model.V, model.state(u_bb))
+    plot_function_3d(u_bb_fun, r'BB: control $u_k$ (final, 3D)', os.path.join(args.plots_dir, 'u_bb_3d.png'))
+    plot_function_3d(y_bb_fun, r'BB: state $y(u_k)$ (final, 3D)', os.path.join(args.plots_dir, 'y_bb_3d.png'))
+
+    u_gd_fun = to_function(model.V, u_gd)
+    y_gd_fun = to_function(model.V, model.state(u_gd))
+    plot_function_3d(u_gd_fun, r'GD(1/L): control $u_k$ (final, 3D)', os.path.join(args.plots_dir, 'u_gd_3d.png'))
+    plot_function_3d(y_gd_fun, r'GD(1/L): state $y(u_k)$ (final, 3D)', os.path.join(args.plots_dir, 'y_gd_3d.png'))
+
+    u_ne_fun = to_function(model.V, u_ne)
+    y_ne_fun = to_function(model.V, model.state(u_ne))
+    plot_function_3d(u_ne_fun, r'Nesterov: control $u_k$ (final, 3D)', os.path.join(args.plots_dir, 'u_nesterov_3d.png'))
+    plot_function_3d(y_ne_fun, r'Nesterov: state $y(u_k)$ (final, 3D)', os.path.join(args.plots_dir, 'y_nesterov_3d.png'))
+
     # Choose best final cost and plot optimized control/state
     finals = [h_bb['cost'][-1], h_gd['cost'][-1], h_ne['cost'][-1]]
     u_opt = [u_bb, u_gd, u_ne][int(np.argmin(finals))]
     u_fun = to_function(model.V, u_opt)
     plot_function(u_fun, r'Optimized control $u_*$', os.path.join(args.plots_dir, 'u_opt.png'))
+    plot_function_3d(u_fun, r'Optimized control $u_*$ (3D)', os.path.join(args.plots_dir, 'u_opt_3d.png'))
     y_opt = model.state(u_opt)
     y_fun = to_function(model.V, y_opt)
     plot_function(y_fun, r'State $y(u_*)$', os.path.join(args.plots_dir, 'y_opt.png'))
+    plot_function_3d(y_fun, r'State $y(u_*)$ (3D)', os.path.join(args.plots_dir, 'y_opt_3d.png'))
 
     fig1 = plt.figure(figsize=(7, 5))
     plt.semilogy(h_bb['grad_norm'], label='BB')

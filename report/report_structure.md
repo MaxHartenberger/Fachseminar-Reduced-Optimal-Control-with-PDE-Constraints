@@ -2,7 +2,7 @@
 
 ## Abstract
 - Problem: PDE-constrained optimal control on $\Omega=(0,1)^2$ with circular $\omega$; objective $F(u)=\tfrac12\|y-y_d\|^2+\tfrac{\beta}{2}\|u\|^2$.
-- Methods: GD with $1/L$, Barzilai–Borwein (BB1/BB2), Nesterov (restart); external Gmsh mesh with XDMF tags; summary of results.
+- Methods: GD with $1/L$, Barzilai–Borwein (BB1/BB2), Nesterov (restart); summary of results.
 
 ## Introduction
 - Motivation and lecture context; prior work on gradient variants and BB strategies.
@@ -12,29 +12,20 @@
 - PDE: $-\Delta y=\chi_\omega u$ in $\Omega$, $y=0$ on $\partial\Omega$; target $y_d$; parameter $\beta>0$.
 - Spaces and norms: $y\in H_0^1(\Omega)$, $u\in L^2(\Omega)$ (restricted to $\omega$ via $\chi_\omega$).
 
-## Weak Formulation
+### Weak Formulation
 - Variational form: find $y\in H_0^1$ with $\int_\Omega \nabla y\cdot\nabla v=\int_\omega u v$ for all $v\in H_0^1$.
 - Optimality system: adjoint $p\in H_0^1$ via $\int_\Omega \nabla p\cdot\nabla w=\int_\Omega (y-y_d)w$; reduced-gradient condition.
 
 ## Finite Element Discretization
 - Triangulation and $\mathbb{P}_1$ (CG1) elements; $V_h\subset H_0^1$, $U_h\subset L^2$.
 - Dirichlet handling: apply BCs on $V_h$ only; $U_h$ shares basis without BCs. Include [plots/mesh.png](plots/mesh.png).
-
-## Discrete Operators (A, M, M_U, B) and Dirichlet Treatment
 - Definitions: $A$ (stiffness on $\Omega$), $M$ (mass on $\Omega$), $M_U$ ($L^2$ mass on $U_h$), $B$ (control coupling on $\omega$).
 - Assembly via XDMF subdomain tags; apply Dirichlet to $A$ only; zero RHS at boundary DOFs for state/adjoint.
-
-## Reduced Functional
-- Eliminate $y$: $y(u)=A^{-1}Bu$; discrete cost $F(u)=\tfrac12(y-y_d)^T M (y-y_d)+\tfrac{\beta}{2} u^T M_U u$.
-- Convexity and role of $\beta$; note on constant/data terms.
-
-## Gradient and Hessian (U-Inner Product)
 - Inner product: $(a,b)_U=a^T M_U b$, norm $\|a\|_U$.
 - Gradient: $\nabla F(u)=M_U^{-1} B^T p + \beta u$, with adjoint $A p = M(y-y_d)$; Riesz Hessian $H=M_U^{-1}(B^T A^{-1} M A^{-1} B + \beta M_U)$.
 
 ## Lipschitz Constant Estimation
-- Estimate $L\geq\|H\|_{U\to U}$ for GD stability.
-- Power iteration with U-metric normalization (Rayleigh quotient); tolerance and iteration caps.
+
 
 ## Optimization Methods
 ### Fixed-Step Gradient Descent (1/L)
@@ -46,9 +37,6 @@
 ### Nesterov’s Accelerated Gradient (with Restart)
 - Momentum scheme with $1/L$ and restart on loss increase; acceleration and robustness trade-offs.
 
-## External Mesh and Tagging (Gmsh → XDMF)
-- Gmsh: unit square fragmented by disk; physical IDs (domain=1, omega=2; facets 11, 12).
-- XDMF import: cell tags assemble $B$ and $M_U$ on $\omega$; accurate control-region integration. Include [plots/omega.png](plots/omega.png).
 
 ## Numerical Experiments
 ### Setup and Parameters

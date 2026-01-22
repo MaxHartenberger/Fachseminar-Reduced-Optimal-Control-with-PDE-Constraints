@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{siunitx}
+\usepackage{algorithm2e}
 
 \title{Reduced Optimal Control with PDE Constraint:\\Model, Discretization, and First-Order Methods}
 \author{Fachseminar}
@@ -17,6 +18,7 @@
 
 \begin{document}
 \maketitle
+\RestyleAlgo{ruled}
 
 \begin{abstract}
 
@@ -73,7 +75,7 @@ Homogeneous Dirichlet boundary conditions are imposed on the state/adjoint by mo
 With coefficient vectors \(\mathbf{y},\mathbf{u}\in\mathbb{R}^n\) and target coefficients \(\mathbf{y}_d\in\mathbb{R}^n\), the discrete state equation and cost read
 \begin{align}
   A\, \mathbf{y} &= B\, \mathbf{u}, \\
-  J(\mathbf{y},\mathbf{u}) &= \tfrac12 (\mathbf{y}-\mathbf{y}_d)^\top M (\mathbf{y}-\mathbf{y}_d) + \tfrac{\beta}{2} \mathbf{u}^\top MU\, \mathbf{u}.
+  J(\mathbf{y},\mathbf{u}) &= \tfrac12 (\mathbf{y}-\mathbf{y}_d)^\top M (\mathbf{y}-\mathbf{y}_d) + \tfrac{\beta}{2} \mathbf{u}^\top M_U\, \mathbf{u}.
 \end{align}
 
 \begin{figure}[ht]
@@ -86,7 +88,7 @@ With coefficient vectors \(\mathbf{y},\mathbf{u}\in\mathbb{R}^n\) and target coe
 \section{Reduced Formulation}
 \paragraph{State elimination.} Eliminating the state via the discrete PDE constraint gives \(\mathbf{y}(\mathbf{u})=A^{-1}B\,\mathbf{u}\) and the reduced functional \(F\colon\mathbb{R}^n\to\mathbb{R}\):
 \begin{equation}
-  F(\mathbf{u}) = \tfrac12 \big(A^{-1} B\, \mathbf{u} - \mathbf{y}_d\big)^\top M \big(A^{-1} B\, \mathbf{u} - \mathbf{y}_d\big) + \tfrac{\beta}{2}\, \mathbf{u}^\top MU\, \mathbf{u}.
+  F(\mathbf{u}) = \tfrac12 \big(A^{-1} B\, \mathbf{u} - \mathbf{y}_d\big)^\top M \big(A^{-1} B\, \mathbf{u} - \mathbf{y}_d\big) + \tfrac{\beta}{2}\, \mathbf{u}^\top M_U\, \mathbf{u}.
 \end{equation}
 
 \paragraph{Adjoint and gradient (continuous view).} Introducing an adjoint variable \(p\in V\) and the Lagrangian
@@ -99,23 +101,177 @@ the optimality system reads: state \(a(y,v)=b(u,v)\), adjoint \(a(v,p)=(y-y_d,v)
 \begin{equation}
   A\, \mathbf{p} = M\, (\mathbf{y}(\mathbf{u}) - \mathbf{y}_d),
 \end{equation}
-and the gradient with respect to the control space inner product induced by \(MU\) is
+and the gradient with respect to the control space inner product induced by \(M_U\) is
 \begin{equation}
-  \nabla F(\mathbf{u}) = MU^{-1}\, B^\top \mathbf{p} + \beta\, \mathbf{u}.
+  \nabla F(\mathbf{u}) = M_U^{-1}\, B^\top \mathbf{p} + \beta\, \mathbf{u}.
 \end{equation}
 The first-order optimality condition \(\nabla F(\mathbf{u}_*)=0\) is equivalent to
 \begin{equation}
-  B^\top \mathbf{p}_* + \beta\, MU\, \mathbf{u}_* = 0, \qquad A\, \mathbf{p}_* = M\, (\mathbf{y}(\mathbf{u}_*)-\mathbf{y}_d).
+  B^\top \mathbf{p}_* + \beta\, M_U\, \mathbf{u}_* = 0, \qquad A\, \mathbf{p}_* = M\, (\mathbf{y}(\mathbf{u}_*)-\mathbf{y}_d).
 \end{equation}
 
 \paragraph{Hessian, convexity, and Lipschitz constant.} The reduced Hessian applied to \(\mathbf{v}\) is
 \begin{equation}
-  H\, \mathbf{v} = MU^{-1}\, B^\top A^{-1} M A^{-1} B\, \mathbf{v} + \beta\, \mathbf{v}.
+  H\, \mathbf{v} = M_U^{-1}\, B^\top A^{-1} M A^{-1} B\, \mathbf{v} + \beta\, \mathbf{v}.
 \end{equation}
-Since \(A\), \(M\), and \(MU\) are symmetric positive definite on their natural subspaces and \(B\) is linear, the quadratic form associated with \(H\) is strictly positive for \(\beta>0\); thus, \(F\) is strictly convex with a unique minimizer. In the \(U\)-metric, the gradient is Lipschitz with constant
+Since \(A\), \(M\), and \(M_U\) are symmetric positive definite on their natural subspaces and \(B\) is linear, the quadratic form associated with \(H\) is strictly positive for \(\beta>0\); thus, \(F\) is strictly convex with a unique minimizer. In the \(U\)-metric, the gradient is Lipschitz with constant
 \begin{equation}
-  L = \big\| MU^{-1/2} B^\top A^{-1} M A^{-1} B\, MU^{-1/2} \big\|_2 + \beta,
+  L = \big\| M_U^{-1/2} B^\top A^{-1} M A^{-1} B\, M_U^{-1/2} \big\|_2 + \beta,
 \end{equation}
 namely the spectral radius of the SPD term plus \(\beta\).
+
+\section{Optimization Methods}
+We first rewrite the reduced problem as a quadratic optimization problem in the control coefficients. Using the discrete operators, the objective
+\[
+  F(\mathbf{u}) = \tfrac12 \big(A^{-1} B\, \mathbf{u} - \mathbf{y}_d\big)^\top M \big(A^{-1} B\, \mathbf{u} - \mathbf{y}_d\big) + \tfrac{\beta}{2}\, \mathbf{u}^\top M_U\, \mathbf{u}
+\]
+expands to the unconstrained QP
+\begin{equation}
+  \min_{\mathbf{u}\in\mathbb{R}^n} \; \tfrac12\, \mathbf{u}^\top Q\, \mathbf{u} + \mathbf{c}^\top \mathbf{u} + \text{const},
+  \qquad Q = B^\top A^{-1} M A^{-1} B + \beta\, M_U,\quad \mathbf{c} = -\, B^\top A^{-1} M\, \mathbf{y}_d,
+\end{equation}
+with constant term $\text{const} = \tfrac12\, \mathbf{y}_d^\top M\, \mathbf{y}_d$. Since $A$, $M$, and $M_U$ are SPD on their natural subspaces, $Q$ is SPD, so the QP is strictly convex with unique minimizer characterized by the normal equations
+\begin{equation}
+  Q\, \mathbf{u}_* = B^\top A^{-1} M\, \mathbf{y}_d.
+\end{equation}
+
+\paragraph{Equivalence with reduced KKT.}
+Rearranging the normal equations gives
+\[
+  \beta\, M_U\, \mathbf{u}_* \;+\; B^\top A^{-1} M\,\big(A^{-1} B\, \mathbf{u}_* - \mathbf{y}_d\big) \;=\; 0.
+\]
+Defining the adjoint by $A\, \mathbf{p}_* = M\,\big(A^{-1} B\, \mathbf{u}_* - \mathbf{y}_d\big)$ (i.e., $\mathbf{p}_* = A^{-1} M\,(A^{-1} B\, \mathbf{u}_* - \mathbf{y}_d)$) yields the reduced optimality condition
+\[
+  B^\top \mathbf{p}_* + \beta\, M_U\, \mathbf{u}_* = 0,
+\]
+which is exactly the KKT stationarity written in Section 3.
+
+We solve the unconstrained, strictly convex reduced problem in the control space endowed with the \(L^2\) inner product induced by \(M_U\):
+\begin{equation}
+  \min_{\mathbf{u}\in\mathbb{R}^n} \; F(\mathbf{u}) = \tfrac12 (A^{-1} B\, \mathbf{u} - \mathbf{y}_d)^\top M (A^{-1} B\, \mathbf{u} - \mathbf{y}_d) + \tfrac{\beta}{2}\, \mathbf{u}^\top M_U\, \mathbf{u}.
+\end{equation}
+The control-space inner product and norm are
+\begin{equation}
+  \langle \mathbf{a}, \mathbf{b} \rangle_U := \mathbf{a}^\top M_U\, \mathbf{b}, \qquad \|\mathbf{a}\|_U := \sqrt{\langle \mathbf{a}, \mathbf{a} \rangle_U}.
+\end{equation}
+The gradient used by all methods is the Riesz-represented gradient in \(U\):
+\begin{equation}
+  \nabla F(\mathbf{u}) = M_U^{-1}\, B^\top \mathbf{p} + \beta\, \mathbf{u}, \quad \text{where } A\, \mathbf{p} = M\, (\mathbf{y}(\mathbf{u}) - \mathbf{y}_d),\; A\, \mathbf{y}(\mathbf{u}) = B\, \mathbf{u}.
+\end{equation}
+Unless stated otherwise, we initialize at \(\mathbf{u}_0 = \nabla F(\mathbf{0})\) (as in the code) and stop when \(\|\nabla F(\mathbf{u}_k)\|_U \le \texttt{tol}\) or a maximum number of iterations is reached.
+
+\subsection{Gradient Descent with Fixed Step \(\alpha = 1/L\)}
+For an \(L\)-Lipschitz gradient in the \(U\)-metric, the fixed-step update
+\begin{equation}
+  \mathbf{u}_{k+1} = \mathbf{u}_k - \alpha\, \nabla F(\mathbf{u}_k), \quad \alpha = 1/L,
+\end{equation}
+produces a monotone decrease in \(F\) for convex \(F\). In practice, \(L\) is estimated via a matrix-free power iteration on the Hessian action
+\(H\,\mathbf{v} = M_U^{-1} B^\top A^{-1} M A^{-1} B\, \mathbf{v} + \beta\, \mathbf{v}\).
+
+\begin{algorithm}
+\caption{Gradient Descent in $U$ with step $\alpha=1/L$}\label{alg:gd}
+\KwData{tolerance $\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $\|\cdot\|_U$}
+\KwResult{sequence $(\mathbf{u}_k)$ converging to a minimizer}
+$\mathbf{u} \gets \mathbf{u}_0$\; \tcp*[r]{default $\nabla F(\mathbf{0})$}
+Estimate $L$ by power iteration; $\alpha \gets 1/L$\;
+\For{$k=0,1,\dots$}{
+  $\mathbf{g} \gets \nabla F(\mathbf{u})$; $g_n \gets \|\mathbf{g}\|_U$\;
+  \If{$g_n \le \texttt{tol}$}{break}
+  $\mathbf{u} \gets \mathbf{u} - \alpha\, \mathbf{g}$\;
+}
+\end{algorithm}
+
+\subsection{Barzilai--Borwein (Alternating BB1/BB2)}
+BB methods approximate inverse curvature along the last step by selecting the steplength from secant information in the \(U\)-inner product. Define \(\mathbf{s}_k=\mathbf{u}_k-\mathbf{u}_{k-1}\), \(\mathbf{d}_k=\nabla F(\mathbf{u}_k)-\nabla F(\mathbf{u}_{k-1})\), and the \(U\)-inner product \(\langle \cdot, \cdot \rangle_U\). The two classical choices are
+\begin{align}
+  \alpha_k^{\text{BB1}} &= \frac{\langle \mathbf{d}_k, \mathbf{d}_k \rangle_U}{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}, &
+  \alpha_k^{\text{BB2}} &= \frac{\langle \mathbf{s}_k, \mathbf{s}_k \rangle_U}{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}.
+\end{align}
+We alternate BB1/BB2 per iteration and fall back to \(\alpha_k=1\) if \(\big|\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U\big|\) is numerically tiny. The update is
+\(\mathbf{u}_{k+1} = \mathbf{u}_k - (1/\alpha_k)\, \nabla F(\mathbf{u}_k)\).
+
+\begin{algorithm}
+\caption{Barzilai--Borwein in $U$ (alternating BB1/BB2)}\label{alg:bb}
+\KwData{$\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $\langle \cdot, \cdot \rangle_U$, $\|\cdot\|_U$}
+\KwResult{sequence $(\mathbf{u}_k)$}
+$\mathbf{u}_{-1} \gets \mathbf{0}$; $\mathbf{g}_{-1} \gets \nabla F(\mathbf{0})$\;
+$\mathbf{u}_0 \gets \mathbf{u}_0$\; $\mathbf{g}_0 \gets \nabla F(\mathbf{u}_0)$\; \tcp*[r]{default $\mathbf{g}_{-1}$}
+\For{$k=0,1,\dots$}{
+  \If{$\|\mathbf{g}_k\|_U \le \texttt{tol}$}{break}
+  $\mathbf{s}_k \gets \mathbf{u}_k - \mathbf{u}_{k-1}$; $\mathbf{d}_k \gets \mathbf{g}_k - \mathbf{g}_{k-1}$; $s\!d \gets \langle \mathbf{s}_k, \mathbf{d}_k \rangle_U$\;
+  \eIf{$|s\!d| < \varepsilon$}{
+    $\alpha_k \gets 1$\;
+  }{
+    \eIf{$k$ is even}{
+      $\alpha_k \gets \langle \mathbf{d}_k, \mathbf{d}_k \rangle_U / s\!d$\;
+    }{
+      $\alpha_k \gets s\!d / \max\{\langle \mathbf{s}_k, \mathbf{s}_k \rangle_U, \varepsilon\}$\;
+    }
+  }
+  $\mathbf{u}_{k+1} \gets \mathbf{u}_k - (1/\alpha_k)\, \mathbf{g}_k$\;
+  $\mathbf{u}_{k-1} \gets \mathbf{u}_k$; $\mathbf{g}_{k-1} \gets \mathbf{g}_k$\;
+  $\mathbf{u}_k \gets \mathbf{u}_{k+1}$; $\mathbf{g}_k \gets \nabla F(\mathbf{u}_k)$\;
+}
+\end{algorithm}
+
+\subsection{Nesterov Acceleration (FISTA-Style, Step \(1/L\), Optional Restart)}
+We employ a FISTA-style accelerated scheme in the \(U\)-metric with step \(\alpha=1/L\). Let \(\mathbf{y}_k\) be the extrapolated point and \(t_k\) the momentum parameter. A simple restart resets momentum when the objective increases.
+\begin{align}
+  \mathbf{u}_{k+1} &= \mathbf{y}_k - \alpha\, \nabla F(\mathbf{y}_k), &
+  t_{k+1} &= \tfrac12\big(1 + \sqrt{1 + 4 t_k^2}\big), &
+  \beta_k &= \frac{t_k - 1}{t_{k+1}}, &
+  \mathbf{y}_{k+1} &= \mathbf{u}_{k+1} + \beta_k (\mathbf{u}_{k+1} - \mathbf{u}_k).
+\end{align}
+With restart, if \(F(\mathbf{u}_{k+1}) > F(\mathbf{u}_k)\) then set \(\mathbf{y}_{k+1} \leftarrow \mathbf{u}_k\), \(t_{k+1} \leftarrow 1\).
+
+\begin{algorithm}
+\caption{Nesterov acceleration (FISTA-style, step $1/L$, restart)}
+\KwData{$\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $F$; estimate $L$}
+\KwResult{sequence $(\mathbf{u}_k)$}
+$\alpha \gets 1/L$\; $\mathbf{u}_0 \gets \mathbf{u}_0$\; $\mathbf{y}_0 \gets \mathbf{u}_0$\; $t_0 \gets 1$\; $f_{\text{prev}} \gets F(\mathbf{u}_0)$\; \tcp*[r]{default $\nabla F(\mathbf{0})$}
+\For{$k=0,1,\dots$}{
+  $\mathbf{g} \gets \nabla F(\mathbf{y}_k)$; $g_n \gets \|\mathbf{g}\|_U$\;
+  \If{$g_n \le \texttt{tol}$}{break}
+  $\mathbf{u}_{k+1} \gets \mathbf{y}_k - \alpha\, \mathbf{g}$; $f_{\text{next}} \gets F(\mathbf{u}_{k+1})$\;
+  \eIf{restart and $f_{\text{next}} > f_{\text{prev}}$}{
+    $\mathbf{y}_{k+1} \gets \mathbf{u}_k$; $t_{k+1} \gets 1$; $f_{\text{prev}} \gets F(\mathbf{u}_k)$\;
+  }{
+    $t_{k+1} \gets \tfrac12(1 + \sqrt{1 + 4 t_k^2})$; $\beta_k \gets (t_k - 1)/t_{k+1}$\;
+    $\mathbf{y}_{k+1} \gets \mathbf{u}_{k+1} + \beta_k (\mathbf{u}_{k+1} - \mathbf{u}_k)$\;
+    $\mathbf{u}_k \gets \mathbf{u}_{k+1}$; $t_k \gets t_{k+1}$; $f_{\text{prev}} \gets f_{\text{next}}$\;
+  }
+}
+\end{algorithm}
+
+\subsection{Nesterov Acceleration with Known $(m,L)$ (Constant Parameters)}
+For the strongly convex quadratic QP with Hessian $Q$ in the $U$-metric, let
+$L=\lambda_{\max}$ and $m=\lambda_{\min}$ denote the largest/smallest generalized eigenvalues of the pencil $(Q, M_U)$,
+equivalently the spectrum of $H = M_U^{-1/2} Q M_U^{-1/2}$. Set
+\[\alpha = 1/L,\qquad \kappa=L/m,\qquad \beta = \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}.\]
+Then the constant-parameter Nesterov scheme reads
+\begin{align}
+  \mathbf{y}_k &= \mathbf{u}_k + \beta\,(\mathbf{u}_k - \mathbf{u}_{k-1}), &
+  \mathbf{u}_{k+1} &= \mathbf{y}_k - \alpha\, \nabla F(\mathbf{y}_k),
+\end{align}
+and achieves a linear rate $\|\mathbf{u}_k-\mathbf{u}_*\|_U \le C\,\big(\tfrac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\big)^k$.
+In practice, we compute $(L,m)$ by solving the generalized eigenproblem $(Q, M_U)$ with $Q\,v = \lambda\, M_U\,v$, where
+$Q v = B^T A^{-1} M A^{-1} B v + \beta M_U v$ is applied matrix-free via $Q v = M_U\, H v$.
+
+\begin{algorithm}
+\caption{Nesterov with known $(m,L)$ (constant $\beta$)}\label{alg:nest-ml}
+\KwData{$\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $M_U$, Hessian action $H$}
+\KwResult{sequence $(\mathbf{u}_k)$}
+Estimate $(L,m)$ from generalized eigenpairs of $(Q, M_U)$; $\alpha \gets 1/L$; $\kappa \gets L/m$; $\beta \gets (\sqrt{\kappa}-1)/(\sqrt{\kappa}+1)$
+
+$\mathbf{u}_{-1} \gets \mathbf{u}_0$; $\mathbf{u} \gets \mathbf{u}_0$\;
+\For{$k=0,1,\dots$}{
+  $\mathbf{y} \gets \mathbf{u} + \beta (\mathbf{u} - \mathbf{u}_{k-1})$\; $\mathbf{g} \gets \nabla F(\mathbf{y})$; $g_n \gets \|\mathbf{g}\|_U$\;
+  \If{$g_n \le \texttt{tol}$}{break}
+  $\mathbf{u}_{k+1} \gets \mathbf{y} - \alpha\, \mathbf{g}$\;
+}
+\end{algorithm}
+
+\subsection{Remarks on Metrics and Implementation}
+All inner products and norms above are in the control metric induced by \(M_U\). This choice ensures that steplengths and convergence tests reflect the natural topology of the control space (consistent with regularization). The adjoint reuse of \(A\) facilitates efficient linear solves and preconditioning.
 
 \end{document}

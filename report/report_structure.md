@@ -1,28 +1,14 @@
 # Report — Comparison of Optimization Methods for a PDE-Constrained Optimal Control Problem
 
 ## Abstract
-- Problem: PDE-constrained optimal control on $\Omega=(0,1)^2$ with circular $\omega$; objective $F(u)=\tfrac12\|y-y_d\|^2+\tfrac{\beta}{2}\|u\|^2$.
-- Methods: GD with $1/L$, Barzilai–Borwein (BB1/BB2), Nesterov (restart); summary of results.
 
-## Introduction
-- Motivation and lecture context; prior work on gradient variants and BB strategies.
-- Contributions and structure of the report; reproducibility via provided Python scripts and figures.
 
-## Continuous Problem
-- PDE: $-\Delta y=\chi_\omega u$ in $\Omega$, $y=0$ on $\partial\Omega$; target $y_d$; parameter $\beta>0$.
-- Spaces and norms: $y\in H_0^1(\Omega)$, $u\in L^2(\Omega)$ (restricted to $\omega$ via $\chi_\omega$).
+## Problem Statement
 
-### Weak Formulation
-- Variational form: find $y\in H_0^1$ with $\int_\Omega \nabla y\cdot\nabla v=\int_\omega u v$ for all $v\in H_0^1$.
-- Optimality system: adjoint $p\in H_0^1$ via $\int_\Omega \nabla p\cdot\nabla w=\int_\Omega (y-y_d)w$; reduced-gradient condition.
+## Variational Formulation and Discretization
 
-## Finite Element Discretization
-- Triangulation and $\mathbb{P}_1$ (CG1) elements; $V_h\subset H_0^1$, $U_h\subset L^2$.
-- Dirichlet handling: apply BCs on $V_h$ only; $U_h$ shares basis without BCs. Include [plots/mesh.png](plots/mesh.png).
-- Definitions: $A$ (stiffness on $\Omega$), $M$ (mass on $\Omega$), $M_U$ ($L^2$ mass on $U_h$), $B$ (control coupling on $\omega$).
-- Assembly via XDMF subdomain tags; apply Dirichlet to $A$ only; zero RHS at boundary DOFs for state/adjoint.
-- Inner product: $(a,b)_U=a^T M_U b$, norm $\|a\|_U$.
-- Gradient: $\nabla F(u)=M_U^{-1} B^T p + \beta u$, with adjoint $A p = M(y-y_d)$; Riesz Hessian $H=M_U^{-1}(B^T A^{-1} M A^{-1} B + \beta M_U)$.
+## Reduced Formulation
+
 
 ## Lipschitz Constant Estimation
 

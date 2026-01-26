@@ -274,4 +274,57 @@ $\mathbf{u}_{-1} \gets \mathbf{u}_0$; $\mathbf{u} \gets \mathbf{u}_0$\;
 \subsection{Remarks on Metrics and Implementation}
 All inner products and norms above are in the control metric induced by \(M_U\). This choice ensures that steplengths and convergence tests reflect the natural topology of the control space (consistent with regularization). The adjoint reuse of \(A\) facilitates efficient linear solves and preconditioning.
 
+\section{Numerical Results}
+We evaluate the four first-order methods on the external-mesh reduced model with control region tag $\omega=2$ and Tikhonov parameter $\beta=10^{-3}$. The initialization is $\mathbf{u}_0=\nabla F(\mathbf{0})$ and the stopping criterion is $\|\nabla F(\mathbf{u}_k)\|_U \le \texttt{tol}$ or a cap on iterations.
+
+The Lipschitz constant used by fixed-step methods is estimated via power iteration, yielding $L\approx 1.0010\times10^{-3}$. For constant-parameter Nesterov, the generalized eigenvalues of the Hessian in the $U$-metric satisfy $m\approx 1.0000\times10^{-3}$ and $L\approx 1.3072\times10^{-3}$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lrr}
+    \hline
+    Method & Final cost $F(\mathbf{u}_k)$ & Iterations \\
+    \hline
+    BB & 0.0162550 & 4 \\
+    GD ($1/L$) & 0.0162550 & 12 \\
+    Nesterov ($1/L$ + restart) & 0.0162550 & 102 \\
+    Nesterov ($m,L$) & 0.0162550 & 6 \\
+    \hline
+  \end{tabular}
+  \caption{Final objective value and iteration counts. All methods reach the same optimum; BB attains it in the fewest iterations.}
+  \label{tab:numerics}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.47\linewidth]{../plots/grad_norm.png}\hfill
+  \includegraphics[width=0.47\linewidth]{../plots/cost.png}
+  \caption{Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot\|_U$ is induced by $M_U$.}
+  \label{fig:convergence}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\linewidth]{../plots/suboptimality.png}
+  \caption{Suboptimality $F(\mathbf{u}_k) - F(\mathbf{u}_*)$ on a logarithmic scale, highlighting linear convergence for strongly convex quadratics and relative speed differences among methods.}
+  \label{fig:subopt}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\linewidth]{../plots/distance_to_opt.png}
+  \caption{Distance to the optimizer in the control metric, $\|\mathbf{u}_k-\mathbf{u}_*\|_U$, confirming convergence of all methods to the unique minimizer and illustrating rate differences.}
+  \label{fig:distU}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.47\linewidth]{../plots/u_opt.png}\hfill
+  \includegraphics[width=0.47\linewidth]{../plots/y_opt.png}
+  \caption{Optimized control $u_*$ (left) supported on $\omega$ and the corresponding state $y(u_*)$ (right).}
+  \label{fig:final_fields}
+\end{figure}
+
+Overall, all methods converge to the same minimizer of the strictly convex reduced problem, corroborating the quadratic structure. In our run, Barzilai--Borwein required only 4 iterations to reach tolerance, while fixed-step GD and constant-parameter Nesterov took 12 and 6 iterations, respectively; the FISTA-style Nesterov with restart was significantly slower (102 iterations) under the chosen parameters.
+
 \end{document}

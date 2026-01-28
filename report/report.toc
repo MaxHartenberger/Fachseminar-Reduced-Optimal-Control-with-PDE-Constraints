@@ -1,6 +1,0 @@
-\contentsline {section}{\numberline {1}Continuous Problem}{1}{section.1}%
-\contentsline {section}{\numberline {2}Weak Formulation}{2}{section.2}%
-\contentsline {section}{\numberline {3}Finite Element Discretization}{2}{section.3}%
-\contentsline {section}{\numberline {4}Discrete Operators}{2}{section.4}%
-\contentsline {section}{\numberline {5}Reduced Functional}{3}{section.5}%
-\contentsline {section}{\numberline {6}Gradient and Hessian}{3}{section.6}%

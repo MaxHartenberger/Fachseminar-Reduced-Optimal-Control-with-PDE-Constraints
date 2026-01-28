@@ -299,4 +299,45 @@ The Lipschitz constant used by fixed-step methods is estimated via power iterati
 
 Overall, all reported methods converge to the same minimizer of the strictly convex reduced problem, corroborating the quadratic structure. In our run, Barzilai--Borwein required only 4 iterations to reach tolerance, while fixed-step GD and constant-parameter Nesterov took 12 and 6 iterations, respectively.
 
+\section{Mesh Independence}
+We assess the sensitivity of the optimizer and solution with respect to the mesh resolution. Triangular meshes of the unit square with a circular control region $\omega$ are generated via Gmsh for global sizes $h\in\{0.06,\,0.04,\,0.03,\,0.02,\,0.015,\,0.012,\,0.01\}$. On each mesh, we solve the reduced problem with $\beta=10^{-3}$ and $\omega=2$ (the physical tag of the circle) and compute the unique minimizer $u_*^{(h)}$ by solving the normal equations $Q u = B^\top A^{-1} M\, y_d$ using CG.
+
+For each $h$, we record the final objective value $F(u_*^{(h)})$, the control-space norm $\|u_*^{(h)}\|_U$, the state $L^2$-norm $\|y(u_*^{(h)})\|_{L^2(\Omega)}$, and also the CG iteration count used to compute $u_*^{(h)}$ via the normal equations. Figure~\ref{fig:mesh-indep} shows that $F(u_*^{(h)})$ stabilizes as $h$ decreases, indicating mesh independence of the discretized reduced problem and its optimizer. The accompanying norms remain consistent across refinements.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_cost_vs_h.png}\hfill
+  \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_norms_vs_h.png}
+  \caption{Mesh independence study: objective value $F(u_*^{(h)})$ versus mesh size $h$ (left), and norms $\|u_*^{(h)}\|_U$ and $\|y(u_*^{(h)})\|_{L^2}$ versus $h$ (right).}
+  \label{fig:mesh-indep}
+\end{figure}
+
+% Streamlined: omit extra plots (L vs h, gradnorm at optimum)
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|r|r|r|r|r|}
+    \hline
+    $h$ & DOFs & $F(u_*^{(h)})$ & $\|u_*^{(h)}\|_U$ & $\|y(u_*^{(h)})\|_{L^2}$ \\
+    \hline
+    \input{../report/mesh_independence_table.tex}\\
+    \hline
+  \end{tabular}
+  \caption{Per-mesh summary of objective and norms. DOFs denotes the number of P1 degrees of freedom.}
+  \label{tab:mesh-indep}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{|r|r|r|r|r|}
+    \hline
+    $h$ & CG ($u_*$) & BB & GD($1/L$) & Nesterov($m,L$) \\
+    \hline
+    \input{../report/mesh_iterations_table.tex}\\
+    \hline
+  \end{tabular}
+  \caption{Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods.}
+  \label{tab:mesh-indep-iters}
+\end{table}
+
 \end{document}

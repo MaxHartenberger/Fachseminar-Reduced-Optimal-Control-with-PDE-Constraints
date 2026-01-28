@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  26 JAN 2026 15:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  28 JAN 2026 12:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -625,7 +625,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 28.
-<../plots/y_d_3d.png, id=44, 396.0396pt x 355.5684pt>
+<../plots/y_d_3d.png, id=40, 396.0396pt x 355.5684pt>
 File: ../plots/y_d_3d.png Graphic file (type png)
 <use ../plots/y_d_3d.png>
 Package pdftex.def Info: ../plots/y_d_3d.png  used on input line 45.
@@ -636,7 +636,7 @@ Package pdftex.def Info: ../plots/y_d_3d.png  used on input line 45.
 dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/t
 exmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-m
 athit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}]
-<../plots/mesh.png, id=70, 341.1144pt x 352.6776pt>
+<../plots/mesh.png, id=66, 341.1144pt x 352.6776pt>
 File: ../plots/mesh.png Graphic file (type png)
 <use ../plots/mesh.png>
 Package pdftex.def Info: ../plots/mesh.png  used on input line 83.
@@ -667,70 +667,61 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 [4]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 217.
-
-
-Overfull \hbox (9.7517pt too wide) detected at line 224
-[]
- []
+(hyperref)                removing `math shift' on input line 218.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 246.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 246.
+(hyperref)                removing `math shift' on input line 218.
 
 [5] [6]
-<../plots/grad_norm.png, id=139, 457.71pt x 337.7418pt>
+<../plots/grad_norm.png, id=134, 457.71pt x 337.7418pt>
 File: ../plots/grad_norm.png Graphic file (type png)
 <use ../plots/grad_norm.png>
-Package pdftex.def Info: ../plots/grad_norm.png  used on input line 300.
+Package pdftex.def Info: ../plots/grad_norm.png  used on input line 272.
 (pdftex.def)             Requested size: 212.89546pt x 157.0947pt.
-<../plots/cost.png, id=140, 457.2282pt x 337.7418pt>
+<../plots/cost.png, id=135, 463.9734pt x 337.7418pt>
 File: ../plots/cost.png Graphic file (type png)
 <use ../plots/cost.png>
-Package pdftex.def Info: ../plots/cost.png  used on input line 301.
-(pdftex.def)             Requested size: 212.89546pt x 157.25961pt.
-<../plots/suboptimality.png, id=141, 456.7464pt x 337.7418pt>
+Package pdftex.def Info: ../plots/cost.png  used on input line 273.
+(pdftex.def)             Requested size: 212.89546pt x 154.97145pt.
+<../plots/suboptimality.png, id=136, 456.7464pt x 337.7418pt>
 File: ../plots/suboptimality.png Graphic file (type png)
 <use ../plots/suboptimality.png>
-Package pdftex.def Info: ../plots/suboptimality.png  used on input line 308.
+Package pdftex.def Info: ../plots/suboptimality.png  used on input line 280.
 (pdftex.def)             Requested size: 317.07614pt x 234.47478pt.
-<../plots/distance_to_opt.png, id=142, 452.892pt x 337.7418pt>
+<../plots/distance_to_opt.png, id=137, 452.892pt x 337.7418pt>
 File: ../plots/distance_to_opt.png Graphic file (type png)
 <use ../plots/distance_to_opt.png>
-Package pdftex.def Info: ../plots/distance_to_opt.png  used on input line 315.
+Package pdftex.def Info: ../plots/distance_to_opt.png  used on input line 287.
 (pdftex.def)             Requested size: 317.07614pt x 236.46404pt.
-<../plots/u_opt.png, id=143, 415.7934pt x 360.3864pt>
+<../plots/u_opt.png, id=138, 415.7934pt x 360.3864pt>
 File: ../plots/u_opt.png Graphic file (type png)
 <use ../plots/u_opt.png>
-Package pdftex.def Info: ../plots/u_opt.png  used on input line 322.
+Package pdftex.def Info: ../plots/u_opt.png  used on input line 294.
 (pdftex.def)             Requested size: 212.89546pt x 184.526pt.
-<../plots/y_opt.png, id=144, 413.8662pt x 360.3864pt>
+<../plots/y_opt.png, id=139, 413.8662pt x 360.3864pt>
 File: ../plots/y_opt.png Graphic file (type png)
 <use ../plots/y_opt.png>
-Package pdftex.def Info: ../plots/y_opt.png  used on input line 323.
+Package pdftex.def Info: ../plots/y_opt.png  used on input line 295.
 (pdftex.def)             Requested size: 212.89546pt x 185.38385pt.
- [7] [8 <../plots/grad_norm.png> <../plots/cost.png>] [9 <../plots/suboptimalit
-y.png> <../plots/distance_to_opt.png>] [10 <../plots/u_opt.png> <../plots/y_opt
-.png>] (./optimization_report.aux)
+ [7 <../plots/grad_norm.png> <../plots/cost.png>] [8 <../plots/suboptimality.pn
+g> <../plots/distance_to_opt.png>] [9 <../plots/u_opt.png> <../plots/y_opt.png>
+] (./optimization_report.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `optimization_report.out' has not changed.
-(rerunfilecheck)             Checksum: F0227FAF1DCAC005F5A2202B1345D869;2376.
+(rerunfilecheck)             Checksum: F480676A5AC00C22F7EE73DC81B709EE;1979.
  ) 
 Here is how much of TeX's memory you used:
- 16235 strings out of 474222
- 310388 string characters out of 5748733
- 1947975 words of memory out of 5000000
- 38207 multiletter control sequences out of 15000+600000
+ 16229 strings out of 474222
+ 310318 string characters out of 5748733
+ 1944975 words of memory out of 5000000
+ 38206 multiletter control sequences out of 15000+600000
  637490 words of font info for 91 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,17n,79p,455b,916s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,17n,79p,446b,916s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></us
 r/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/pu
@@ -740,15 +731,14 @@ m/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.
 pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr
-/share/texmf/fonts/type1/public/lm/lmri8.pfb></usr/share/texmf/fonts/type1/publ
-ic/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/
-texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/
-lmtti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/
-msbm10.pfb>
-Output written on optimization_report.pdf (10 pages, 1274703 bytes).
+/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/pub
+lic/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share
+/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/symbols/msbm10.pfb>
+Output written on optimization_report.pdf (9 pages, 1235738 bytes).
 PDF statistics:
- 291 PDF objects out of 1000 (max. 8388607)
- 216 compressed objects within 3 object streams
- 70 named destinations out of 1000 (max. 500000)
- 121 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 274 PDF objects out of 1000 (max. 8388607)
+ 202 compressed objects within 3 object streams
+ 65 named destinations out of 1000 (max. 500000)
+ 113 words of extra memory for PDF output out of 10000 (max. 10000000)
 

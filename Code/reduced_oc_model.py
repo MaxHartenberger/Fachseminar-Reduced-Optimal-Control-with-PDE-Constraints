@@ -28,7 +28,7 @@ Control-Reduced Notes (from Ex3)
 """
 import numpy as np
 from scipy.sparse import csr_matrix
-from scipy.sparse.linalg import splu
+from scipy.sparse.linalg import splu, eigsh, LinearOperator
 
 import fenics as fe
 from dolfin import Mesh, MeshValueCollection, MeshFunction, XDMFFile, as_backend_type
@@ -175,3 +175,31 @@ class ReducedOCModelExternal:
             lam_old = lam
             x = y / (self.norm_U(y) + 1e-16)
         return float(max(lam_old, 0.0))
+
+    def estimate_L_m(self, tol: float = 1e-8, maxiter: int = None) -> tuple[float, float]:
+        """
+        Compute extreme generalized eigenvalues of (Q, M_U):
+        Q = B^T A^{-1} M A^{-1} B + beta M_U.
+        Returns (L, m) = (lambda_max, lambda_min).
+        Uses eigsh with A as a LinearOperator via Q v = M_U @ hess_U(v).
+        """
+        n = self.n
+
+        def q_matvec(v: np.ndarray) -> np.ndarray:
+            return self.MU @ self.hess_U(v)
+
+        Qop = LinearOperator((n, n), matvec=q_matvec, rmatvec=q_matvec, dtype=float)
+
+        # Largest eigenvalue (w.r.t. M_U)
+        vals_max, _ = eigsh(A=Qop, M=self.MU, k=1, which='LM', tol=tol, maxiter=maxiter)
+        L = float(vals_max[-1])
+
+        # Smallest eigenvalue (w.r.t. M_U)
+        # For SPD generalized problem, 'SM' targets the smallest eigenvalue.
+        vals_min, _ = eigsh(A=Qop, M=self.MU, k=1, which='SM', tol=tol, maxiter=maxiter)
+        m = float(vals_min[0])
+
+        # Safety clamps
+        L = max(L, 0.0)
+        m = max(m, 0.0)
+        return L, m

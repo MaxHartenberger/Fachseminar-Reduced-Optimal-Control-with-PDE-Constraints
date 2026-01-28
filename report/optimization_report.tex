@@ -214,34 +214,6 @@ $\mathbf{u}_0 \gets \mathbf{u}_0$\; $\mathbf{g}_0 \gets \nabla F(\mathbf{u}_0)$\
 }
 \end{algorithm}
 
-\subsection{Nesterov Acceleration (FISTA-Style, Step \(1/L\), Optional Restart)}
-We employ a FISTA-style accelerated scheme in the \(U\)-metric with step \(\alpha=1/L\). Let \(\mathbf{y}_k\) be the extrapolated point and \(t_k\) the momentum parameter. A simple restart resets momentum when the objective increases.
-\begin{align}
-  \mathbf{u}_{k+1} &= \mathbf{y}_k - \alpha\, \nabla F(\mathbf{y}_k), &
-  t_{k+1} &= \tfrac12\big(1 + \sqrt{1 + 4 t_k^2}\big), &
-  \beta_k &= \frac{t_k - 1}{t_{k+1}}, &
-  \mathbf{y}_{k+1} &= \mathbf{u}_{k+1} + \beta_k (\mathbf{u}_{k+1} - \mathbf{u}_k).
-\end{align}
-With restart, if \(F(\mathbf{u}_{k+1}) > F(\mathbf{u}_k)\) then set \(\mathbf{y}_{k+1} \leftarrow \mathbf{u}_k\), \(t_{k+1} \leftarrow 1\).
-
-\begin{algorithm}
-\caption{Nesterov acceleration (FISTA-style, step $1/L$, restart)}
-\KwData{$\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $F$; estimate $L$}
-\KwResult{sequence $(\mathbf{u}_k)$}
-$\alpha \gets 1/L$\; $\mathbf{u}_0 \gets \mathbf{u}_0$\; $\mathbf{y}_0 \gets \mathbf{u}_0$\; $t_0 \gets 1$\; $f_{\text{prev}} \gets F(\mathbf{u}_0)$\; \tcp*[r]{default $\nabla F(\mathbf{0})$}
-\For{$k=0,1,\dots$}{
-  $\mathbf{g} \gets \nabla F(\mathbf{y}_k)$; $g_n \gets \|\mathbf{g}\|_U$\;
-  \If{$g_n \le \texttt{tol}$}{break}
-  $\mathbf{u}_{k+1} \gets \mathbf{y}_k - \alpha\, \mathbf{g}$; $f_{\text{next}} \gets F(\mathbf{u}_{k+1})$\;
-  \eIf{restart and $f_{\text{next}} > f_{\text{prev}}$}{
-    $\mathbf{y}_{k+1} \gets \mathbf{u}_k$; $t_{k+1} \gets 1$; $f_{\text{prev}} \gets F(\mathbf{u}_k)$\;
-  }{
-    $t_{k+1} \gets \tfrac12(1 + \sqrt{1 + 4 t_k^2})$; $\beta_k \gets (t_k - 1)/t_{k+1}$\;
-    $\mathbf{y}_{k+1} \gets \mathbf{u}_{k+1} + \beta_k (\mathbf{u}_{k+1} - \mathbf{u}_k)$\;
-    $\mathbf{u}_k \gets \mathbf{u}_{k+1}$; $t_k \gets t_{k+1}$; $f_{\text{prev}} \gets f_{\text{next}}$\;
-  }
-}
-\end{algorithm}
 
 \subsection{Nesterov Acceleration with Known $(m,L)$ (Constant Parameters)}
 For the strongly convex quadratic QP with Hessian $Q$ in the $U$-metric, let
@@ -275,7 +247,7 @@ $\mathbf{u}_{-1} \gets \mathbf{u}_0$; $\mathbf{u} \gets \mathbf{u}_0$\;
 All inner products and norms above are in the control metric induced by \(M_U\). This choice ensures that steplengths and convergence tests reflect the natural topology of the control space (consistent with regularization). The adjoint reuse of \(A\) facilitates efficient linear solves and preconditioning.
 
 \section{Numerical Results}
-We evaluate the four first-order methods on the external-mesh reduced model with control region tag $\omega=2$ and Tikhonov parameter $\beta=10^{-3}$. The initialization is $\mathbf{u}_0=\nabla F(\mathbf{0})$ and the stopping criterion is $\|\nabla F(\mathbf{u}_k)\|_U \le \texttt{tol}$ or a cap on iterations.
+We evaluate three first-order methods on the external-mesh reduced model with control region tag $\omega=2$ and Tikhonov parameter $\beta=10^{-3}$. The initialization is $\mathbf{u}_0=\nabla F(\mathbf{0})$ and the stopping criterion is $\|\nabla F(\mathbf{u}_k)\|_U \le \texttt{tol}$ or a cap on iterations.
 
 The Lipschitz constant used by fixed-step methods is estimated via power iteration, yielding $L\approx 1.0010\times10^{-3}$. For constant-parameter Nesterov, the generalized eigenvalues of the Hessian in the $U$-metric satisfy $m\approx 1.0000\times10^{-3}$ and $L\approx 1.3072\times10^{-3}$.
 
@@ -287,7 +259,7 @@ The Lipschitz constant used by fixed-step methods is estimated via power iterati
     \hline
     BB & 0.0162550 & 4 \\
     GD ($1/L$) & 0.0162550 & 12 \\
-    Nesterov ($1/L$ + restart) & 0.0162550 & 102 \\
+    % Nesterov ($1/L$ + restart) removed from reported results
     Nesterov ($m,L$) & 0.0162550 & 6 \\
     \hline
   \end{tabular}
@@ -325,6 +297,6 @@ The Lipschitz constant used by fixed-step methods is estimated via power iterati
   \label{fig:final_fields}
 \end{figure}
 
-Overall, all methods converge to the same minimizer of the strictly convex reduced problem, corroborating the quadratic structure. In our run, Barzilai--Borwein required only 4 iterations to reach tolerance, while fixed-step GD and constant-parameter Nesterov took 12 and 6 iterations, respectively; the FISTA-style Nesterov with restart was significantly slower (102 iterations) under the chosen parameters.
+Overall, all reported methods converge to the same minimizer of the strictly convex reduced problem, corroborating the quadratic structure. In our run, Barzilai--Borwein required only 4 iterations to reach tolerance, while fixed-step GD and constant-parameter Nesterov took 12 and 6 iterations, respectively.
 
 \end{document}

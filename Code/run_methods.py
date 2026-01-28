@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import argparse
 
 from reduced_oc_model import ReducedOCModelExternal
-from optimizers import bb, gd_fixed, nesterov
+from optimizers import bb, gd_fixed, nesterov, nesterov_constant_ml
 
 def ensure_outdir(path: str):
     os.makedirs(path, exist_ok=True)
@@ -121,6 +121,35 @@ def build_model(mesh_cells_xdmf: str, omega_id: int, beta: float):
     """Construct the external-mesh reduced model with control region tag `omega_id` and Tikhonov β."""
     return ReducedOCModelExternal(mesh_cells_xdmf=mesh_cells_xdmf, omega_id=omega_id, beta=beta)
 
+def compute_u_star(model, rtol: float = 1e-10, maxiter: int | None = None):
+    """Compute the unique minimizer u_* by solving the normal equations Q u = B^T A^{-1} M y_d.
+    Uses CG with the matrix-free action Q v = M_U @ H v, where H = model.hess_U.
+    Returns u_* and the CG info code (0 indicates convergence).
+    """
+    import numpy as np
+    from scipy.sparse.linalg import LinearOperator, cg
+
+    n = model.n
+
+    def q_matvec(v: np.ndarray) -> np.ndarray:
+        return model.MU @ model.hess_U(v)
+
+    Qop = LinearOperator((n, n), matvec=q_matvec, rmatvec=q_matvec, dtype=float)
+
+    # RHS r = B^T A^{-1} M y_d
+    z = model.M @ model.y_d
+    p = model.adjoint(z)
+    rhs = model.B.transpose() @ p
+
+    # Count CG iterations via callback
+    iters = [0]
+    def _cb(_):
+        iters[0] += 1
+    u_star, info = cg(Qop, rhs, rtol=rtol, maxiter=maxiter, callback=_cb)
+    if info != 0:
+        print(f"Warning: CG for u_* did not converge (info={info}).")
+    return u_star, info, int(iters[0])
+
 
 def main():
     parser = argparse.ArgumentParser(description='Compare BB, GD(1/L), Nesterov on external-mesh Ex3.')
@@ -135,6 +164,7 @@ def main():
     ensure_outdir(args.plots_dir)
     ensure_outdir(args.results_dir)
 
+    # Build model (avoid using Trash paths; rely on provided or default mesh)
     model = build_model(mesh_cells_xdmf=args.mesh_cells_xdmf, omega_id=args.omega_id, beta=args.beta)
 
     # Mesh and data figures
@@ -155,10 +185,13 @@ def main():
     # Initialize at u0 = ∇F(0) and estimate Lipschitz L for GD/Nesterov.
     u0 = model.grad_U(np.zeros(n))
     L = model.estimate_L(iters=30, tol=1e-6)
+    # Also estimate (L,m) via generalized eigenpairs of (Q, M_U) for constant-parameter Nesterov.
+    L_ml, m_ml = model.estimate_L_m(tol=1e-6)
 
     u_bb, h_bb = bb(model, u0=u0, tol=1e-8, max_iter=500)
     u_gd, h_gd = gd_fixed(model, u0=u0, tol=1e-8, max_iter=500, L=L)
     u_ne, h_ne = nesterov(model, u0=u0, tol=1e-8, max_iter=500, L=L, restart=True)
+    u_ne_ml, h_ne_ml = nesterov_constant_ml(model, u0=u0, tol=1e-8, max_iter=500, L=L_ml, m=m_ml)
 
     # 3D plots for each algorithm: control u and resulting state y(u)
     u_bb_fun = to_function(model.V, u_bb)
@@ -176,9 +209,14 @@ def main():
     plot_function_3d(u_ne_fun, r'Nesterov: control $u_k$ (final, 3D)', os.path.join(args.plots_dir, 'u_nesterov_3d.png'))
     plot_function_3d(y_ne_fun, r'Nesterov: state $y(u_k)$ (final, 3D)', os.path.join(args.plots_dir, 'y_nesterov_3d.png'))
 
+    u_ne_ml_fun = to_function(model.V, u_ne_ml)
+    y_ne_ml_fun = to_function(model.V, model.state(u_ne_ml))
+    plot_function_3d(u_ne_ml_fun, r'Nesterov (m,L): control $u_k$ (final, 3D)', os.path.join(args.plots_dir, 'u_nesterov_ml_3d.png'))
+    plot_function_3d(y_ne_ml_fun, r'Nesterov (m,L): state $y(u_k)$ (final, 3D)', os.path.join(args.plots_dir, 'y_nesterov_ml_3d.png'))
+
     # Choose best final cost and plot optimized control/state
-    finals = [h_bb['cost'][-1], h_gd['cost'][-1], h_ne['cost'][-1]]
-    u_opt = [u_bb, u_gd, u_ne][int(np.argmin(finals))]
+    finals = [h_bb['cost'][-1], h_gd['cost'][-1], h_ne['cost'][-1], h_ne_ml['cost'][-1]]
+    u_opt = [u_bb, u_gd, u_ne, u_ne_ml][int(np.argmin(finals))]
     u_fun = to_function(model.V, u_opt)
     plot_function(u_fun, r'Optimized control $u_*$', os.path.join(args.plots_dir, 'u_opt.png'))
     plot_function_3d(u_fun, r'Optimized control $u_*$ (3D)', os.path.join(args.plots_dir, 'u_opt_3d.png'))
@@ -190,44 +228,127 @@ def main():
     fig1 = plt.figure(figsize=(7, 5))
     plt.semilogy(h_bb['grad_norm'], label='BB')
     plt.semilogy(h_gd['grad_norm'], label='GD 1/L')
-    plt.semilogy(h_ne['grad_norm'], label='Nesterov 1/L + restart')
+    # Omit FISTA-style Nesterov (1/L + restart) from convergence plots
+    plt.semilogy(h_ne_ml['grad_norm'], label='Nesterov (m,L)')
     plt.xlabel('Iteration'); plt.ylabel(r'$\|\nabla F(u_k)\|_U$')
     plt.grid(True, which='both', ls='--', alpha=0.5)
     plt.legend(); plt.title('Gradient Norm Convergence')
     fig1.savefig(os.path.join(args.plots_dir, 'grad_norm.png'), dpi=150, bbox_inches='tight')
 
     fig2 = plt.figure(figsize=(7, 5))
-    plt.semilogy(h_bb['cost'], label='BB')
-    plt.semilogy(h_gd['cost'], label='GD 1/L')
-    plt.semilogy(h_ne['cost'], label='Nesterov 1/L + restart')
+    # Plot cost on a linear scale to avoid misleading log scaling
+    plt.plot(h_bb['cost'], label='BB')
+    plt.plot(h_gd['cost'], label='GD 1/L')
+    # Omit FISTA-style Nesterov (1/L + restart) from cost plot
+    plt.plot(h_ne_ml['cost'], label='Nesterov (m,L)')
     plt.xlabel('Iteration'); plt.ylabel(r'$F(u_k)$')
     plt.grid(True, which='both', ls='--', alpha=0.5)
     plt.legend(); plt.title('Cost Convergence')
+    # Adjust y-axis upper limit per report request
+    plt.ylim(0.016, 0.017)
     fig2.savefig(os.path.join(args.plots_dir, 'cost.png'), dpi=150, bbox_inches='tight')
+
+    # Compute direct solution u_* and suboptimality curves
+    try:
+        u_star, info_cg, iters_cg = compute_u_star(model, rtol=1e-10)
+        F_star = float(model.cost(u_star))
+        subopt_bb = np.maximum(np.array(h_bb['cost']) - F_star, 1e-16)
+        subopt_gd = np.maximum(np.array(h_gd['cost']) - F_star, 1e-16)
+        subopt_ne_ml = np.maximum(np.array(h_ne_ml['cost']) - F_star, 1e-16)
+
+        fig3 = plt.figure(figsize=(7, 5))
+        plt.semilogy(subopt_bb, label='BB')
+        plt.semilogy(subopt_gd, label='GD 1/L')
+        plt.semilogy(subopt_ne_ml, label='Nesterov (m,L)')
+        plt.xlabel('Iteration'); plt.ylabel(r'$F(u_k) - F(u_*)$')
+        plt.grid(True, which='both', ls='--', alpha=0.5)
+        plt.legend(); plt.title('Suboptimality vs. Iteration')
+        fig3.savefig(os.path.join(args.plots_dir, 'suboptimality.png'), dpi=150, bbox_inches='tight')
+
+        # Distances in U: ||u_k - u_*||_U
+        dist_bb = [model.norm_U(ub - u_star) for ub in h_bb.get('u_seq', [])]
+        dist_gd = [model.norm_U(ug - u_star) for ug in h_gd.get('u_seq', [])]
+        dist_ne_ml = [model.norm_U(um - u_star) for um in h_ne_ml.get('u_seq', [])]
+        print(f"Distance sequences lengths: BB={len(dist_bb)}, GD={len(dist_gd)}, Nesterov_mL={len(dist_ne_ml)}")
+
+        fig4 = plt.figure(figsize=(7, 5))
+        plt.semilogy(dist_bb, label='BB')
+        plt.semilogy(dist_gd, label='GD 1/L')
+        plt.semilogy(dist_ne_ml, label='Nesterov (m,L)')
+        plt.xlabel('Iteration'); plt.ylabel(r'$\|u_k - u_*\|_U$')
+        plt.grid(True, which='both', ls='--', alpha=0.5)
+        plt.legend(); plt.title('Distance to Optimum in U')
+        out_dist_path = os.path.abspath(os.path.join(args.plots_dir, 'distance_to_opt.png'))
+        fig4.savefig(out_dist_path, dpi=150, bbox_inches='tight')
+        # Also ensure it exists under the repository-level plots directory
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        repo_plots = os.path.join(base_dir, 'plots', 'distance_to_opt.png')
+        try:
+            fig4.savefig(repo_plots, dpi=150, bbox_inches='tight')
+        except Exception:
+            pass
+        print(f"Saved distance plot to {out_dist_path} and {repo_plots}")
+        dist_last = {
+            'BB': float(dist_bb[-1]) if dist_bb else None,
+            'GD': float(dist_gd[-1]) if dist_gd else None,
+            'Nesterov': float(dist_ne[-1]) if dist_ne else None,
+            'Nesterov_mL': float(dist_ne_ml[-1]) if dist_ne_ml else None,
+        }
+    except Exception as e:
+        print(f"Warning: could not compute direct-solve u_* or suboptimality plot: {e}")
 
     # Save optimizer results
     try:
         import json
         method_idx = int(np.argmin(finals))
-        method_names = ['BB', 'GD', 'Nesterov']
+        method_names = ['BB', 'GD', 'Nesterov', 'Nesterov_mL']
         summary = {
             'omega_id': int(args.omega_id),
             'beta': float(args.beta),
             'L_est': float(L),
+            'L_mL': float(L_ml),
+            'm_mL': float(m_ml),
             'final_costs': {
                 'BB': float(finals[0]),
                 'GD': float(finals[1]),
-                'Nesterov': float(finals[2])
+                'Nesterov': float(finals[2]),
+                'Nesterov_mL': float(finals[3])
             },
             'best_method': method_names[method_idx],
             'iterations': {
                 'BB': int(len(h_bb['cost'])),
                 'GD': int(len(h_gd['cost'])),
-                'Nesterov': int(len(h_ne['cost']))
+                'Nesterov': int(len(h_ne['cost'])),
+                'Nesterov_mL': int(len(h_ne_ml['cost']))
             }
         }
-        with open(os.path.join(args.results_dir, 'optimizer_summary.json'), 'w') as f:
+        # Attach direct-solve info if available
+        if 'F_star' in locals():
+            summary['F_star'] = float(F_star)
+        if 'info_cg' in locals():
+            summary['cg_info_u_star'] = int(info_cg)
+        if 'iters_cg' in locals():
+            summary['cg_iters_u_star'] = int(iters_cg)
+        # Attach distance-to-optimum (recompute here if u_* and sequences available)
+        if 'u_star' in locals():
+            try:
+                dist_bb_last = float(model.norm_U(h_bb['u_seq'][-1] - u_star)) if 'u_seq' in h_bb and h_bb['u_seq'] else None
+                dist_gd_last = float(model.norm_U(h_gd['u_seq'][-1] - u_star)) if 'u_seq' in h_gd and h_gd['u_seq'] else None
+                dist_ne_last = float(model.norm_U(h_ne['u_seq'][-1] - u_star)) if 'u_seq' in h_ne and h_ne['u_seq'] else None
+                dist_ne_ml_last = float(model.norm_U(h_ne_ml['u_seq'][-1] - u_star)) if 'u_seq' in h_ne_ml and h_ne_ml['u_seq'] else None
+                summary['dist_U_final'] = {
+                    'BB': dist_bb_last,
+                    'GD': dist_gd_last,
+                    'Nesterov': dist_ne_last,
+                    'Nesterov_mL': dist_ne_ml_last,
+                }
+            except Exception:
+                pass
+        out_json = os.path.join(args.results_dir, 'optimizer_summary.json')
+        print(f"Writing summary keys: {list(summary.keys())}")
+        with open(out_json, 'w') as f:
             json.dump(summary, f, indent=2)
+        print(f"Wrote summary to {out_json}")
         np.save(os.path.join(args.results_dir, 'u_opt.npy'), u_opt)
         np.save(os.path.join(args.results_dir, 'y_opt.npy'), y_opt)
     except Exception as e:

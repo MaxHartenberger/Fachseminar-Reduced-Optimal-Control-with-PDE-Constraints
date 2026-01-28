@@ -24,23 +24,21 @@
 \newlabel{alg:gd}{{1}{5}{Gradient Descent with Fixed Step \(\alpha = 1/L\)}{algocf.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Gradient Descent with Fixed Step \(\alpha = 1/L\)}{5}{subsection.4.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Barzilai--Borwein (Alternating BB1/BB2)}{5}{subsection.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Nesterov Acceleration (FISTA-Style, Step \(1/L\), Optional Restart)}{5}{subsection.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Nesterov Acceleration with Known $(m,L)$ (Constant Parameters)}{5}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Nesterov Acceleration with Known $(m,L)$ (Constant Parameters)}{5}{subsection.4.3}\protected@file@percent }
 \@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces Barzilai--Borwein in $U$ (alternating BB1/BB2)}}{6}{algocf.2}\protected@file@percent }
 \newlabel{alg:bb}{{2}{6}{Barzilai--Borwein (Alternating BB1/BB2)}{algocf.2}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces Nesterov acceleration (FISTA-style, step $1/L$, restart)}}{6}{algocf.3}\protected@file@percent }
-\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces Nesterov with known $(m,L)$ (constant $\beta $)}}{7}{algocf.4}\protected@file@percent }
-\newlabel{alg:nest-ml}{{4}{7}{Nesterov Acceleration with Known $(m,L)$ (Constant Parameters)}{algocf.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Remarks on Metrics and Implementation}{7}{subsection.4.5}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces Nesterov with known $(m,L)$ (constant $\beta $)}}{6}{algocf.3}\protected@file@percent }
+\newlabel{alg:nest-ml}{{3}{6}{Nesterov Acceleration with Known $(m,L)$ (Constant Parameters)}{algocf.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Remarks on Metrics and Implementation}{7}{subsection.4.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5}Numerical Results}{7}{section.5}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Final objective value and iteration counts. All methods reach the same optimum; BB attains it in the fewest iterations.}}{7}{table.1}\protected@file@percent }
 \newlabel{tab:numerics}{{1}{7}{Final objective value and iteration counts. All methods reach the same optimum; BB attains it in the fewest iterations}{table.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot \|_U$ is induced by $M_U$.}}{8}{figure.3}\protected@file@percent }
-\newlabel{fig:convergence}{{3}{8}{Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot \|_U$ is induced by $M_U$}{figure.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Suboptimality $F(\mathbf  {u}_k) - F(\mathbf  {u}_*)$ on a logarithmic scale, highlighting linear convergence for strongly convex quadratics and relative speed differences among methods.}}{9}{figure.4}\protected@file@percent }
-\newlabel{fig:subopt}{{4}{9}{Suboptimality $F(\mathbf {u}_k) - F(\mathbf {u}_*)$ on a logarithmic scale, highlighting linear convergence for strongly convex quadratics and relative speed differences among methods}{figure.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Distance to the optimizer in the control metric, $\|\mathbf  {u}_k-\mathbf  {u}_*\|_U$, confirming convergence of all methods to the unique minimizer and illustrating rate differences.}}{9}{figure.5}\protected@file@percent }
-\newlabel{fig:distU}{{5}{9}{Distance to the optimizer in the control metric, $\|\mathbf {u}_k-\mathbf {u}_*\|_U$, confirming convergence of all methods to the unique minimizer and illustrating rate differences}{figure.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Optimized control $u_*$ (left) supported on $\omega $ and the corresponding state $y(u_*)$ (right).}}{10}{figure.6}\protected@file@percent }
-\newlabel{fig:final_fields}{{6}{10}{Optimized control $u_*$ (left) supported on $\omega $ and the corresponding state $y(u_*)$ (right)}{figure.6}{}}
-\gdef \@abspage@last{10}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot \|_U$ is induced by $M_U$.}}{7}{figure.3}\protected@file@percent }
+\newlabel{fig:convergence}{{3}{7}{Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot \|_U$ is induced by $M_U$}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Suboptimality $F(\mathbf  {u}_k) - F(\mathbf  {u}_*)$ on a logarithmic scale, highlighting linear convergence for strongly convex quadratics and relative speed differences among methods.}}{8}{figure.4}\protected@file@percent }
+\newlabel{fig:subopt}{{4}{8}{Suboptimality $F(\mathbf {u}_k) - F(\mathbf {u}_*)$ on a logarithmic scale, highlighting linear convergence for strongly convex quadratics and relative speed differences among methods}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Distance to the optimizer in the control metric, $\|\mathbf  {u}_k-\mathbf  {u}_*\|_U$, confirming convergence of all methods to the unique minimizer and illustrating rate differences.}}{8}{figure.5}\protected@file@percent }
+\newlabel{fig:distU}{{5}{8}{Distance to the optimizer in the control metric, $\|\mathbf {u}_k-\mathbf {u}_*\|_U$, confirming convergence of all methods to the unique minimizer and illustrating rate differences}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Optimized control $u_*$ (left) supported on $\omega $ and the corresponding state $y(u_*)$ (right).}}{9}{figure.6}\protected@file@percent }
+\newlabel{fig:final_fields}{{6}{9}{Optimized control $u_*$ (left) supported on $\omega $ and the corresponding state $y(u_*)$ (right)}{figure.6}{}}
+\gdef \@abspage@last{9}

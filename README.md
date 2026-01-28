@@ -19,6 +19,32 @@ This repo solves a linear–quadratic optimal control problem with an elliptic P
 3. Run the optimization methods and save figures/results:
    ```bash
    python Code/run_methods.py --mesh-cells-xdmf mesh/out/mesh_cells.xdmf --omega-id 2 --beta 1e-3 --plots-dir plots --results-dir results
+   ## Mesh Independence Study
+
+   To reproduce the mesh independence results, aggregated plots, and report tables:
+
+   ```bash
+   conda activate fenics
+
+   # Run the study across multiple mesh sizes (adjust the list if desired)
+   cd /home/max/Documents/Fachseminar/Fachseminar
+   python -m Code.mesh_independence --h-list 0.06 0.04 0.03 0.02 0.015 0.012 0.01 --beta 1e-3 --omega-id 2
+
+   # Compile the report PDF (includes Mesh Independence section with tables & figures)
+   cd report
+   pdflatex -interaction=nonstopmode optimization_report.tex
+   pdflatex -interaction=nonstopmode optimization_report.tex
+   ```
+
+   Outputs:
+   - Summary JSON: `results/mesh_independence_summary.json`
+   - Aggregated plots: `plots/mesh_independence_cost_vs_h.png`, `plots/mesh_independence_norms_vs_h.png`, `plots/mesh_independence_cost_vs_ndofs.png`
+   - Report tables: `results/mesh_independence_table.tex`, `results/mesh_iterations_table.tex`
+
+   Notes:
+   - The driver also records CG iterations used to compute the exact minimizer via the normal equations.
+   - Per‑mesh optimizer plots are disabled in the streamlined study; aggregated plots focus on cost and norms vs `h`.
+
    ```
 
 ## Outputs

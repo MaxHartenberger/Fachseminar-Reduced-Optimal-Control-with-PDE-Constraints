@@ -15,9 +15,16 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 25,
       "iterations": {
+        "CG": 25,
         "BB": 4,
         "GD": 11,
-        "Nesterov_mL": 5
+        "Nesterov": 5
+      },
+      "final_costs": {
+        "CG": 0.016517144657772983,
+        "BB": 0.01651714455251067,
+        "GD": 0.01651714455253277,
+        "Nesterov": 0.01651714455259022
       }
     },
     {
@@ -33,9 +40,16 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 26,
       "iterations": {
+        "CG": 26,
         "BB": 4,
         "GD": 12,
-        "Nesterov_mL": 6
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.016331895535693784,
+        "BB": 0.016331895523508475,
+        "GD": 0.016331895523519158,
+        "Nesterov": 0.01633189552351201
       }
     },
     {
@@ -51,9 +65,16 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 24,
       "iterations": {
+        "CG": 24,
         "BB": 4,
         "GD": 12,
-        "Nesterov_mL": 6
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.016255043470095508,
+        "BB": 0.016255043467937172,
+        "GD": 0.01625504346795888,
+        "Nesterov": 0.016255043467942223
       }
     },
     {
@@ -69,9 +90,16 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 24,
       "iterations": {
+        "CG": 24,
         "BB": 4,
         "GD": 13,
-        "Nesterov_mL": 6
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.016170842166533382,
+        "BB": 0.016170842166312652,
+        "GD": 0.016170842166317208,
+        "Nesterov": 0.01617084216631961
       }
     },
     {
@@ -87,9 +115,16 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 25,
       "iterations": {
+        "CG": 25,
         "BB": 4,
         "GD": 13,
-        "Nesterov_mL": 6
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.016125313983330128,
+        "BB": 0.016125313983292807,
+        "GD": 0.01612531398329915,
+        "Nesterov": 0.016125313983300908
       }
     },
     {
@@ -105,9 +140,16 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 24,
       "iterations": {
+        "CG": 24,
         "BB": 4,
         "GD": 13,
-        "Nesterov_mL": 6
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.016103545776951327,
+        "BB": 0.01610354577694073,
+        "GD": 0.016103545776948607,
+        "Nesterov": 0.01610354577694951
       }
     },
     {
@@ -123,9 +165,41 @@
       "cg_info_u_star": 0,
       "cg_iters_u_star": 23,
       "iterations": {
+        "CG": 23,
         "BB": 4,
         "GD": 13,
-        "Nesterov_mL": 6
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.016084738587402173,
+        "BB": 0.016084738587398454,
+        "GD": 0.016084738587407735,
+        "Nesterov": 0.01608473858740776
+      }
+    },
+    {
+      "h": 0.008,
+      "n_dofs": 18497,
+      "beta": 0.001,
+      "omega_id": 2,
+      "L_est": 0.0010000678997319978,
+      "F_star": 0.01606954607491468,
+      "grad_norm_star": 1.6654268888666146e-09,
+      "u_star_norm_U": 2.6786866538773912,
+      "y_star_norm_L2": 0.048418845714772986,
+      "cg_info_u_star": 0,
+      "cg_iters_u_star": 24,
+      "iterations": {
+        "CG": 24,
+        "BB": 4,
+        "GD": 13,
+        "Nesterov": 6
+      },
+      "final_costs": {
+        "CG": 0.01606954607491468,
+        "BB": 0.016069546074913645,
+        "GD": 0.016069546074924036,
+        "Nesterov": 0.016069546074923412
       }
     }
   ]

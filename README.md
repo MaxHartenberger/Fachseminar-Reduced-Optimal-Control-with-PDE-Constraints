@@ -13,7 +13,13 @@ This repo solves a linear–quadratic optimal control problem with an elliptic P
    ```
 2. Generate the external mesh and a mesh plot:
    ```bash
-   python mesh/gmsh_mesh.py --outdir mesh/out --plots-dir plots
+   python Code/gmsh_mesh.py --outdir mesh/out --plots-dir plots
+
+Mesh family workflow (recommended for mesh-independence studies):
+1) Generate meshes for all $h$ (writes to mesh/out_h_{h}/...)
+   python Code/generate_meshes.py --h-list 0.06 0.04 0.03 0.02 0.015 0.012 0.01
+2) Solve on the existing meshes and generate aggregated plots/tables
+   python Code/mesh_independence.py --no-mesh-gen --h-list 0.06 0.04 0.03 0.02 0.015 0.012 0.01
    ```
    Outputs (under `mesh/out`): `mesh.msh`, `mesh_cells.xdmf`, `mesh_facets.xdmf`. Mesh plot saved to `plots/mesh.png`.
 3. Run the optimization methods and save figures/results:

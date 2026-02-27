@@ -1,0 +1,166 @@
+% !TeX program = pdflatex
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{algorithm2e}
+
+\title{Conjugate Gradient vs. Gradient Descent\\Implementation Notes for the Reduced Optimal Control Problem}
+\author{Fachseminar}
+\date{\today}
+
+\begin{document}
+\maketitle
+\RestyleAlgo{ruled}
+
+\begin{abstract}
+This note explains how the fixed-step gradient descent (GD) and the conjugate gradient (CG) solvers are implemented in the accompanying code base for the reduced, strictly convex quadratic optimal control problem. In particular, we clarify the ``optimization as a linear system'' viewpoint: the unique minimizer of the quadratic reduced functional solves a symmetric positive definite (SPD) linear system, which can be solved efficiently by CG. We also summarize why CG is typically much faster than GD for SPD quadratics.
+\end{abstract}
+
+\section{Problem and Discrete Reduced Form}
+We consider the reduced objective in control coefficients $\mathbf{u}\in\mathbb{R}^n$,
+\begin{equation}
+  F(\mathbf{u})
+  = \tfrac12\, (A^{-1}B\mathbf{u}-\mathbf{y}_d)^\top M\,(A^{-1}B\mathbf{u}-\mathbf{y}_d)
+    + \tfrac\beta2\, \mathbf{u}^\top M_U\,\mathbf{u},
+\end{equation}
+where $A$ is the discrete stiffness matrix (with homogeneous Dirichlet treatment), $M$ is the state $L^2$ mass matrix, $M_U$ is the control mass matrix, and $B$ is the control-to-state coupling (restriction of the source to the tagged subdomain $\omega$). The regularization parameter satisfies $\beta>0$.
+
+Expanding the quadratic yields the unconstrained quadratic program
+\begin{equation}
+  \min_{\mathbf{u}\in\mathbb{R}^n}\; \tfrac12\,\mathbf{u}^\top Q\,\mathbf{u} - \mathbf{b}^\top\mathbf{u} + \text{const},
+  \qquad
+  Q := B^\top A^{-1}MA^{-1}B + \beta M_U,
+  \qquad
+  \mathbf{b} := B^\top A^{-1}M\,\mathbf{y}_d.
+  \label{eq:qp}
+\end{equation}
+Under the assumptions used in the project (in particular $\beta>0$), $Q$ is SPD and the minimizer is unique.
+
+\paragraph{Control inner product used in the code.}
+The methods are written in the control-space inner product induced by $M_U$,
+\begin{equation}
+  \langle \mathbf{a},\mathbf{b}\rangle_U := \mathbf{a}^\top M_U\,\mathbf{b},
+  \qquad
+  \|\mathbf{a}\|_U := \sqrt{\langle \mathbf{a},\mathbf{a}\rangle_U}.
+\end{equation}
+Accordingly, the gradient used by the algorithms is the Riesz-represented gradient in this metric.
+
+\section{``Optimization as a Linear System'' and CG}
+For a quadratic functional of the form \eqref{eq:qp}, the first-order optimality condition is linear:
+\begin{equation}
+  \nabla F(\mathbf{u}_*) = \mathbf{0}
+  \quad\Longleftrightarrow\quad
+  Q\,\mathbf{u}_* = \mathbf{b}.
+  \label{eq:linear_system}
+\end{equation}
+This is the key point behind the professor's remark: instead of iterating an optimization method, we can compute the minimizer by solving the SPD linear system \eqref{eq:linear_system}. CG is specifically designed for large SPD systems and typically converges in far fewer iterations than GD.
+
+\subsection{Matrix-free application of $Q$ in the code}
+The implementation avoids forming $Q$ explicitly and only needs the matrix-vector product $\mathbf{v}\mapsto Q\,\mathbf{v}$. The code first implements the reduced Hessian action in the $U$-metric,
+\begin{equation}
+  H\,\mathbf{v} = M_U^{-1} B^\top A^{-1} M A^{-1} B\,\mathbf{v} + \beta\,\mathbf{v}.
+\end{equation}
+Multiplying by $M_U$ gives
+\begin{equation}
+  M_U\,(H\,\mathbf{v}) = \big(B^\top A^{-1} M A^{-1} B + \beta M_U\big)\mathbf{v} = Q\,\mathbf{v}.
+\end{equation}
+In other words, the matvec is implemented as
+\begin{equation}
+  Q\,\mathbf{v} \equiv M_U\,\big(H\,\mathbf{v}\big),
+\end{equation}
+which is exactly what the Python code does when it defines a \texttt{LinearOperator} with \texttt{q\_matvec(v) = MU @ hess\_U(v)}.
+
+\subsection{Right-hand side construction in the code}
+The vector $\mathbf{b}=B^\top A^{-1}M\mathbf{y}_d$ is computed by one adjoint-like solve:
+\begin{align}
+  \mathbf{z} &:= M\,\mathbf{y}_d,\\
+  A\,\mathbf{p} &= \mathbf{z}\quad(\text{solve}),\\
+  \mathbf{b} &:= B^\top\mathbf{p}.
+\end{align}
+This matches the routine used to build the CG right-hand side.
+
+\subsection{CG algorithm (as used)}
+CG is applied to the SPD system \eqref{eq:linear_system} with a matrix-free operator. In SciPy's interface, one provides only the action $\mathbf{v}\mapsto Q\mathbf{v}$. A concise description is:
+
+\begin{algorithm}
+\caption{Conjugate Gradient for the minimizer $\mathbf{u}_*$}
+\KwData{SPD operator $Q$ via matvec, right-hand side $\mathbf{b}$, tolerance \texttt{rtol}}
+\KwResult{Approximation $\mathbf{u}$ to the solution of $Q\mathbf{u}=\mathbf{b}$}
+Initialize $\mathbf{u}_0$ (SciPy default is $\mathbf{0}$)\;
+$\mathbf{r}_0 \gets \mathbf{b} - Q\mathbf{u}_0$\;
+$\mathbf{p}_0 \gets \mathbf{r}_0$\;
+\For{$k=0,1,\dots$ until convergence}{
+  $\alpha_k \gets \dfrac{\mathbf{r}_k^\top\mathbf{r}_k}{\mathbf{p}_k^\top Q\mathbf{p}_k}$\;
+  $\mathbf{u}_{k+1} \gets \mathbf{u}_k + \alpha_k\,\mathbf{p}_k$\;
+  $\mathbf{r}_{k+1} \gets \mathbf{r}_k - \alpha_k\,Q\mathbf{p}_k$\;
+  $\beta_k \gets \dfrac{\mathbf{r}_{k+1}^\top\mathbf{r}_{k+1}}{\mathbf{r}_k^\top\mathbf{r}_k}$\;
+  $\mathbf{p}_{k+1} \gets \mathbf{r}_{k+1} + \beta_k\,\mathbf{p}_k$\;
+}
+\end{algorithm}
+
+In exact arithmetic CG terminates in at most $n$ iterations. In practice it converges much sooner when $Q$ is reasonably well-conditioned (or after preconditioning).
+
+\section{Fixed-step Gradient Descent (GD) Implementation}
+GD is implemented as a first-order method that iterates
+\begin{equation}
+  \mathbf{u}_{k+1} = \mathbf{u}_k - \alpha\, \nabla F(\mathbf{u}_k),
+\end{equation}
+where the gradient is the $U$-Riesz gradient,
+\begin{equation}
+  \nabla F(\mathbf{u}) = M_U^{-1}B^\top\mathbf{p} + \beta\,\mathbf{u},
+  \qquad
+  A\mathbf{p} = M(\mathbf{y}(\mathbf{u})-\mathbf{y}_d),
+  \qquad
+  A\mathbf{y}(\mathbf{u}) = B\mathbf{u}.
+\end{equation}
+
+\subsection{Step size choice (alpha = 1/L)}
+For an $L$-Lipschitz gradient in the $U$-metric, a safe fixed step is $\alpha=1/L$. The code estimates $L\approx\lambda_{\max}(H)$ by power iteration applied to the Hessian action $H\mathbf{v}$ and a $U$-Rayleigh quotient.
+
+\subsection{Stopping criterion and logging}
+The GD loop stops when $\|\nabla F(\mathbf{u}_k)\|_U \le \texttt{tol}$ (or a maximum iteration count is reached). The implementation stores the gradient norms and objective values in a history dictionary for plotting/analysis.
+
+\section{Why CG Should Be Faster Than GD (for this problem)}
+Both GD and CG are iterative methods, but they exploit curvature very differently.
+
+\paragraph{GD (fixed-step) rate.}
+For a strongly convex quadratic with eigenvalues in $[m,L]$ (in the relevant metric), fixed-step GD with $\alpha=1/L$ converges linearly with a factor approximately
+\begin{equation}
+  \|\mathbf{u}_k-\mathbf{u}_*\| \lesssim \left(1-\frac{m}{L}\right)^k\,\|\mathbf{u}_0-\mathbf{u}_*\|.
+\end{equation}
+If the condition number $\kappa:=L/m$ is large, then $1-m/L = 1-1/\kappa$ is close to $1$ and GD becomes slow.
+
+\paragraph{CG rate.}
+CG has a sharper dependence on the condition number. A standard bound in the $Q$-energy norm is
+\begin{equation}
+  \frac{\|\mathbf{u}_k-\mathbf{u}_*\|_Q}{\|\mathbf{u}_0-\mathbf{u}_*\|_Q}
+  \le
+  2\left(\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\right)^k.
+\end{equation}
+The appearance of $\sqrt{\kappa}$ (instead of $\kappa$) explains why CG is typically much faster than GD on ill-conditioned SPD problems.
+
+\paragraph{Interpretation for the reduced OC system.}
+Here, $Q = B^\top A^{-1}MA^{-1}B + \beta M_U$ is SPD and often moderately to strongly ill-conditioned depending on mesh size and $\beta$. In such settings, CG (especially with preconditioning) is expected to reach a good accuracy in far fewer iterations than fixed-step GD.
+
+\section{Mapping to the Repository Code}
+The relevant implementations are:
+\begin{itemize}
+  \item \textbf{GD:} \texttt{gd\_fixed} in \texttt{Code/optimizers.py}. It uses $\alpha=1/L$, logs $F(\mathbf{u}_k)$ and $\|\nabla F(\mathbf{u}_k)\|_U$, and stops at \texttt{tol}.
+  \item \textbf{CG for $\mathbf{u}_*$:} \texttt{compute\_u\_star} in \texttt{Code/run\_methods.py} (and similarly in \texttt{Code/mesh\_independence.py}). It builds a matrix-free \texttt{LinearOperator} for $Q$, assembles $\mathbf{b}=B^\top A^{-1}M\mathbf{y}_d$, and calls \texttt{scipy.sparse.linalg.cg} with a relative tolerance. A callback is used to count iterations.
+  \item \textbf{Hessian action:} \texttt{hess\_U} in \texttt{Code/reduced\_oc\_model.py}, used both for $L$ estimation and for the $Q$ matvec in CG.
+\end{itemize}
+
+\section{Practical Notes}
+\paragraph{Fair comparison.}
+If one compares GD and CG fairly as solvers for \eqref{eq:linear_system}, then GD corresponds to steepest descent on the same quadratic. CG usually wins by a large margin in iteration counts, but each iteration has a similar dominant cost here: applying $Q$ once, which entails two PDE solves through the $A^{-1}$ applications.
+
+\paragraph{Preconditioning (not used here).}
+If CG iteration counts still grow with mesh refinement, the natural next step is preconditioning (e.g., using $M_U$ or a multigrid-type approximation). This can reduce $\kappa$ dramatically.
+
+\end{document}

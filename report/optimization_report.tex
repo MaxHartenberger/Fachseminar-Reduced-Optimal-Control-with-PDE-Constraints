@@ -168,6 +168,14 @@ For an \(L\)-Lipschitz gradient in the \(U\)-metric, the fixed-step update
 produces a monotone decrease in \(F\) for convex \(F\). In practice, \(L\) is estimated via a matrix-free power iteration on the Hessian action
 \(H\,\mathbf{v} = M_U^{-1} B^\top A^{-1} M A^{-1} B\, \mathbf{v} + \beta\, \mathbf{v}\).
 
+\paragraph{Spectral viewpoint (how $L$ and $m$ are computed).}
+In the $U$-metric, $H$ is self-adjoint and SPD, and can be written as $H = M_U^{-1} Q$ with
+\(Q = B^\top A^{-1} M A^{-1} B + \beta\, M_U\). Therefore, the extreme eigenvalues of $H$ in the $U$-inner product are the extreme \emph{generalized} eigenvalues of the pencil $(Q,M_U)$:
+\begin{equation}
+  Q\,\mathbf{v} = \lambda\, M_U\,\mathbf{v}.
+\end{equation}
+The Lipschitz constant is $L=\lambda_{\max}$ and the strong convexity constant is $m=\lambda_{\min}$. Numerically, we approximate $L$ either by power iteration applied to $H$ using the $U$-Rayleigh quotient, or by solving the generalized eigenproblem for the largest eigenpair; for $(m,L)$ we solve the generalized eigenproblem for both extremes.
+
 \begin{algorithm}
 \caption{Gradient Descent in $U$ with step $\alpha=1/L$}\label{alg:gd}
 \KwData{tolerance $\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $\|\cdot\|_U$}
@@ -230,7 +238,7 @@ In practice, we compute $(L,m)$ by solving the generalized eigenproblem $(Q, M_U
 $Q v = B^T A^{-1} M A^{-1} B v + \beta M_U v$ is applied matrix-free via $Q v = M_U\, H v$.
 
 \begin{algorithm}
-\caption{Nesterov with known $(m,L)$ (constant $\beta$)}\label{alg:nest-ml}
+\caption{Nesterov (constant parameters)}\label{alg:nest-ml}
 \KwData{$\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla F$, $M_U$, Hessian action $H$}
 \KwResult{sequence $(\mathbf{u}_k)$}
 Estimate $(L,m)$ from generalized eigenpairs of $(Q, M_U)$; $\alpha \gets 1/L$; $\kappa \gets L/m$; $\beta \gets (\sqrt{\kappa}-1)/(\sqrt{\kappa}+1)$
@@ -241,6 +249,22 @@ $\mathbf{u}_{-1} \gets \mathbf{u}_0$; $\mathbf{u} \gets \mathbf{u}_0$\;
   \If{$g_n \le \texttt{tol}$}{break}
   $\mathbf{u}_{k+1} \gets \mathbf{y} - \alpha\, \mathbf{g}$\;
 }
+\end{algorithm}
+
+\subsection{Conjugate Gradient (CG) for the Stationarity System}
+The reduced problem is strictly convex and quadratic. The first-order optimality condition $\nabla F(\mathbf{u}_*)=0$ can be written as an SPD linear system in the control unknowns,
+\begin{equation}
+  Q\,\mathbf{u}_* = B^\top A^{-1} M\,\mathbf{y}_d, \qquad Q := B^\top A^{-1} M A^{-1} B + \beta\, M_U.
+\end{equation}
+In the implementation, we solve this system with Conjugate Gradient in a matrix-free manner (Hessian action only). Concretely, we apply $Q\mathbf{v}$ via the reduced Hessian action and the control metric, and call SciPy's routine \texttt{scipy.sparse.linalg.cg} on a \texttt{LinearOperator}.
+
+\begin{algorithm}
+\caption{CG for $Q\mathbf{u}=\mathbf{b}$ (matrix-free)}\label{alg:cg}
+\KwData{model with $A^{-1}$ solves, matrices $B,M,M_U$, Hessian action $H$; $\texttt{rtol}>0$}
+\KwResult{$\mathbf{u}_*$}
+$\mathbf{b} \gets B^\top A^{-1}(M\,\mathbf{y}_d)$\;
+Define operator $Q\mathbf{v} := M_U\,(H\mathbf{v})$ (equivalently $B^\top A^{-1} M A^{-1} B\,\mathbf{v} + \beta\,M_U\mathbf{v}$)\;
+Call CG to solve $Q\mathbf{u}=\mathbf{b}$ to relative tolerance $\texttt{rtol}$\;
 \end{algorithm}
 
 \subsection{Remarks on Metrics and Implementation}
@@ -260,7 +284,7 @@ The Lipschitz constant used by fixed-step methods is estimated via power iterati
     BB & 0.0162550 & 4 \\
     GD ($1/L$) & 0.0162550 & 12 \\
     % Nesterov ($1/L$ + restart) removed from reported results
-    Nesterov ($m,L$) & 0.0162550 & 6 \\
+    Nesterov & 0.0162550 & 6 \\
     \hline
   \end{tabular}
   \caption{Final objective value and iteration counts. All methods reach the same optimum; BB attains it in the fewest iterations.}
@@ -273,13 +297,6 @@ The Lipschitz constant used by fixed-step methods is estimated via power iterati
   \includegraphics[width=0.47\linewidth]{../plots/cost.png}
   \caption{Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot\|_U$ is induced by $M_U$.}
   \label{fig:convergence}
-\end{figure}
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\linewidth]{../plots/suboptimality.png}
-  \caption{Suboptimality $F(\mathbf{u}_k) - F(\mathbf{u}_*)$ on a logarithmic scale, highlighting linear convergence for strongly convex quadratics and relative speed differences among methods.}
-  \label{fig:subopt}
 \end{figure}
 
 \begin{figure}[ht]
@@ -302,14 +319,21 @@ Overall, all reported methods converge to the same minimizer of the strictly con
 \section{Mesh Independence}
 We assess the sensitivity of the optimizer and solution with respect to the mesh resolution. Triangular meshes of the unit square with a circular control region $\omega$ are generated via Gmsh for global sizes $h\in\{0.06,\,0.04,\,0.03,\,0.02,\,0.015,\,0.012,\,0.01\}$. On each mesh, we solve the reduced problem with $\beta=10^{-3}$ and $\omega=2$ (the physical tag of the circle) and compute the unique minimizer $u_*^{(h)}$ by solving the normal equations $Q u = B^\top A^{-1} M\, y_d$ using CG.
 
-For each $h$, we record the final objective value $F(u_*^{(h)})$, the control-space norm $\|u_*^{(h)}\|_U$, the state $L^2$-norm $\|y(u_*^{(h)})\|_{L^2(\Omega)}$, and also the CG iteration count used to compute $u_*^{(h)}$ via the normal equations. Figure~\ref{fig:mesh-indep} shows that $F(u_*^{(h)})$ stabilizes as $h$ decreases, indicating mesh independence of the discretized reduced problem and its optimizer. The accompanying norms remain consistent across refinements.
+For each $h$, we record (i) the final objective value reached by each method and (ii) the iteration counts to reach the stopping criterion. Figure~\ref{fig:mesh-indep} shows that the final objective values stabilize as $h$ decreases, indicating mesh independence of the discretized reduced problem and its numerical solution.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_cost_vs_h.png}\hfill
-  \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_norms_vs_h.png}
-  \caption{Mesh independence study: objective value $F(u_*^{(h)})$ versus mesh size $h$ (left), and norms $\|u_*^{(h)}\|_U$ and $\|y(u_*^{(h)})\|_{L^2}$ versus $h$ (right).}
+  \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_cost_vs_ndofs.png}
+  \caption{Mesh independence study: final objective value versus mesh size $h$ (left) and versus degrees of freedom (right), for all methods (CG, BB, GD, Nesterov).}
   \label{fig:mesh-indep}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\linewidth]{../plots/mesh_independence_iterations_vs_h.png}
+  \caption{Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov).}
+  \label{fig:mesh-indep-iters}
 \end{figure}
 
 % Streamlined: omit extra plots (L vs h, gradnorm at optimum)
@@ -320,7 +344,7 @@ For each $h$, we record the final objective value $F(u_*^{(h)})$, the control-sp
     \hline
     $h$ & DOFs & $F(u_*^{(h)})$ & $\|u_*^{(h)}\|_U$ & $\|y(u_*^{(h)})\|_{L^2}$ \\
     \hline
-    \input{../report/mesh_independence_table.tex}\\
+    \input{../results/mesh_independence_table.tex}\\
     \hline
   \end{tabular}
   \caption{Per-mesh summary of objective and norms. DOFs denotes the number of P1 degrees of freedom.}
@@ -331,9 +355,9 @@ For each $h$, we record the final objective value $F(u_*^{(h)})$, the control-sp
   \centering
   \begin{tabular}{|r|r|r|r|r|}
     \hline
-    $h$ & CG ($u_*$) & BB & GD($1/L$) & Nesterov($m,L$) \\
+    $h$ & CG ($u_*$) & BB & GD($1/L$) & Nesterov \\
     \hline
-    \input{../report/mesh_iterations_table.tex}\\
+    \input{../results/mesh_iterations_table.tex}\\
     \hline
   \end{tabular}
   \caption{Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods.}

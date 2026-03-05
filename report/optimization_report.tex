@@ -46,7 +46,7 @@ The target is chosen as the pyramid-like profile
 \end{equation}
 which belongs to \(L^2(\Omega)\). The control enters only on \(\omega\) via \(\chi_{\omega}\), so the effective source equals \(u\) on \(\omega\) and vanishes on \(\Omega\setminus\omega\). The PDE with homogeneous Dirichlet boundary conditions is well-posed for \(u\in L^2(\Omega)\), yielding a unique weak solution \(y\in V\) by Lax--Milgram.
 
-% Figures are generated under \plotsdir (aggregated) and \meshplotsdir (per-mesh).
+% (Target visualization omitted; the plotting pipeline is kept minimal.)
 
 \section{Variational Formulation and Discretization}
 \paragraph{Weak formulation.} Define the bilinear and linear forms
@@ -254,7 +254,7 @@ The reduced problem is strictly convex and quadratic. The first-order optimality
 \end{equation}
 In the implementation, we solve this system with Conjugate Gradient in a matrix-free manner (Hessian action only). Concretely, we apply $Q\mathbf{v}$ via the reduced Hessian action and the control metric, and call SciPy's routine \texttt{scipy.sparse.linalg.cg} on a \texttt{LinearOperator}.
 
-\begin{algorithm}
+\begin{algorithm}[]
 \caption{CG for $Q\mathbf{u}=\mathbf{b}$ (matrix-free)}\label{alg:cg}
 \KwData{model with $A^{-1}$ solves, matrices $B,M,M_U$, Hessian action $H$; $\texttt{rtol}>0$}
 \KwResult{$\mathbf{u}_*$}

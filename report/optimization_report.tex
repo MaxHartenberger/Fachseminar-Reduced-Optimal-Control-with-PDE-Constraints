@@ -16,6 +16,12 @@
 \author{Fachseminar}
 \date{\today}
 
+% Output locations
+\newcommand{\plotsdir}{../plots}
+% Representative mesh size for per-mesh figures (must match plots/mesh_h_<token>/...)
+\newcommand{\meshhtoken}{0.02}
+\newcommand{\meshplotsdir}{../plots/mesh_h_\meshhtoken}
+
 \begin{document}
 \maketitle
 \RestyleAlgo{ruled}
@@ -40,12 +46,7 @@ The target is chosen as the pyramid-like profile
 \end{equation}
 which belongs to \(L^2(\Omega)\). The control enters only on \(\omega\) via \(\chi_{\omega}\), so the effective source equals \(u\) on \(\omega\) and vanishes on \(\Omega\setminus\omega\). The PDE with homogeneous Dirichlet boundary conditions is well-posed for \(u\in L^2(\Omega)\), yielding a unique weak solution \(y\in V\) by Lax--Milgram.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.75\linewidth]{../plots/y_d_3d.png}
-  \caption{3D surface of the target profile $y_d$ on $\Omega$.}
-  \label{fig:yd3d}
-\end{figure}
+% Figures are generated under \plotsdir (aggregated) and \meshplotsdir (per-mesh).
 
 \section{Variational Formulation and Discretization}
 \paragraph{Weak formulation.} Define the bilinear and linear forms
@@ -78,12 +79,7 @@ With coefficient vectors \(\mathbf{y},\mathbf{u}\in\mathbb{R}^n\) and target coe
   J(\mathbf{y},\mathbf{u}) &= \tfrac12 (\mathbf{y}-\mathbf{y}_d)^\top M (\mathbf{y}-\mathbf{y}_d) + \tfrac{\beta}{2} \mathbf{u}^\top M_U\, \mathbf{u}.
 \end{align}
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\linewidth]{../plots/mesh.png}
-  \caption{Triangular mesh of $\Omega$ used for the P1 finite element discretization.}
-  \label{fig:mesh}
-\end{figure}
+% (Mesh visualization omitted; meshes are pre-generated and loaded from disk.)
 
 \section{Reduced Formulation}
 \paragraph{State elimination.} Eliminating the state via the discrete PDE constraint gives \(\mathbf{y}(\mathbf{u})=A^{-1}B\,\mathbf{u}\) and the reduced functional \(F\colon\mathbb{R}^n\to\mathbb{R}\):
@@ -293,24 +289,16 @@ The Lipschitz constant used by fixed-step methods is estimated via power iterati
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.47\linewidth]{../plots/grad_norm.png}\hfill
-  \includegraphics[width=0.47\linewidth]{../plots/cost.png}
-  \caption{Convergence of gradient norm (left) and objective value (right). The control-space norm $\|\cdot\|_U$ is induced by $M_U$.}
+  \includegraphics[width=0.7\linewidth]{\meshplotsdir/grad_norm.png}
+  \caption{Convergence of gradient norm for a representative mesh ($h=\meshhtoken$). The control-space norm $\|\cdot\|_U$ is induced by $M_U$.}
   \label{fig:convergence}
 \end{figure}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\linewidth]{../plots/distance_to_opt.png}
-  \caption{Distance to the optimizer in the control metric, $\|\mathbf{u}_k-\mathbf{u}_*\|_U$, confirming convergence of all methods to the unique minimizer and illustrating rate differences.}
-  \label{fig:distU}
-\end{figure}
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.47\linewidth]{../plots/u_opt.png}\hfill
-  \includegraphics[width=0.47\linewidth]{../plots/y_opt.png}
-  \caption{Optimized control $u_*$ (left) supported on $\omega$ and the corresponding state $y(u_*)$ (right).}
+  \includegraphics[width=0.47\linewidth]{\meshplotsdir/u_cg_3d.png}\hfill
+  \includegraphics[width=0.47\linewidth]{\meshplotsdir/y_cg_3d.png}
+  \caption{Optimized control $u_*$ (left) and the corresponding state $y(u_*)$ (right) computed by CG on the stationarity system, shown for a representative mesh ($h=\meshhtoken$).}
   \label{fig:final_fields}
 \end{figure}
 
@@ -323,15 +311,15 @@ For each $h$, we record (i) the final objective value reached by each method and
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_cost_vs_h.png}\hfill
-  \includegraphics[width=0.47\linewidth]{../plots/mesh_independence_cost_vs_ndofs.png}
+  \includegraphics[width=0.47\linewidth]{\plotsdir/mesh_independence_cost_vs_h.png}\hfill
+  \includegraphics[width=0.47\linewidth]{\plotsdir/mesh_independence_cost_vs_ndofs.png}
   \caption{Mesh independence study: final objective value versus mesh size $h$ (left) and versus degrees of freedom (right), for all methods (CG, BB, GD, Nesterov).}
   \label{fig:mesh-indep}
 \end{figure}
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\linewidth]{../plots/mesh_independence_iterations_vs_h.png}
+  \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_iterations_vs_h.png}
   \caption{Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov).}
   \label{fig:mesh-indep-iters}
 \end{figure}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  5 MAR 2026 10:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  22 MAR 2026 16:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -468,7 +468,7 @@ Package: relsize 2013/03/29 ver 4.1
 \algocf@algobox=\box71
 )
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 25.
+h' as default language. on input line 26.
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2022/01/06 v1.3d Standard LaTeX Color (DPC)
@@ -479,7 +479,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 25
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 26
 .
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
@@ -490,27 +490,28 @@ File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count311
 \l__pdf_internal_box=\box72
 )
-No file optimization_report.aux.
+(./optimization_report.aux)
 \openout1 = `optimization_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -567,7 +568,9 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 25.
+Package hyperref Info: Link coloring OFF on input line 26.
+
+(./optimization_report.out) (./optimization_report.out)
 \@outlinefile=\write3
 \openout3 = `optimization_report.out'.
 
@@ -578,169 +581,244 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 25.
+or `english'. on input line 26.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
-7.
+8.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-7.
+8.
 
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-27.
+28.
 
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-27.
+28.
 
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 27.
+(Font)              <12> on input line 28.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 27.
+(Font)              <8> on input line 28.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 27.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
+(Font)              <6> on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 34.
+(Font)              <10> on input line 31.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 31.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 31.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 39.
+<../plots/mesh_h_0.02/y_d_3d.png, id=48, 396.0396pt x 355.5684pt>
+File: ../plots/mesh_h_0.02/y_d_3d.png Graphic file (type png)
+<use ../plots/mesh_h_0.02/y_d_3d.png>
+Package pdftex.def Info: ../plots/mesh_h_0.02/y_d_3d.png  used on input line 56
+.
+(pdftex.def)             Requested size: 339.72592pt x 305.01242pt.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
-dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/t
-exmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-m
-athit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}] [2]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-57.
-
-(/usr/share/texmf/tex/latex/lm/t1lmtt.fd
+dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/sha
+re/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
+lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}] [2 <../plots/mes
+h_h_0.02/y_d_3d.png>] [3]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+56.
+ (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Overfull \hbox (6.31323pt too wide) in paragraph at lines 156--158
-\T1/lmr/m/n/10.95 Unless stated oth-er-wise, we ini-tial-ize at $\OT1/lmr/bx/n/
-10.95 u[] \OT1/lmr/m/n/10.95 = \OMS/lmsy/m/n/10.95 r\OML/lmm/m/it/10.95 F\OT1/l
-mr/m/n/10.95 (\OT1/lmr/bx/n/10.95 0\OT1/lmr/m/n/10.95 )$ \T1/lmr/m/n/10.95 (as 
-in the code) and stop when $\OMS/lmsy/m/n/10.95 kr\OML/lmm/m/it/10.95 F\OT1/lmr
-/m/n/10.95 (\OT1/lmr/bx/n/10.95 u[]\OT1/lmr/m/n/10.95 )\OMS/lmsy/m/n/10.95 k[] 
-^^T
- []
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 259.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 159.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\alpha' on input line 159.
-
-[3]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 222.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 222.
-
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 257.
+(hyperref)                removing `\alpha' on input line 259.
 
 [4] [5]
-<../plots/mesh_h_0.02/grad_norm.png, id=100, 497.2176pt x 353.6412pt>
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `htbp') on input line 345.
+
+[6]
+<../plots/mesh_h_0.02/grad_norm.png, id=150, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.02/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/grad_norm.png  used on input line
- 292.
+ 380.
 (pdftex.def)             Requested size: 317.07614pt x 225.52556pt.
-<../plots/mesh_h_0.02/u_cg_3d.png, id=102, 404.2302pt x 356.0502pt>
+<../plots/mesh_h_0.02/u_cg_3d.png, id=151, 404.2302pt x 356.0502pt>
 File: ../plots/mesh_h_0.02/u_cg_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/u_cg_3d.png>
-Package pdftex.def Info: ../plots/mesh_h_0.02/u_cg_3d.png  used on input line 2
-99.
+Package pdftex.def Info: ../plots/mesh_h_0.02/u_cg_3d.png  used on input line 3
+87.
 (pdftex.def)             Requested size: 212.89546pt x 187.52133pt.
-<../plots/mesh_h_0.02/y_cg_3d.png, id=103, 404.2302pt x 356.0502pt>
+<../plots/mesh_h_0.02/y_cg_3d.png, id=152, 404.2302pt x 356.0502pt>
 File: ../plots/mesh_h_0.02/y_cg_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/y_cg_3d.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/y_cg_3d.png  used on input line 3
-00.
+88.
 (pdftex.def)             Requested size: 212.89546pt x 187.52133pt.
- [6 <../plots/mesh_h_0.02/grad_norm.png>]
+<../mesh/mesh_h_0.06/mesh.png, id=157, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.06/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.06/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.06/mesh.png  used on input line 404.
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.04/mesh.png, id=158, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.04/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.04/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.04/mesh.png  used on input line 408.
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.03/mesh.png, id=159, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.03/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.03/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.03/mesh.png  used on input line 412.
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.02/mesh.png, id=160, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.02/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.02/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.02/mesh.png  used on input line 416.
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.015/mesh.png, id=161, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.015/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.015/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.015/mesh.png  used on input line 423.
 
-LaTeX Warning: Reference `fig:mesh-indep' on page 7 undefined on input line 310
-.
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.012/mesh.png, id=162, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.012/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.012/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.012/mesh.png  used on input line 427.
 
-<../plots/mesh_independence_cost_vs_h.png, id=113, 461.5644pt x 339.1872pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.01/mesh.png, id=163, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.01/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.01/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.01/mesh.png  used on input line 431.
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+<../mesh/mesh_h_0.008/mesh.png, id=164, 344.487pt x 353.6412pt>
+File: ../mesh/mesh_h_0.008/mesh.png Graphic file (type png)
+<use ../mesh/mesh_h_0.008/mesh.png>
+Package pdftex.def Info: ../mesh/mesh_h_0.008/mesh.png  used on input line 435.
+
+(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+ (../results/mesh_independence_table.tex) [7 <../plots/mesh_h_0.02/grad_norm.pn
+g>]
+<../plots/mesh_independence_cost_vs_h.png, id=177, 461.5644pt x 339.1872pt>
 File: ../plots/mesh_independence_cost_vs_h.png Graphic file (type png)
 <use ../plots/mesh_independence_cost_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_cost_vs_h.png  used on inpu
-t line 314.
+t line 462.
 (pdftex.def)             Requested size: 212.89546pt x 156.44722pt.
-<../plots/mesh_independence_cost_vs_ndofs.png, id=114, 461.5644pt x 339.1872pt>
+<../plots/mesh_independence_cost_vs_ndofs.png, id=178, 461.5644pt x 339.1872pt>
 
 File: ../plots/mesh_independence_cost_vs_ndofs.png Graphic file (type png)
 <use ../plots/mesh_independence_cost_vs_ndofs.png>
 Package pdftex.def Info: ../plots/mesh_independence_cost_vs_ndofs.png  used on 
-input line 315.
+input line 463.
 (pdftex.def)             Requested size: 212.89546pt x 156.44722pt.
-<../plots/mesh_independence_iterations_vs_h.png, id=115, 461.5644pt x 339.1872p
+<../plots/mesh_h_0.06/grad_norm.png, id=182, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.06/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.06/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.06/grad_norm.png  used on input line
+ 473.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_h_0.04/grad_norm.png, id=183, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.04/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.04/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.04/grad_norm.png  used on input line
+ 477.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_h_0.03/grad_norm.png, id=184, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.03/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.03/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.03/grad_norm.png  used on input line
+ 481.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+File: ../plots/mesh_h_0.02/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.02/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.02/grad_norm.png  used on input line
+ 485.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_h_0.015/grad_norm.png, id=185, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.015/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.015/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.015/grad_norm.png  used on input lin
+e 492.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_h_0.012/grad_norm.png, id=186, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.012/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.012/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.012/grad_norm.png  used on input lin
+e 496.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_h_0.01/grad_norm.png, id=187, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.01/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.01/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.01/grad_norm.png  used on input line
+ 500.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_h_0.008/grad_norm.png, id=188, 497.2176pt x 353.6412pt>
+File: ../plots/mesh_h_0.008/grad_norm.png Graphic file (type png)
+<use ../plots/mesh_h_0.008/grad_norm.png>
+Package pdftex.def Info: ../plots/mesh_h_0.008/grad_norm.png  used on input lin
+e 504.
+(pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
+<../plots/mesh_independence_iterations_vs_h.png, id=189, 461.5644pt x 339.1872p
 t>
 File: ../plots/mesh_independence_iterations_vs_h.png Graphic file (type png)
 <use ../plots/mesh_independence_iterations_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_iterations_vs_h.png  used o
-n input line 322.
+n input line 514.
 (pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
-(../results/mesh_independence_table.tex) (../results/mesh_iterations_table.tex)
-[7 <../plots/mesh_h_0.02/u_cg_3d.png> <../plots/mesh_h_0.02/y_cg_3d.png> <../pl
-ots/mesh_independence_cost_vs_h.png> <../plots/mesh_independence_cost_vs_ndofs.
-png>] [8 <../plots/mesh_independence_iterations_vs_h.png>]
+ (../results/mesh_iterations_table.tex) [8 <../plots/mesh_h_0.02/u_cg_3d.png> <
+../plots/mesh_h_0.02/y_cg_3d.png>] [9 <../mesh/mesh_h_0.06/mesh.png> <../mesh/m
+esh_h_0.04/mesh.png> <../mesh/mesh_h_0.03/mesh.png> <../mesh/mesh_h_0.02/mesh.p
+ng> <../mesh/mesh_h_0.015/mesh.png> <../mesh/mesh_h_0.012/mesh.png> <../mesh/me
+sh_h_0.01/mesh.png> <../mesh/mesh_h_0.008/mesh.png> <../plots/mesh_independence
+_cost_vs_h.png> <../plots/mesh_independence_cost_vs_ndofs.png>] [10 <../plots/m
+esh_h_0.06/grad_norm.png> <../plots/mesh_h_0.04/grad_norm.png> <../plots/mesh_h
+_0.03/grad_norm.png> <../plots/mesh_h_0.015/grad_norm.png> <../plots/mesh_h_0.0
+12/grad_norm.png> <../plots/mesh_h_0.01/grad_norm.png> <../plots/mesh_h_0.008/g
+rad_norm.png> <../plots/mesh_independence_iterations_vs_h.png>]
 (./optimization_report.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `optimization_report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `optimization_report.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  84C8768D7C66E1FC379BD2971F185038;2448.
+Package rerunfilecheck Info: File `optimization_report.out' has not changed.
+(rerunfilecheck)             Checksum: DF3F9D1FA659B396ED6EA5633CD4346E;2576.
  ) 
 Here is how much of TeX's memory you used:
- 16220 strings out of 474222
- 310944 string characters out of 5748733
- 1946975 words of memory out of 5000000
- 38190 multiletter control sequences out of 15000+600000
- 637490 words of font info for 91 fonts, out of 8000000 for 9000
+ 16406 strings out of 474222
+ 316212 string characters out of 5748733
+ 1941975 words of memory out of 5000000
+ 38349 multiletter control sequences out of 15000+600000
+ 660310 words of font info for 115 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,17n,79p,543b,916s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,17n,79p,643b,913s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></us
 r/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/pu
@@ -749,15 +827,16 @@ re/texmf/fonts/type1/public/lm/lmmi6.pfb></usr/share/texmf/fonts/type1/public/l
 m/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.
 pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/ty
-pe1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr
-/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/pub
-lic/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share
-/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/symbols/msbm10.pfb>
-Output written on optimization_report.pdf (8 pages, 968994 bytes).
+pe1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/s
+hare/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/publi
+c/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/t
+exmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lm
+tt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on optimization_report.pdf (10 pages, 3824633 bytes).
 PDF statistics:
- 245 PDF objects out of 1000 (max. 8388607)
- 179 compressed objects within 2 object streams
- 71 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 349 PDF objects out of 1000 (max. 8388607)
+ 244 compressed objects within 3 object streams
+ 80 named destinations out of 1000 (max. 500000)
+ 199 words of extra memory for PDF output out of 10000 (max. 10000000)
 

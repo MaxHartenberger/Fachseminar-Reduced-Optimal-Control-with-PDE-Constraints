@@ -1,0 +1,277 @@
+% !TeX program = pdflatex
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{hyperref}
+
+% Keep paths simple: presentation/ is a sibling of plots/, mesh/, results/.
+\newcommand{\plotsdir}{../plots}
+\newcommand{\resultsdir}{../results}
+\newcommand{\meshdir}{../mesh}
+
+% Representative mesh size for per-mesh figures
+\newcommand{\meshhtoken}{0.02}
+\newcommand{\meshplotsdir}{../plots/mesh_h_\meshhtoken}
+
+\title[Reduced PDE-Constrained OC]{Reduced Optimal Control with PDE Constraint\\Model, Discretization, and First-Order Methods}
+\author{Fachseminar (Mathematics Seminar)}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Project in one slide}
+\begin{itemize}
+  \item \textbf{Goal:} find a control $u$ (volumetric source) that drives a Poisson state $y$ close to a desired profile $y_d$.
+  \item \textbf{Constraint:} $-\Delta y = \chi_\omega\, u$ in $\Omega$, $y=0$ on $\partial\Omega$.
+  \item \textbf{Cost (Tikhonov):}
+  \[
+    J(y,u)=\tfrac12\|y-y_d\|_{L^2(\Omega)}^2+\tfrac{\beta}{2}\|u\|_{L^2(\Omega)}^2,\qquad \beta>0.
+  \]
+  \item \textbf{Approach:} P1 finite elements on a mesh family, state elimination $\Rightarrow$ reduced strictly convex quadratic $F(u)$.
+  \item \textbf{Solvers:} CG on the stationarity system and first-order methods (GD $1/L$, BB, Nesterov with $(m,L)$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Model problem}
+\textbf{Domain.} Polygonal $\Omega\subset\mathbb{R}^2$ (here $\Omega=[0,1]^2$). Control acts only on a tagged subdomain $\omega\subset\Omega$.
+
+\medskip
+\textbf{PDE constraint.}
+\[
+-\Delta y = \chi_{\omega} u \quad \text{in }\Omega, \qquad y=0\quad\text{on }\partial\Omega.
+\]
+
+\textbf{Spaces.} $V=H_0^1(\Omega)$, $U=L^2(\Omega)$.
+
+\medskip
+\textbf{Target.}
+\[
+  y_d(x)=0.5-\max\big(|x_1-0.5|,\,|x_2-0.5|\big)\in L^2(\Omega).
+\]
+
+\begin{center}
+\includegraphics[width=0.55\linewidth]{\meshplotsdir/y_d_3d.png}
+\end{center}
+\end{frame}
+
+\begin{frame}{Weak formulation}
+Define
+\[
+ a(y,v)=\int_\Omega \nabla y\cdot\nabla v\,dx,\qquad b(u,v)=\int_\omega u\,v\,dx.
+\]
+\textbf{State:} given $u\in L^2(\Omega)$, find $y\in V$ such that
+\[
+ a(y,v)=b(u,v)\quad\forall v\in V.
+\]
+\textbf{Cost:}
+\[
+J(y,u)=\tfrac12\int_\Omega (y-y_d)^2\,dx+\tfrac{\beta}{2}\int_\Omega u^2\,dx.
+\]
+\textbf{Well-posedness:} coercivity of $a(\cdot,\cdot)$ on $V$ $\Rightarrow$ unique $y(u)$ (Lax--Milgram).
+\end{frame}
+
+\begin{frame}{Optimality conditions (continuous)}
+Lagrangian
+\[
+\mathcal{L}(y,u,p)=\tfrac12\|y-y_d\|_{L^2}^2+\tfrac{\beta}{2}\|u\|_{L^2}^2 + a(y,p) - b(u,p).
+\]
+Stationarity yields:
+\begin{align*}
+\textbf{State:}&& a(y,v) &= b(u,v) &&\forall v\in V,\\
+\textbf{Adjoint:}&& a(v,p) &= (y-y_d,v)_{L^2(\Omega)} &&\forall v\in V,\\
+\textbf{Gradient:}&& (\beta u + \chi_\omega p,\, w)_{L^2(\Omega)} &= 0 &&\forall w\in U.
+\end{align*}
+Formally: $\beta u + \chi_\omega p = 0$ in $\Omega$.
+\end{frame}
+
+\begin{frame}{Finite element discretization (P1)}
+Let $V_h\subset H_0^1(\Omega)$ be the conforming P1 space with basis $(\varphi_i)_{i=1}^n$.
+
+\medskip
+Assemble matrices
+\begin{align*}
+A_{ij}&=\int_\Omega \nabla\varphi_j\cdot\nabla\varphi_i\,dx, &
+M_{ij}&=\int_\Omega \varphi_j\varphi_i\,dx,\\
+B_{ij}&=\int_\omega \varphi_j\varphi_i\,dx, &
+(M_U)_{ij}&=\int_\Omega \varphi_j\varphi_i\,dx.
+\end{align*}
+\textbf{Discrete state:} $A\bm y = B\bm u$ (Dirichlet BCs imposed in the solve).
+
+\textbf{Discrete objective:}
+\[
+J(\bm y,\bm u)=\tfrac12(\bm y-\bm y_d)^\top M(\bm y-\bm y_d)+\tfrac{\beta}{2}\bm u^\top M_U\bm u.
+\]
+\end{frame}
+
+\begin{frame}{Reduced formulation}
+Eliminate state: $\bm y(\bm u)=A^{-1}B\bm u$. Define reduced functional
+\[
+F(\bm u)=\tfrac12\big(A^{-1}B\bm u-\bm y_d\big)^\top M\big(A^{-1}B\bm u-\bm y_d\big)+\tfrac{\beta}{2}\bm u^\top M_U\bm u.
+\]
+\textbf{Adjoint:}
+\[
+A\bm p = M\,(\bm y(\bm u)-\bm y_d).
+\]
+\textbf{$U$-gradient (Riesz w.r.t. $\langle a,b\rangle_U=a^\top M_U b$):}
+\[
+\nabla F(\bm u)=M_U^{-1}B^\top\bm p + \beta\bm u.
+\]
+\end{frame}
+
+\begin{frame}{Quadratic structure and stationarity system}
+Expand $F$ as an unconstrained QP:
+\[
+F(\bm u)=\tfrac12\bm u^\top Q\bm u + \bm c^\top\bm u + \text{const},
+\]
+with
+\[
+Q=B^\top A^{-1}MA^{-1}B + \beta M_U\quad\text{(SPD)},\qquad \bm c=-B^\top A^{-1}M\bm y_d.
+\]
+\textbf{Optimality:}
+\[
+Q\bm u_* = B^\top A^{-1}M\bm y_d.
+\]
+\textbf{Interpretation:} strictly convex $\Rightarrow$ unique minimizer; can solve by Krylov (CG) matrix-free via Hessian action.
+\end{frame}
+
+\begin{frame}{Spectral viewpoint: $L$ and $m$ in the $U$-metric}
+In the $U$-inner product, the reduced Hessian is self-adjoint and SPD:
+\[
+H\bm v = M_U^{-1}B^\top A^{-1}MA^{-1}B\bm v + \beta\bm v
+\quad\Leftrightarrow\quad H = M_U^{-1}Q.
+\]
+Extreme eigenvalues are generalized eigenvalues of $(Q,M_U)$:
+\[
+Q\bm v = \lambda\, M_U\bm v.
+\]
+Hence
+\[
+L=\lambda_{\max},\qquad m=\lambda_{\min},\qquad \kappa=L/m.
+\]
+Used for GD step $\alpha=1/L$ and constant-parameter Nesterov.
+\end{frame}
+
+\begin{frame}{Algorithms used}
+\textbf{CG (linear solve).} Solve SPD system $Q\bm u=\bm b$ with $\bm b=B^\top A^{-1}(M\bm y_d)$.
+
+\medskip
+\textbf{First-order methods on $F$ (using $U$-gradient).}
+\begin{itemize}
+  \item GD with fixed step $\alpha=1/L$.
+  \item Barzilai--Borwein (alternating BB1/BB2) using secant information in $\langle\cdot,\cdot\rangle_U$.
+  \item Nesterov acceleration for strongly convex case with parameters from $(m,L)$.
+\end{itemize}
+
+\medskip
+\textbf{Stopping criterion.} $\|\nabla F(\bm u_k)\|_U \le \texttt{tol}$ (and max iterations safeguard).
+\end{frame}
+
+\begin{frame}{Representative numerical results ($h=\meshhtoken$)}
+Parameters in experiments:
+\[
+\beta=10^{-3},\qquad \omega\text{ tagged as physical region }2.
+\]
+
+\begin{center}
+\includegraphics[width=0.75\linewidth]{\meshplotsdir/grad_norm.png}
+\end{center}
+\vspace{-1ex}
+\begin{itemize}
+  \item All methods converge to the same optimum (up to numerical precision).
+  \item Convergence is tracked in $\|\nabla F(\bm u_k)\|_U$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optimized fields on representative mesh ($h=\meshhtoken$)}
+\begin{columns}[T,onlytextwidth]
+  \column{0.49\textwidth}
+  \centering
+  \textbf{Control $u_*$ (CG)}\\[2mm]
+  \includegraphics[width=\linewidth]{\meshplotsdir/u_cg_3d.png}
+
+  \column{0.49\textwidth}
+  \centering
+  \textbf{State $y(u_*)$ (CG)}\\[2mm]
+  \includegraphics[width=\linewidth]{\meshplotsdir/y_cg_3d.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Mesh-independence study}
+Meshes: $h\in\{0.06,0.04,0.03,0.02,0.015,0.012,0.01,0.008\}$, pre-generated and loaded from disk.
+
+\medskip
+\begin{columns}[T,onlytextwidth]
+  \column{0.55\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{\plotsdir/mesh_independence_cost_vs_h.png}
+
+  \column{0.45\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{\plotsdir/mesh_independence_iterations_vs_h.png}
+\end{columns}
+
+\medskip
+\begin{itemize}
+  \item Objective and norms stabilize as $h\to 0$.
+  \item Iteration counts stay largely insensitive to DOFs in this experiment.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Mesh-independence tables (from computed results)}
+\small
+\textbf{Objective and norms (per mesh).}
+\medskip
+
+\begin{center}
+\begin{tabular}{|r|r|r|r|r|}
+\hline
+$h$ & DOFs & $F(u_*^{(h)})$ & $\|u_*^{(h)}\|_U$ & $\|y(u_*^{(h)})\|_{L^2}$\\
+\hline
+\input{\resultsdir/mesh_independence_table.tex}\\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+\textbf{Iterations (per mesh).}
+\medskip
+
+\begin{center}
+\begin{tabular}{|r|r|r|r|r|}
+\hline
+$h$ & CG & BB & GD($1/L$) & Nesterov\\
+\hline
+\input{\resultsdir/mesh_iterations_table.tex}\\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}{Takeaways}
+\begin{itemize}
+  \item Reduced formulation turns PDE-constrained OC into an SPD quadratic problem in the control.
+  \item The $U$-metric (mass matrix $M_U$) gives the natural gradient and convergence test.
+  \item CG is highly efficient for the stationarity system; BB and Nesterov provide strong first-order baselines.
+  \item Mesh-independence: optimal values stabilize; iteration counts are largely DOF-insensitive in these runs.
+\end{itemize}
+
+\medskip
+\textbf{Implementation (high level):} matrix-free Hessian action via state/adjoint solves; mesh family and plots generated by project scripts.
+\end{frame}
+
+\begin{frame}{Backup: example mesh (optional)}
+\centering
+\includegraphics[width=0.65\linewidth]{\meshdir/mesh_h_\meshhtoken/mesh.png}
+\end{frame}
+
+\end{document}

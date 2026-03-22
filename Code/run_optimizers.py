@@ -145,6 +145,76 @@ def norm_L2_from_M(vec: np.ndarray, M) -> float:
     return math.sqrt(max(val, 0.0))
 
 
+def cg_solve_with_gradnorm_history(model: ReducedOCModelExternal,
+                                  q_matvec,
+                                  rhs: np.ndarray,
+                                  rtol: float = 1e-10,
+                                  atol: float = 0.0,
+                                  maxiter: int | None = None,
+                                  x0: np.ndarray | None = None) -> tuple[np.ndarray, int, Dict[str, List[float]]]:
+    """Conjugate Gradient for SPD system Qx=rhs with gradient-norm history.
+
+    We solve the stationarity system in coefficient space:
+      Q u = rhs,  Q = B^T A^{-1} M A^{-1} B + beta * MU.
+
+    The reduced gradient in the U-metric satisfies
+      grad_U(u) = MU^{-1} (Q u - rhs).
+    Hence, if we maintain the CG residual r = rhs - Q u, then
+      ||grad_U(u)||_U^2 = (Q u - rhs)^T MU^{-1} (Q u - rhs) = r^T MU^{-1} r,
+    which we can compute cheaply via one MU solve per iteration.
+    """
+    n = int(model.n)
+    if x0 is None:
+        x = np.zeros(n, dtype=float)
+    else:
+        x = np.array(x0, dtype=float, copy=True)
+
+    # r = b - A x
+    r = rhs - q_matvec(x)
+    p = r.copy()
+    rsold = float(r @ r)
+    bnorm = float(np.linalg.norm(rhs))
+    # Termination threshold as in SciPy-style: ||r|| <= max(atol, rtol*||b||)
+    thresh = max(float(atol), float(rtol) * bnorm)
+
+    grad_norm_hist: List[float] = []
+    # Store grad norm at the initial iterate
+    z = model.MU_fac.solve(r)  # MU^{-1} r
+    grad_norm_hist.append(float(math.sqrt(max(float(r @ z), 0.0))))
+
+    if float(np.linalg.norm(r)) <= thresh:
+        return x, 0, {'grad_norm': grad_norm_hist}
+
+    k = 0
+    while True:
+        if maxiter is not None and k >= int(maxiter):
+            return x, k, {'grad_norm': grad_norm_hist}
+
+        Ap = q_matvec(p)
+        pAp = float(p @ Ap)
+        if pAp <= 0.0:
+            # Should not happen for SPD; treat as breakdown.
+            return x, -1, {'grad_norm': grad_norm_hist}
+
+        alpha = rsold / pAp
+        x = x + alpha * p
+        r = r - alpha * Ap
+
+        # Record gradient norm in U metric
+        z = model.MU_fac.solve(r)
+        grad_norm_hist.append(float(math.sqrt(max(float(r @ z), 0.0))))
+
+        rnorm = float(np.linalg.norm(r))
+        if rnorm <= thresh:
+            return x, 0, {'grad_norm': grad_norm_hist}
+
+        rsnew = float(r @ r)
+        beta = rsnew / rsold
+        p = r + beta * p
+        rsold = rsnew
+        k += 1
+
+
 def run_one_mesh(h: float,
                  beta: float,
                  omega_id: int,
@@ -181,29 +251,51 @@ def run_one_mesh(h: float,
         )
     model = ReducedOCModelExternal(mesh_cells_xdmf=cells_path, omega_id=omega_id, beta=beta)
 
-    # Per-mesh plots intentionally exclude mesh/target visualizations (kept minimal by request).
+    # Ensure a mesh visualization exists alongside the mesh files.
+    # This does NOT regenerate meshes; it only renders an image from the existing XDMF mesh.
+    try:
+        mesh_png_path = os.path.join(mesh_dir, 'mesh.png')
+        plot_mesh(model.mesh, mesh_png_path, title=f"Mesh (h={h_dir_token})")
+    except Exception as e:
+        print(f"Warning: could not write mesh.png for h={h}: {e}")
+
+    # Per-mesh plots
+    # - Keep the full target plot only for the representative mesh h=0.02 (used in the report).
+    if per_mesh_plots and h_dir_token == '0.02':
+        try:
+            import fenics as fe
+            yd_fun = fe.Function(model.V)
+            yd_fun.vector().set_local(model.y_d)
+            yd_fun.vector().apply('insert')
+            plot_function_3d(
+                yd_fun,
+                rf'Target $y_d$ (3D, h={h_dir_token})',
+                os.path.join(per_mesh_plots_dir, 'y_d_3d.png'),
+            )
+        except Exception as e:
+            print(f"Warning: per-mesh target plot failed for h={h}: {e}")
 
     # Compute CG-based u_* (normal equations Q u = B^T A^{-1} M y_d)
-    from scipy.sparse.linalg import LinearOperator, cg
     n = model.n
     def q_matvec(v: np.ndarray) -> np.ndarray:
         return model.MU @ model.hess_U(v)
-    Qop = LinearOperator((n, n), matvec=q_matvec, rmatvec=q_matvec, dtype=float)
     z = model.M @ model.y_d
     p = model.adjoint(z)
     rhs = model.B.transpose() @ p
-    iters = [0]
-    def _cb(_):
-        iters[0] += 1
-    u_star, info_cg = cg(Qop, rhs, rtol=1e-10, maxiter=None, callback=_cb)
-    iters_cg = int(iters[0])
+
+    u_star, info_cg, h_cg = cg_solve_with_gradnorm_history(
+        model=model,
+        q_matvec=q_matvec,
+        rhs=rhs,
+        rtol=1e-8,
+        atol=0.0,
+        maxiter=None,
+        x0=None,
+    )
+    iters_cg = int(max(len(h_cg['grad_norm']) - 1, 0))
     F_star = float(model.cost(u_star))
     g_star = model.grad_U(u_star)
     grad_norm_star = float(model.norm_U(g_star))
-
-    # For convergence plots, include a lightweight CG trace (start/end only).
-    g0 = model.grad_U(np.zeros(n))
-    grad_norm0 = float(model.norm_U(g0))
 
     # Save arrays
     np.save(os.path.join(res_dir, 'u_star.npy'), u_star)
@@ -275,8 +367,8 @@ def run_one_mesh(h: float,
 
                 # Convergence plot: gradient norms
                 plt.figure(figsize=(7, 5))
-                # CG: show start/end only (CG itself is applied to the SPD stationarity system)
-                plt.semilogy([0, max(iters_cg, 1)], [grad_norm0, grad_norm_star], marker='o', label='CG')
+                # CG: full convergence curve from the stationarity-system solve
+                plt.semilogy(h_cg['grad_norm'], label='CG')
                 plt.semilogy(h_bb['grad_norm'], label='BB')
                 plt.semilogy(h_gd['grad_norm'], label='GD 1/L')
                 plt.semilogy(h_nesterov['grad_norm'], label='Nesterov')
@@ -403,10 +495,12 @@ def main():
         rows = sorted(summary, key=lambda e: e['h'], reverse=True)
         lines = []
         for idx, e in enumerate(rows):
-            lines.append(
-                f"{e['h']} & {e['n_dofs']} & {e['F_star']:.7f} & {e['u_star_norm_U']:.6f} & {e['y_star_norm_L2']:.6f} "
-                + r"\\"
+            row = (
+                f"{e['h']} & {e['n_dofs']} & {e['F_star']:.7f} & {e['u_star_norm_U']:.6f} & {e['y_star_norm_L2']:.6f}"
             )
+            if idx < len(rows) - 1:
+                row += r"\\"
+            lines.append(row)
             if idx < len(rows) - 1:
                 lines.append(r"\hline")
         with open(os.path.join(report_results_dir, 'mesh_independence_table.tex'), 'w') as f:
@@ -420,9 +514,10 @@ def main():
             gd_it = it.get('GD', '')
             ne_it = it.get('Nesterov', '')
             cg_it = it.get('CG', e.get('cg_iters_u_star', ''))
-            lines2.append(
-                f"{e['h']} & {cg_it} & {bb_it} & {gd_it} & {ne_it} " + r"\\"
-            )
+            row = f"{e['h']} & {cg_it} & {bb_it} & {gd_it} & {ne_it}"
+            if idx < len(rows) - 1:
+                row += r"\\"
+            lines2.append(row)
             if idx < len(rows) - 1:
                 lines2.append(r"\hline")
         with open(os.path.join(report_results_dir, 'mesh_iterations_table.tex'), 'w') as f:

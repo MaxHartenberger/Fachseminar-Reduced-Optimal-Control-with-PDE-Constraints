@@ -148,7 +148,7 @@ def norm_L2_from_M(vec: np.ndarray, M) -> float:
 def cg_solve_with_gradnorm_history(model: ReducedOCModelExternal,
                                   q_matvec,
                                   rhs: np.ndarray,
-                                  rtol: float = 1e-10,
+                                  rtol: float = 1e-3,
                                   atol: float = 0.0,
                                   maxiter: int | None = None,
                                   x0: np.ndarray | None = None) -> tuple[np.ndarray, int, Dict[str, List[float]]]:
@@ -287,7 +287,7 @@ def run_one_mesh(h: float,
         model=model,
         q_matvec=q_matvec,
         rhs=rhs,
-        rtol=1e-8,
+        rtol=1e-3,
         atol=0.0,
         maxiter=None,
         x0=None,
@@ -322,10 +322,13 @@ def run_one_mesh(h: float,
         L_fixed = model.estimate_L(iters=30, tol=1e-6)
         L_ml, m_ml = model.estimate_L_m(tol=1e-6)
 
-        u_bb, h_bb = bb(model, u0=u0, tol=1e-8, max_iter=500)
-        u_gd, h_gd = gd_fixed(model, u0=u0, tol=1e-8, max_iter=500, L=L_fixed)
+        tol_abs = 1e-5
+        tol_rel = 1e-3
+
+        u_bb, h_bb = bb(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500)
+        u_gd, h_gd = gd_fixed(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_fixed)
         # Only use the strongly-convex constant-parameter variant (m,L) and label it "Nesterov".
-        u_nesterov, h_nesterov = nesterov_constant_ml(model, u0=u0, tol=1e-8, max_iter=500, L=L_ml, m=m_ml)
+        u_nesterov, h_nesterov = nesterov_constant_ml(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_ml, m=m_ml)
 
         entry['iterations'] = {
             'CG': int(iters_cg),
@@ -382,6 +385,34 @@ def run_one_mesh(h: float,
                 print(f"Warning: per-mesh optimizer plots failed for h={h}: {e}")
     except Exception as e:
         print(f"Warning: optimizer runs/plots failed for h={h}: {e}")
+
+    # Write a small LaTeX snippet for the representative-mesh table in the report.
+    # This follows the same pattern as the mesh-independence tables: the report inputs
+    # this file inside a tabular environment.
+    try:
+        it = entry.get('iterations', {})
+        fc = entry.get('final_costs', {})
+        methods = [
+            ('CG ($Q\\mathbf{u}=\\mathbf{b}$)', 'CG'),
+            ('BB', 'BB'),
+            ('GD ($1/L$)', 'GD'),
+            ('Nesterov', 'Nesterov'),
+        ]
+
+        lines = []
+        for idx, (label, key) in enumerate(methods):
+            cost = float(fc.get(key, np.nan))
+            iters = it.get(key, np.nan)
+            # 7 digits after the decimal point for costs, as requested.
+            row = f"{label} & {cost:.7f} & {iters}"
+            if idx < len(methods) - 1:
+                row += r"\\"
+            lines.append(row)
+
+        with open(os.path.join(res_dir, 'numerics_table.tex'), 'w') as f:
+            f.write("\n".join(lines) + "\n")
+    except Exception as e:
+        print(f"Warning: could not write numerics_table.tex for h={h}: {e}")
     return entry
 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  22 MAR 2026 16:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  22 MAR 2026 21:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -645,177 +645,188 @@ re/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
 lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}] [2 <../plots/mes
 h_h_0.02/y_d_3d.png>] [3]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-56.
+57.
  (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
+Overfull \hbox (20.51837pt too wide) in paragraph at lines 257--258
+\T1/lmr/m/n/10.95 Unless stated oth-er-wise, we ini-tial-ize at $\OT1/lmr/bx/n/
+10.95 u[] \OT1/lmr/m/n/10.95 = \OMS/lmsy/m/n/10.95 r[]\OML/lmm/m/it/10.95 F\OT1
+/lmr/m/n/10.95 (\OT1/lmr/bx/n/10.95 0\OT1/lmr/m/n/10.95 )$ \T1/lmr/m/n/10.95 (a
+s in the code) and stop when $\OMS/lmsy/m/n/10.95 kr[]\OML/lmm/m/it/10.95 F\OT1
+/lmr/m/n/10.95 (\OT1/lmr/bx/n/10.95 u[]\OT1/lmr/m/n/10.95 )\OMS/lmsy/m/n/10.95 
+k[] ^^T
+ []
+
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 259.
+(hyperref)                removing `math shift' on input line 258.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\alpha' on input line 259.
+(hyperref)                removing `\alpha' on input line 258.
 
 [4] [5]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 345.
+               Default added (so using `htbp') on input line 352.
 
-[6]
-<../plots/mesh_h_0.02/grad_norm.png, id=150, 497.2176pt x 353.6412pt>
+[6] (../results/mesh_h_0.02/numerics_table.tex)
+<../plots/mesh_h_0.02/grad_norm.png, id=151, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.02/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/grad_norm.png  used on input line
- 380.
+ 384.
 (pdftex.def)             Requested size: 317.07614pt x 225.52556pt.
-<../plots/mesh_h_0.02/u_cg_3d.png, id=151, 404.2302pt x 356.0502pt>
+<../plots/mesh_h_0.02/u_cg_3d.png, id=152, 404.2302pt x 356.0502pt>
 File: ../plots/mesh_h_0.02/u_cg_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/u_cg_3d.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/u_cg_3d.png  used on input line 3
-87.
+91.
 (pdftex.def)             Requested size: 212.89546pt x 187.52133pt.
-<../plots/mesh_h_0.02/y_cg_3d.png, id=152, 404.2302pt x 356.0502pt>
+<../plots/mesh_h_0.02/y_cg_3d.png, id=153, 404.2302pt x 356.0502pt>
 File: ../plots/mesh_h_0.02/y_cg_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/y_cg_3d.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/y_cg_3d.png  used on input line 3
-88.
+92.
 (pdftex.def)             Requested size: 212.89546pt x 187.52133pt.
-<../mesh/mesh_h_0.06/mesh.png, id=157, 344.487pt x 353.6412pt>
+ [7 <../plots/mesh_h_0.02/grad_norm.png>]
+<../mesh/mesh_h_0.06/mesh.png, id=167, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.06/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.06/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.06/mesh.png  used on input line 404.
+Package pdftex.def Info: ../mesh/mesh_h_0.06/mesh.png  used on input line 408.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.04/mesh.png, id=158, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.04/mesh.png, id=168, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.04/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.04/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.04/mesh.png  used on input line 408.
+Package pdftex.def Info: ../mesh/mesh_h_0.04/mesh.png  used on input line 412.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.03/mesh.png, id=159, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.03/mesh.png, id=169, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.03/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.03/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.03/mesh.png  used on input line 412.
+Package pdftex.def Info: ../mesh/mesh_h_0.03/mesh.png  used on input line 416.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.02/mesh.png, id=160, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.02/mesh.png, id=170, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.02/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.02/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.02/mesh.png  used on input line 416.
+Package pdftex.def Info: ../mesh/mesh_h_0.02/mesh.png  used on input line 420.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.015/mesh.png, id=161, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.015/mesh.png, id=171, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.015/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.015/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.015/mesh.png  used on input line 423.
+Package pdftex.def Info: ../mesh/mesh_h_0.015/mesh.png  used on input line 427.
 
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.012/mesh.png, id=162, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.012/mesh.png, id=172, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.012/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.012/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.012/mesh.png  used on input line 427.
+Package pdftex.def Info: ../mesh/mesh_h_0.012/mesh.png  used on input line 431.
 
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.01/mesh.png, id=163, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.01/mesh.png, id=173, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.01/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.01/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.01/mesh.png  used on input line 431.
+Package pdftex.def Info: ../mesh/mesh_h_0.01/mesh.png  used on input line 435.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.008/mesh.png, id=164, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.008/mesh.png, id=174, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.008/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.008/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.008/mesh.png  used on input line 435.
+Package pdftex.def Info: ../mesh/mesh_h_0.008/mesh.png  used on input line 439.
 
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
- (../results/mesh_independence_table.tex) [7 <../plots/mesh_h_0.02/grad_norm.pn
-g>]
+ (../results/mesh_independence_table.tex)
 <../plots/mesh_independence_cost_vs_h.png, id=177, 461.5644pt x 339.1872pt>
 File: ../plots/mesh_independence_cost_vs_h.png Graphic file (type png)
 <use ../plots/mesh_independence_cost_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_cost_vs_h.png  used on inpu
-t line 462.
+t line 466.
 (pdftex.def)             Requested size: 212.89546pt x 156.44722pt.
 <../plots/mesh_independence_cost_vs_ndofs.png, id=178, 461.5644pt x 339.1872pt>
 
 File: ../plots/mesh_independence_cost_vs_ndofs.png Graphic file (type png)
 <use ../plots/mesh_independence_cost_vs_ndofs.png>
 Package pdftex.def Info: ../plots/mesh_independence_cost_vs_ndofs.png  used on 
-input line 463.
+input line 467.
 (pdftex.def)             Requested size: 212.89546pt x 156.44722pt.
-<../plots/mesh_h_0.06/grad_norm.png, id=182, 497.2176pt x 353.6412pt>
+ [8 <../plots/mesh_h_0.02/u_cg_3d.png> <../plots/mesh_h_0.02/y_cg_3d.png> <../m
+esh/mesh_h_0.06/mesh.png> <../mesh/mesh_h_0.04/mesh.png> <../mesh/mesh_h_0.03/m
+esh.png> <../mesh/mesh_h_0.02/mesh.png> <../mesh/mesh_h_0.015/mesh.png> <../mes
+h/mesh_h_0.012/mesh.png> <../mesh/mesh_h_0.01/mesh.png> <../mesh/mesh_h_0.008/m
+esh.png>]
+<../plots/mesh_h_0.06/grad_norm.png, id=200, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.06/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.06/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.06/grad_norm.png  used on input line
- 473.
+ 477.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.04/grad_norm.png, id=183, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.04/grad_norm.png, id=201, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.04/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.04/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.04/grad_norm.png  used on input line
- 477.
+ 481.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.03/grad_norm.png, id=184, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.03/grad_norm.png, id=202, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.03/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.03/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.03/grad_norm.png  used on input line
- 481.
+ 485.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
 File: ../plots/mesh_h_0.02/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/grad_norm.png  used on input line
- 485.
+ 489.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.015/grad_norm.png, id=185, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.015/grad_norm.png, id=203, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.015/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.015/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.015/grad_norm.png  used on input lin
-e 492.
+e 496.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.012/grad_norm.png, id=186, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.012/grad_norm.png, id=204, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.012/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.012/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.012/grad_norm.png  used on input lin
-e 496.
+e 500.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.01/grad_norm.png, id=187, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.01/grad_norm.png, id=205, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.01/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.01/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.01/grad_norm.png  used on input line
- 500.
+ 504.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.008/grad_norm.png, id=188, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.008/grad_norm.png, id=206, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.008/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.008/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.008/grad_norm.png  used on input lin
-e 504.
+e 508.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_independence_iterations_vs_h.png, id=189, 461.5644pt x 339.1872p
+<../plots/mesh_independence_iterations_vs_h.png, id=207, 461.5644pt x 339.1872p
 t>
 File: ../plots/mesh_independence_iterations_vs_h.png Graphic file (type png)
 <use ../plots/mesh_independence_iterations_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_iterations_vs_h.png  used o
-n input line 514.
+n input line 518.
 (pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
- (../results/mesh_iterations_table.tex) [8 <../plots/mesh_h_0.02/u_cg_3d.png> <
-../plots/mesh_h_0.02/y_cg_3d.png>] [9 <../mesh/mesh_h_0.06/mesh.png> <../mesh/m
-esh_h_0.04/mesh.png> <../mesh/mesh_h_0.03/mesh.png> <../mesh/mesh_h_0.02/mesh.p
-ng> <../mesh/mesh_h_0.015/mesh.png> <../mesh/mesh_h_0.012/mesh.png> <../mesh/me
-sh_h_0.01/mesh.png> <../mesh/mesh_h_0.008/mesh.png> <../plots/mesh_independence
-_cost_vs_h.png> <../plots/mesh_independence_cost_vs_ndofs.png>] [10 <../plots/m
-esh_h_0.06/grad_norm.png> <../plots/mesh_h_0.04/grad_norm.png> <../plots/mesh_h
-_0.03/grad_norm.png> <../plots/mesh_h_0.015/grad_norm.png> <../plots/mesh_h_0.0
-12/grad_norm.png> <../plots/mesh_h_0.01/grad_norm.png> <../plots/mesh_h_0.008/g
-rad_norm.png> <../plots/mesh_independence_iterations_vs_h.png>]
+
+(../results/mesh_iterations_table.tex) [9 <../plots/mesh_independence_cost_vs_h
+.png> <../plots/mesh_independence_cost_vs_ndofs.png>] [10 <../plots/mesh_h_0.06
+/grad_norm.png> <../plots/mesh_h_0.04/grad_norm.png> <../plots/mesh_h_0.03/grad
+_norm.png> <../plots/mesh_h_0.015/grad_norm.png> <../plots/mesh_h_0.012/grad_no
+rm.png> <../plots/mesh_h_0.01/grad_norm.png> <../plots/mesh_h_0.008/grad_norm.p
+ng> <../plots/mesh_independence_iterations_vs_h.png>]
 (./optimization_report.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
 Package rerunfilecheck Info: File `optimization_report.out' has not changed.
-(rerunfilecheck)             Checksum: DF3F9D1FA659B396ED6EA5633CD4346E;2576.
+(rerunfilecheck)             Checksum: 37259E36C29ED4450F3F0C3A4C9D9DBE;2682.
  ) 
 Here is how much of TeX's memory you used:
- 16406 strings out of 474222
- 316212 string characters out of 5748733
+ 16413 strings out of 474222
+ 316479 string characters out of 5748733
  1941975 words of memory out of 5000000
- 38349 multiletter control sequences out of 15000+600000
+ 38352 multiletter control sequences out of 15000+600000
  660310 words of font info for 115 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,17n,79p,643b,913s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -833,10 +844,10 @@ c/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/t
 exmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lm
 tt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on optimization_report.pdf (10 pages, 3824633 bytes).
+Output written on optimization_report.pdf (10 pages, 3793009 bytes).
 PDF statistics:
- 349 PDF objects out of 1000 (max. 8388607)
- 244 compressed objects within 3 object streams
+ 350 PDF objects out of 1000 (max. 8388607)
+ 245 compressed objects within 3 object streams
  80 named destinations out of 1000 (max. 500000)
  199 words of extra memory for PDF output out of 10000 (max. 10000000)
 

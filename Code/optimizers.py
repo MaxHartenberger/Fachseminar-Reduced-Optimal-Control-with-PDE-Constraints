@@ -7,7 +7,26 @@ Require a model exposing: cost(u), grad_U(u), norm_U(x), dot_U(a,b), estimate_L(
 import numpy as np
 
 
-def bb(model, u0=None, tol=1e-8, max_iter=1000):
+def _stop_threshold(model, tol: float | None, tol_abs: float | None, tol_rel: float | None) -> float:
+    """Return a stopping threshold for ||grad_U(u)||_U.
+
+    If tol_abs or tol_rel is provided, uses
+        tol_abs + tol_rel * ||grad_U(0)||_U.
+    Otherwise falls back to the legacy absolute tolerance `tol`.
+    """
+    if tol_abs is None and tol_rel is None:
+        if tol is None:
+            return 0.0
+        return float(tol)
+
+    tol_abs_val = 0.0 if tol_abs is None else float(tol_abs)
+    tol_rel_val = 0.0 if tol_rel is None else float(tol_rel)
+    g0 = model.grad_U(np.zeros(model.n))
+    g0n = float(model.norm_U(g0))
+    return tol_abs_val + tol_rel_val * g0n
+
+
+def bb(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000):
     """Barzilai–Borwein in U with inner product from model."""
     n = model.n
     if u0 is None:
@@ -27,7 +46,8 @@ def bb(model, u0=None, tol=1e-8, max_iter=1000):
     }
 
     k = 0
-    while model.norm_U(g) > tol and k < max_iter:
+    stop_thr = _stop_threshold(model, tol=tol, tol_abs=tol_abs, tol_rel=tol_rel)
+    while model.norm_U(g) > stop_thr and k < max_iter:
         s = u - u_m1
         d = g - g_m1
         sd = model.dot_U(s, d)
@@ -50,7 +70,7 @@ def bb(model, u0=None, tol=1e-8, max_iter=1000):
     return u, hist
 
 
-def gd_fixed(model, u0=None, tol=1e-8, max_iter=1000, L=None):
+def gd_fixed(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000, L=None):
     """Gradient descent with fixed step alpha=1/L (L estimated if None)."""
     n = model.n
     if u0 is None:
@@ -68,13 +88,15 @@ def gd_fixed(model, u0=None, tol=1e-8, max_iter=1000, L=None):
         'u_seq': [],
     }
 
+    stop_thr = _stop_threshold(model, tol=tol, tol_abs=tol_abs, tol_rel=tol_rel)
+
     for _ in range(max_iter):
         g = model.grad_U(u)
         gn = model.norm_U(g)
         hist['grad_norm'].append(gn)
         hist['cost'].append(model.cost(u))
         hist['u_seq'].append(u.copy())
-        if gn <= tol:
+        if gn <= stop_thr:
             break
         u = u - alpha * g
 
@@ -129,7 +151,7 @@ def nesterov(model, u0=None, tol=1e-8, max_iter=1000, L=None, restart=False):
     return u, hist
 
 
-def nesterov_constant_ml(model, u0=None, tol=1e-8, max_iter=1000, L=None, m=None):
+def nesterov_constant_ml(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000, L=None, m=None):
     """Nesterov with constant parameters for strongly convex QP.
 
     Uses alpha = 1/L and beta = (sqrt(kappa)-1)/(sqrt(kappa)+1), kappa = L/m,
@@ -165,6 +187,8 @@ def nesterov_constant_ml(model, u0=None, tol=1e-8, max_iter=1000, L=None, m=None
         'u_seq': [],
     }
 
+    stop_thr = _stop_threshold(model, tol=tol, tol_abs=tol_abs, tol_rel=tol_rel)
+
     for _ in range(max_iter):
         y = u + beta * (u - u_prev)
         g = model.grad_U(y)
@@ -172,7 +196,7 @@ def nesterov_constant_ml(model, u0=None, tol=1e-8, max_iter=1000, L=None, m=None
         hist['grad_norm'].append(gn)
         hist['cost'].append(model.cost(u))
         hist['u_seq'].append(u.copy())
-        if gn <= tol:
+        if gn <= stop_thr:
             break
         u_next = y - alpha * g
         u_prev, u = u, u_next

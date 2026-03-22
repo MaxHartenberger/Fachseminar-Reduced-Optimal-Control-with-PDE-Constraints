@@ -253,19 +253,17 @@ This operator is self-adjoint and SPD with respect to $\langle\cdot,\cdot\rangle
 \end{equation}
 equivalently the extreme eigenvalues of the SPD matrix $M_U^{-1/2}QM_U^{-1/2}$. Their ratio $\kappa=L/m$ is the condition number that governs convergence rates of GD and Nesterov in the next section.
 
-Unless stated otherwise, we initialize at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ (as in the code) and stop when $\|\nabla_U F(\mathbf{u}_k)\|_U\le\texttt{tol}$ or a maximum number of iterations is reached.
-
 \section{Optimization Methods}
-\subsection{Steepest Descent/ Gradient method with constant Stepsize \(\alpha = 1/L\)}
+Unless stated otherwise, we initialize at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ (as in the code) and stop when $\|\nabla_U F(\mathbf{u}_k)\|_U\le\texttt{tol}_{abs}+\texttt{tol}_{rel}\|\nabla_U F(\mathbf{0})\|_U$ with $\texttt{tol}_{abs}=10^{-5}$ and $\texttt{tol}_{rel}=10^{-3}$ or a maximum number of 1000 iterations is reached.
+\subsection{Steepest Descent/ Gradient method with constant Stepsize \(\alpha = 1/L\) (GD)}
 For an \(L\)-Lipschitz gradient in the \(U\)-metric, the fixed-step update
 \begin{equation}
-  \mathbf{u}_{k+1} = \mathbf{u}_k - \alpha\, \nabla_U F(\mathbf{u}_k), \quad \alpha = 1/L,
+  \mathbf{u}_{k+1} = \mathbf{u}_k - \alpha\, \nabla_U F(\mathbf{u}_k), \quad \alpha = 1/L.
 \end{equation}
-produces a monotone decrease in \(F\) for convex \(F\). In practice, \(L\) is estimated via a matrix-free power iteration on the Hessian action
-\(H\,\mathbf{v} = M_U^{-1} B^\top A^{-1} M A^{-1} B\, \mathbf{v} + \beta\, \mathbf{v}\).
+
 
 \begin{algorithm}
-\caption{Steepest Descent/ Gradient Method with constant stepsize $\alpha=1/L$}\label{alg:gd}
+\caption{Steepest Descent with constant stepsize $\alpha=1/L$}\label{alg:gd}
 \KwData{tolerance $\texttt{tol}>0$, $\texttt{max\_iter}$, model with $\nabla_U F$, $\|\cdot\|_U$}
 \KwResult{sequence $(\mathbf{u}_k)$ converging to a minimizer}
 $\mathbf{u} \gets \mathbf{u}_0=\nabla_U F(\mathbf{0})$\\
@@ -277,7 +275,7 @@ Estimate $L$ by power iteration; $\alpha \gets 1/L$\;
 }
 \end{algorithm}
 
-\subsection{Steepest Descent with Barzilai-Borwein stepsize strategy}
+\subsection{Steepest Descent with Barzilai-Borwein stepsize strategy (BB)}
 BB methods approximate the inverse curvature along the last step by selecting the steplength from secant information in the \(U\)-inner product. Define \(\mathbf{s}_k=\mathbf{u}_k-\mathbf{u}_{k-1}\), \(\mathbf{d}_k=\nabla_U F(\mathbf{u}_k)-\nabla_U F(\mathbf{u}_{k-1})\), and the \(U\)-inner product \(\langle \cdot, \cdot \rangle_U\). The two classical choices are
 \begin{align}
   \alpha_k^{\text{BB1}} &= \frac{\langle \mathbf{d}_k, \mathbf{d}_k \rangle_U}{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}, &
@@ -334,13 +332,22 @@ $\mathbf{u}_{-1} \gets \mathbf{u}_0$; $\mathbf{u} \gets \mathbf{u}_0$\;
 }
 \end{algorithm}
 
-\subsection{Conjugate Gradient (CG) for the Stationarity System}
+\subsection{Conjugate Gradient method (CG) for the Stationarity System}
 The reduced problem is strictly convex and quadratic. The first-order optimality condition $\nabla_U F(\mathbf{u}_*)=0$ can be written as an SPD linear system in the control unknowns,
 \begin{equation}
   Q\mathbf{u}_* = B^\top A^{-1} M\mathbf{y}_d, \qquad Q := B^\top A^{-1} M A^{-1} B + \beta M_U.
 \end{equation}
-In the implementation, we solve this system with Conjugate Gradient in a matrix-free manner (Hessian action only). Concretely, we apply $Q\mathbf{v}$ via the reduced Hessian action and the control metric, and run the standard CG recurrences while tracking the residual.
-This implementation is equivalent in method to SciPy's routine \texttt{scipy.sparse.linalg.cg}, and tracking the residual makes it straightforward to record per-iteration quantities such as a full convergence curve $\|\nabla_U F(\mathbf{u}_k)\|_U$ for plotting.
+In the implementation, we solve this system with the Conjugate Gradient method in a matrix-free manner (Hessian action only). Concretely, we apply $Q\mathbf{v}$ via the reduced Hessian action and the control metric, and run the standard CG recurrences while tracking the residual.
+We use a standard relative residual stopping criterion (as in SciPy's \texttt{scipy.sparse.linalg.cg}): with residual $\mathbf{r}_k:=\mathbf{b}-Q\mathbf{u}_k$, we stop once
+\[
+  \|\mathbf{r}_k\|_2 \le \texttt{rtol}\,\|\mathbf{b}\|_2,
+\]
+and we set $\texttt{rtol}=10^{-5}$ in all runs.
+Moreover, since $\nabla_U F(\mathbf{u})=M_U^{-1}(Q\mathbf{u}-\mathbf{b})=-M_U^{-1}\mathbf{r}$, the reduced gradient norm can be obtained directly from the residual via
+\[
+  \|\nabla_U F(\mathbf{u}_k)\|_U = \sqrt{\mathbf{r}_k^\top M_U^{-1}\mathbf{r}_k},
+\]
+which we record as the convergence curve in Figure~\ref{fig:convergence}.
 
 \begin{algorithm}[]
 \caption{CG for $Q\mathbf{u}=\mathbf{b}$ (matrix-free)}\label{alg:cg}
@@ -348,14 +355,14 @@ This implementation is equivalent in method to SciPy's routine \texttt{scipy.spa
 \KwResult{$\mathbf{u}_*$}
 $\mathbf{b} \gets B^\top A^{-1}(M\mathbf{y}_d)$\;
 Define operator $Q\mathbf{v} := M_U(H\mathbf{v})$ (equivalently $B^\top A^{-1} M A^{-1} B\mathbf{v} + \beta M_U\mathbf{v}$)\;
-Call CG to solve $Q\mathbf{u}=\mathbf{b}$ to relative tolerance $\texttt{rtol}$\;
+Call CG to solve $Q\mathbf{u}=\mathbf{b}$ to relative tolerance $\texttt{rtol}=10^{-5}$\;
 \end{algorithm}
 
 \subsection{Remarks on Metrics and Implementation}
 All inner products and norms above are in the control metric induced by \(M_U\). This choice ensures that steplengths and convergence tests reflect the natural topology of the control space (consistent with regularization). The adjoint reuse of \(A\) facilitates efficient linear solves and preconditioning.
 
 \section{Numerical Results}
-We report results on a representative external mesh with size $h=\meshhtoken$ (here $n=3093$ control degrees of freedom). We use control region tag $\omega=2$ and Tikhonov parameter $\beta=10^{-3}$. The first-order methods (BB, GD, Nesterov) are initialized at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ and stopped when $\|\nabla_U F(\mathbf{u}_k)\|_U \le \texttt{tol}$ (with $\texttt{tol}=10^{-8}$ in the driver) or when a maximum iteration count is reached.
+We report results on a representative external mesh with size $h=\meshhtoken$ (here $n=3093$ control degrees of freedom). We use control region tag $\omega=2$ and Tikhonov parameter $\beta=10^{-3}$. The first-order methods (BB, GD, Nesterov) are initialized at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ and stopped when $\|\nabla_U F(\mathbf{u}_k)\|_U \le \texttt{tol}_{abs}+\texttt{tol}_{rel}\|\nabla_U F(\mathbf{0})\|_U$ with $\texttt{tol}_{abs}=10^{-5}$ and $\texttt{tol}_{rel}=10^{-3}$.
 
 For GD, the fixed step uses an estimated Lipschitz constant $L$ (power iteration on the Hessian action); on this mesh we obtain $L\approx 1.00028\times 10^{-3}$. As an additional method tailored to the quadratic structure, we also run CG on the SPD stationarity system $Q\mathbf{u}=\mathbf{b}$.
 
@@ -365,10 +372,7 @@ For GD, the fixed step uses an estimated Lipschitz constant $L$ (power iteration
     \hline
     Method & Final cost $F(\mathbf{u}_k)$ & Iterations \\
     \hline
-    CG ($Q\mathbf{u}=\mathbf{b}$) & 0.0161708421665 & 19 \\
-    BB & 0.0161708421663 & 4 \\
-    GD ($1/L$) & 0.0161708421663 & 13 \\
-    Nesterov & 0.0161708421663 & 6 \\
+    \input{../results/mesh_h_\meshhtoken/numerics_table.tex}\\
     \hline
   \end{tabular}
   \caption{Representative-mesh results ($h=\meshhtoken$). All methods reach the same optimum up to numerical precision; BB attains the stopping criterion in the fewest first-order iterations, while CG solves the stationarity system in a modest number of Krylov steps.}

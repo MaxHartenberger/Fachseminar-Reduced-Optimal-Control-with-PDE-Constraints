@@ -179,35 +179,44 @@ def cg_solve_with_gradnorm_history(model: ReducedOCModelExternal,
     thresh = max(float(atol), float(rtol) * bnorm)
 
     grad_norm_hist: List[float] = []
+    # Track the overhead of gradient-norm evaluation (MU^{-1} solves).
+    # This is useful because the gradient norms for CG are computed only for
+    # comparison with first-order methods and can be excluded from timing.
+    t_gradnorm = 0.0
+
     # Store grad norm at the initial iterate
+    t_g0 = time.perf_counter()
     z = model.MU_fac.solve(r)  # MU^{-1} r
+    t_gradnorm += time.perf_counter() - t_g0
     grad_norm_hist.append(float(math.sqrt(max(float(r @ z), 0.0))))
 
     if float(np.linalg.norm(r)) <= thresh:
-        return x, 0, {'grad_norm': grad_norm_hist}
+        return x, 0, {'grad_norm': grad_norm_hist, 't_gradnorm': float(t_gradnorm)}
 
     k = 0
     while True:
         if maxiter is not None and k >= int(maxiter):
-            return x, k, {'grad_norm': grad_norm_hist}
+            return x, k, {'grad_norm': grad_norm_hist, 't_gradnorm': float(t_gradnorm)}
 
         Ap = q_matvec(p)
         pAp = float(p @ Ap)
         if pAp <= 0.0:
             # Should not happen for SPD; treat as breakdown.
-            return x, -1, {'grad_norm': grad_norm_hist}
+            return x, -1, {'grad_norm': grad_norm_hist, 't_gradnorm': float(t_gradnorm)}
 
         alpha = rsold / pAp
         x = x + alpha * p
         r = r - alpha * Ap
 
         # Record gradient norm in U metric
+        t_gk = time.perf_counter()
         z = model.MU_fac.solve(r)
+        t_gradnorm += time.perf_counter() - t_gk
         grad_norm_hist.append(float(math.sqrt(max(float(r @ z), 0.0))))
 
         rnorm = float(np.linalg.norm(r))
         if rnorm <= thresh:
-            return x, 0, {'grad_norm': grad_norm_hist}
+            return x, 0, {'grad_norm': grad_norm_hist, 't_gradnorm': float(t_gradnorm)}
 
         rsnew = float(r @ r)
         beta = rsnew / rsold
@@ -289,12 +298,15 @@ def run_one_mesh(h: float,
         model=model,
         q_matvec=q_matvec,
         rhs=rhs,
-        rtol=1e-5,
+        rtol=1e-4,
         atol=0.0,
         maxiter=None,
         x0=None,
     )
-    t_cg_iter = time.perf_counter() - t0
+    t_cg_total = time.perf_counter() - t0
+    # Exclude gradient-norm evaluation overhead (computed only for comparison).
+    t_cg_gradnorm = float(h_cg.get('t_gradnorm', 0.0))
+    t_cg_iter = max(float(t_cg_total) - float(t_cg_gradnorm), 0.0)
     iters_cg = int(max(len(h_cg['grad_norm']) - 1, 0))
     F_star = float(model.cost(u_star))
     g_star = model.grad_U(u_star)
@@ -327,6 +339,8 @@ def run_one_mesh(h: float,
             't_m': 0.0,
             't_iter': float(t_cg_iter),
             't_total': float(t_cg_iter),
+            # Extra diagnostic: time spent only on gradient-norm history.
+            't_gradnorm': float(t_cg_gradnorm),
         }
     }
     # Run optimizers for iteration counts and per-mesh plots
@@ -562,6 +576,26 @@ def make_plots(summary: List[Dict[str, Any]], plots_dir: str = 'plots'):
     plt.title('Mesh Independence: Total Time vs h')
     plt.tight_layout()
     plt.savefig(os.path.join(plots_dir, 'mesh_independence_total_times_vs_h.png'), dpi=150, bbox_inches='tight')
+    plt.close()
+
+    # Iteration time vs h (excluding estimate times)
+    iter_time_by_method: Dict[str, List[float]] = {m: [] for m in methods}
+    for e in summary_sorted:
+        timings = e.get('timings', {})
+        for m in methods:
+            tm = timings.get(m, {})
+            iter_time_by_method[m].append(float(tm.get('t_iter', np.nan)))
+
+    plt.figure(figsize=(6.5, 4.8))
+    for m in methods:
+        plt.plot(H, iter_time_by_method[m], marker='o', label=m)
+    plt.xlabel('Global mesh size h')
+    plt.ylabel('Iteration time to tolerance [s]')
+    plt.grid(True, ls='--', alpha=0.5)
+    plt.legend()
+    plt.title('Mesh Independence: Iteration Time vs h')
+    plt.tight_layout()
+    plt.savefig(os.path.join(plots_dir, 'mesh_independence_iteration_times_vs_h.png'), dpi=150, bbox_inches='tight')
     plt.close()
 
 

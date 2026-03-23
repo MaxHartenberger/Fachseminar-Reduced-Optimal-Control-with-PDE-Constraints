@@ -162,44 +162,49 @@ class ReducedOCModelExternal:
         val = self.dot_U(a, a)
         return float(np.sqrt(max(val, 0.0)))
 
-    def estimate_L(self, iters: int = 20, tol: float = 1e-8, seed: int = 0) -> float:
-        rng = np.random.default_rng(seed)
-        x = rng.standard_normal(self.n)
-        x /= (self.norm_U(x) + 1e-16)
-        lam_old = 0.0
-        for _ in range(iters):
-            y = self.hess_U(x)
-            lam = self.dot_U(x, y) / max(self.dot_U(x, x), 1e-16)
-            if abs(lam - lam_old) <= tol * max(1.0, abs(lam_old)):
-                return float(max(lam, 0.0))
-            lam_old = lam
-            x = y / (self.norm_U(y) + 1e-16)
-        return float(max(lam_old, 0.0))
+    def _Q_operator(self) -> LinearOperator:
+        """Return LinearOperator for Q in the generalized eigenproblem (Q, MU).
 
-    def estimate_L_m(self, tol: float = 1e-8, maxiter: int = None) -> tuple[float, float]:
+        Here Q = B^T A^{-1} M A^{-1} B + beta * MU, and we apply it matrix-free as
+            Q v = MU @ hess_U(v).
         """
-        Compute extreme generalized eigenvalues of (Q, M_U):
-        Q = B^T A^{-1} M A^{-1} B + beta M_U.
-        Returns (L, m) = (lambda_max, lambda_min).
-        Uses eigsh with A as a LinearOperator via Q v = M_U @ hess_U(v).
-        """
-        n = self.n
+        n = int(self.n)
 
         def q_matvec(v: np.ndarray) -> np.ndarray:
             return self.MU @ self.hess_U(v)
 
-        Qop = LinearOperator((n, n), matvec=q_matvec, rmatvec=q_matvec, dtype=float)
+        return LinearOperator((n, n), matvec=q_matvec, rmatvec=q_matvec, dtype=float)
 
-        # Largest eigenvalue (w.r.t. M_U)
-        vals_max, _ = eigsh(A=Qop, M=self.MU, k=1, which='LM', tol=tol, maxiter=maxiter)
-        L = float(vals_max[-1])
+    def estimate_L(self, iters: int = 20, tol: float = 1e-8, seed: int = 0, maxiter: int = None) -> float:
+        """Estimate the Lipschitz constant L in the U-metric.
 
-        # Smallest eigenvalue (w.r.t. M_U)
-        # For SPD generalized problem, 'SM' targets the smallest eigenvalue.
-        vals_min, _ = eigsh(A=Qop, M=self.MU, k=1, which='SM', tol=tol, maxiter=maxiter)
-        m = float(vals_min[0])
+        Computes the largest generalized eigenvalue of (Q, MU):
+            Q v = lambda MU v,
+        using ARPACK (eigsh) with a matrix-free Q.
 
-        # Safety clamps
-        L = max(L, 0.0)
-        m = max(m, 0.0)
-        return L, m
+        Notes:
+        - The arguments (iters, seed) are accepted for backward compatibility.
+          Here, iters is mapped to ARPACK's maxiter unless maxiter is provided.
+        """
+        Qop = self._Q_operator()
+        maxiter_eff = maxiter if maxiter is not None else iters
+        vals, _ = eigsh(A=Qop, M=self.MU, k=1, which='LM', tol=tol, maxiter=maxiter_eff)
+        L = float(vals[-1])
+        return max(L, 0.0)
+
+    def estimate_m(self, iters: int = 20, tol: float = 1e-8, seed: int = 0, maxiter: int = None) -> float:
+        """Estimate the strong convexity modulus m in the U-metric.
+
+        Computes the smallest generalized eigenvalue of (Q, MU):
+            Q v = lambda MU v,
+        using ARPACK (eigsh) with a matrix-free Q.
+
+        Notes:
+        - The arguments (iters, seed) are accepted for backward compatibility.
+          Here, iters is mapped to ARPACK's maxiter unless maxiter is provided.
+        """
+        Qop = self._Q_operator()
+        maxiter_eff = maxiter if maxiter is not None else iters
+        vals, _ = eigsh(A=Qop, M=self.MU, k=1, which='SM', tol=tol, maxiter=maxiter_eff)
+        m = float(vals[0])
+        return max(m, 0.0)

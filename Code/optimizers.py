@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Optimizers for reduced OC: Barzilai–Borwein, fixed-step GD (alpha=1/L), Nesterov.
-Require a model exposing: cost(u), grad_U(u), norm_U(x), dot_U(a,b), estimate_L().
+Require a model exposing: cost(u), grad_U(u), norm_U(x), dot_U(a,b), estimate_L(), estimate_m().
 """
 import numpy as np
 
@@ -103,60 +103,12 @@ def gd_fixed(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000
     return u, hist
 
 
-def nesterov(model, u0=None, tol=1e-8, max_iter=1000, L=None, restart=False):
-    """Nesterov acceleration (FISTA-style) with step 1/L. Optional restart if cost increases."""
-    n = model.n
-    if u0 is None:
-        u = model.grad_U(np.zeros(n))
-    else:
-        u = u0.copy()
-    y = u.copy()
-    if L is None or L <= 0:
-        L = model.estimate_L(iters=20, tol=1e-6)
-    alpha = 1.0 / L
-    t = 1.0
-
-    hist = {
-        'grad_norm': [],
-        'cost': [],
-        'L': L,
-        'u_seq': [],
-    }
-
-    f_prev = model.cost(u)
-    for _ in range(max_iter):
-        g = model.grad_U(y)
-        gn = model.norm_U(g)
-        hist['grad_norm'].append(gn)
-        hist['cost'].append(f_prev)
-        hist['u_seq'].append(u.copy())
-        if gn <= tol:
-            break
-
-        u_next = y - alpha * g
-        f_next = model.cost(u_next)
-
-        if restart and f_next > f_prev:
-            y = u.copy()
-            t = 1.0
-            continue
-
-        t_next = 0.5 * (1.0 + np.sqrt(1.0 + 4.0 * t * t))
-        beta = (t - 1.0) / t_next
-        y = u_next + beta * (u_next - u)
-        u = u_next
-        t = t_next
-        f_prev = f_next
-
-    return u, hist
-
-
 def nesterov_constant_ml(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000, L=None, m=None):
     """Nesterov with constant parameters for strongly convex QP.
 
     Uses alpha = 1/L and beta = (sqrt(kappa)-1)/(sqrt(kappa)+1), kappa = L/m,
     where L and m are the largest/smallest generalized eigenvalues of (Q, M_U).
-    If L or m is not provided, they are computed via model.estimate_L_m().
+    If L or m is not provided, they are computed via model.estimate_L() and model.estimate_m().
     """
     n = model.n
     if u0 is None:
@@ -165,12 +117,10 @@ def nesterov_constant_ml(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, m
         u = u0.copy()
     u_prev = u.copy()
 
-    if L is None or m is None or L <= 0 or m <= 0:
-        L_est, m_est = model.estimate_L_m()
-        if L is None or L <= 0:
-            L = L_est
-        if m is None or m <= 0:
-            m = m_est
+    if L is None or L <= 0:
+        L = model.estimate_L(iters=20, tol=1e-6)
+    if m is None or m <= 0:
+        m = model.estimate_m(iters=20, tol=1e-6)
 
     alpha = 1.0 / L
     kappa = max(L / max(m, 1e-30), 1.0)

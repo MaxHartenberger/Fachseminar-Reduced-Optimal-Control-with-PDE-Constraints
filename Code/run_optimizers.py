@@ -21,6 +21,7 @@ import json
 import math
 import argparse
 import sys
+import time
 from typing import List, Dict, Any
 
 import numpy as np
@@ -283,15 +284,17 @@ def run_one_mesh(h: float,
     p = model.adjoint(z)
     rhs = model.B.transpose() @ p
 
+    t0 = time.perf_counter()
     u_star, info_cg, h_cg = cg_solve_with_gradnorm_history(
         model=model,
         q_matvec=q_matvec,
         rhs=rhs,
-        rtol=1e-3,
+        rtol=1e-5,
         atol=0.0,
         maxiter=None,
         x0=None,
     )
+    t_cg_iter = time.perf_counter() - t0
     iters_cg = int(max(len(h_cg['grad_norm']) - 1, 0))
     F_star = float(model.cost(u_star))
     g_star = model.grad_U(u_star)
@@ -308,7 +311,8 @@ def run_one_mesh(h: float,
         'n_dofs': int(model.n),
         'beta': float(beta),
         'omega_id': int(omega_id),
-        'L_est': float(model.estimate_L(iters=30, tol=1e-6)),
+        'L_est': None,
+        'm_est': None,
         'F_star': F_star,
         'grad_norm_star': grad_norm_star,
         'u_star_norm_U': float(model.norm_U(u_star)),
@@ -316,19 +320,67 @@ def run_one_mesh(h: float,
         'cg_info_u_star': int(info_cg),
         'cg_iters_u_star': int(iters_cg)
     }
+
+    entry['timings'] = {
+        'CG': {
+            't_L': 0.0,
+            't_m': 0.0,
+            't_iter': float(t_cg_iter),
+            't_total': float(t_cg_iter),
+        }
+    }
     # Run optimizers for iteration counts and per-mesh plots
     try:
         u0 = model.grad_U(np.zeros(n))
-        L_fixed = model.estimate_L(iters=30, tol=1e-6)
-        L_ml, m_ml = model.estimate_L_m(tol=1e-6)
-
         tol_abs = 1e-5
         tol_rel = 1e-3
 
+        # --- Spectral estimates ---
+        t0 = time.perf_counter()
+        L_fixed = float(model.estimate_L(iters=50, tol=1e-6))
+        t_L = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        m_ml = float(model.estimate_m(iters=50, tol=1e-6))
+        t_m = time.perf_counter() - t0
+
+        entry['L_est'] = float(L_fixed)
+        entry['m_est'] = float(m_ml)
+
+        # --- Optimizer runs (timed) ---
+        t0 = time.perf_counter()
         u_bb, h_bb = bb(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500)
+        t_bb_iter = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
         u_gd, h_gd = gd_fixed(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_fixed)
+        t_gd_iter = time.perf_counter() - t0
+
         # Only use the strongly-convex constant-parameter variant (m,L) and label it "Nesterov".
-        u_nesterov, h_nesterov = nesterov_constant_ml(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_ml, m=m_ml)
+        t0 = time.perf_counter()
+        u_nesterov, h_nesterov = nesterov_constant_ml(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_fixed, m=m_ml)
+        t_nes_iter = time.perf_counter() - t0
+
+        entry['timings'].update({
+            'BB': {
+                't_L': 0.0,
+                't_m': 0.0,
+                't_iter': float(t_bb_iter),
+                't_total': float(t_bb_iter),
+            },
+            'GD': {
+                't_L': float(t_L),
+                't_m': 0.0,
+                't_iter': float(t_gd_iter),
+                't_total': float(t_L + t_gd_iter),
+            },
+            'Nesterov': {
+                't_L': float(t_L),
+                't_m': float(t_m),
+                't_iter': float(t_nes_iter),
+                't_total': float(t_L + t_m + t_nes_iter),
+            }
+        })
 
         entry['iterations'] = {
             'CG': int(iters_cg),
@@ -385,6 +437,25 @@ def run_one_mesh(h: float,
                 print(f"Warning: per-mesh optimizer plots failed for h={h}: {e}")
     except Exception as e:
         print(f"Warning: optimizer runs/plots failed for h={h}: {e}")
+
+    # Per-mesh timing table (LaTeX rows only, for optional inclusion in the report)
+    try:
+        methods = ['CG', 'BB', 'GD', 'Nesterov']
+        t = entry.get('timings', {})
+        lines = []
+        for idx, mth in enumerate(methods):
+            tm = t.get(mth, {})
+            row = (
+                f"{mth} & {tm.get('t_L', float('nan')):.4f} & {tm.get('t_m', float('nan')):.4f} "
+                f"& {tm.get('t_iter', float('nan')):.4f} & {tm.get('t_total', float('nan')):.4f}"
+            )
+            if idx < len(methods) - 1:
+                row += r"\\"
+            lines.append(row)
+        with open(os.path.join(res_dir, 'timings_table.tex'), 'w') as f:
+            f.write("\n".join(lines) + "\n")
+    except Exception as e:
+        print(f"Warning: could not write timings_table.tex for h={h}: {e}")
 
     # Write a small LaTeX snippet for the representative-mesh table in the report.
     # This follows the same pattern as the mesh-independence tables: the report inputs
@@ -471,6 +542,26 @@ def make_plots(summary: List[Dict[str, Any]], plots_dir: str = 'plots'):
     plt.title('Mesh Independence: Iterations vs h')
     plt.tight_layout()
     plt.savefig(os.path.join(plots_dir, 'mesh_independence_iterations_vs_h.png'), dpi=150, bbox_inches='tight')
+    plt.close()
+
+    # Total time vs h
+    total_time_by_method: Dict[str, List[float]] = {m: [] for m in methods}
+    for e in summary_sorted:
+        timings = e.get('timings', {})
+        for m in methods:
+            tm = timings.get(m, {})
+            total_time_by_method[m].append(float(tm.get('t_total', np.nan)))
+
+    plt.figure(figsize=(6.5, 4.8))
+    for m in methods:
+        plt.plot(H, total_time_by_method[m], marker='o', label=m)
+    plt.xlabel('Global mesh size h')
+    plt.ylabel('Total time to tolerance [s]')
+    plt.grid(True, ls='--', alpha=0.5)
+    plt.legend()
+    plt.title('Mesh Independence: Total Time vs h')
+    plt.tight_layout()
+    plt.savefig(os.path.join(plots_dir, 'mesh_independence_total_times_vs_h.png'), dpi=150, bbox_inches='tight')
     plt.close()
 
 

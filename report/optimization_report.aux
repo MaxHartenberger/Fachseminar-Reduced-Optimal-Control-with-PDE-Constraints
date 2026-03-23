@@ -35,21 +35,25 @@
 \@writefile{toc}{\contentsline {section}{\numberline {5}Numerical Results}{7}{section.5}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Representative-mesh results ($h=0.02$). All methods reach the same optimum up to numerical precision; BB attains the stopping criterion in the fewest first-order iterations, while CG solves the stationarity system in a modest number of Krylov steps.}}{7}{table.1}\protected@file@percent }
 \newlabel{tab:numerics}{{1}{7}{Representative-mesh results ($h=\meshhtoken $). All methods reach the same optimum up to numerical precision; BB attains the stopping criterion in the fewest first-order iterations, while CG solves the stationarity system in a modest number of Krylov steps}{table.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Convergence of gradient norm for a representative mesh ($h=0.02$). The control-space norm $\|\cdot \|_U$ is induced by $M_U$.}}{7}{figure.2}\protected@file@percent }
-\newlabel{fig:convergence}{{2}{7}{Convergence of gradient norm for a representative mesh ($h=\meshhtoken $). The control-space norm $\|\cdot \|_U$ is induced by $M_U$}{figure.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Optimized control $u_*$ (left) and the corresponding state $y(u_*)$ (right) computed by CG on the stationarity system, shown for a representative mesh ($h=0.02$).}}{8}{figure.3}\protected@file@percent }
-\newlabel{fig:final_fields}{{3}{8}{Optimized control $u_*$ (left) and the corresponding state $y(u_*)$ (right) computed by CG on the stationarity system, shown for a representative mesh ($h=\meshhtoken $)}{figure.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Mesh Independence}{8}{section.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Meshes used in the mesh-independence study.}}{8}{figure.4}\protected@file@percent }
-\newlabel{fig:mesh-grid}{{4}{8}{Meshes used in the mesh-independence study}{figure.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Per-mesh summary of objective and norms. DOFs denotes the number of P1 degrees of freedom.}}{9}{table.2}\protected@file@percent }
-\newlabel{tab:mesh-indep}{{2}{9}{Per-mesh summary of objective and norms. DOFs denotes the number of P1 degrees of freedom}{table.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Mesh independence study: final objective value versus mesh size $h$ (left) and versus degrees of freedom (right), for all methods (CG, BB, GD, Nesterov).}}{9}{figure.5}\protected@file@percent }
-\newlabel{fig:mesh-indep}{{5}{9}{Mesh independence study: final objective value versus mesh size $h$ (left) and versus degrees of freedom (right), for all methods (CG, BB, GD, Nesterov)}{figure.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods.}}{9}{table.3}\protected@file@percent }
-\newlabel{tab:mesh-indep-iters}{{3}{9}{Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods}{table.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Gradient norm convergence $\|\nabla _U F(\mathbf  {u}_k)\|_U$ for each mesh (shown in a $4\times 2$ grid).}}{10}{figure.6}\protected@file@percent }
-\newlabel{fig:mesh-gradnorm-grid}{{6}{10}{Gradient norm convergence $\|\nabla _U F(\mathbf {u}_k)\|_U$ for each mesh (shown in a $4\times 2$ grid)}{figure.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov).}}{10}{figure.7}\protected@file@percent }
-\newlabel{fig:mesh-indep-iters}{{7}{10}{Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov)}{figure.7}{}}
-\gdef \@abspage@last{10}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Timing breakdown on the representative mesh $h=0.02$. Here $t_L$ and $t_m$ denote time spent estimating spectral constants (if used), $t_{iter}$ is the optimization runtime excluding estimates, and $t_{total}=t_L+t_m+t_{iter}$.}}{7}{table.2}\protected@file@percent }
+\newlabel{tab:timings_h002}{{2}{7}{Timing breakdown on the representative mesh $h=0.02$. Here $t_L$ and $t_m$ denote time spent estimating spectral constants (if used), $t_{iter}$ is the optimization runtime excluding estimates, and $t_{total}=t_L+t_m+t_{iter}$}{table.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Mesh Independence}{7}{section.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Convergence of gradient norm for a representative mesh ($h=0.02$). The control-space norm $\|\cdot \|_U$ is induced by $M_U$.}}{8}{figure.2}\protected@file@percent }
+\newlabel{fig:convergence}{{2}{8}{Convergence of gradient norm for a representative mesh ($h=\meshhtoken $). The control-space norm $\|\cdot \|_U$ is induced by $M_U$}{figure.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Per-mesh summary of objective and norms. DOFs denotes the number of P1 degrees of freedom.}}{8}{table.3}\protected@file@percent }
+\newlabel{tab:mesh-indep}{{3}{8}{Per-mesh summary of objective and norms. DOFs denotes the number of P1 degrees of freedom}{table.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Optimized control $u_*$ (left) and the corresponding state $y(u_*)$ (right) computed by CG on the stationarity system, shown for a representative mesh ($h=0.02$).}}{9}{figure.3}\protected@file@percent }
+\newlabel{fig:final_fields}{{3}{9}{Optimized control $u_*$ (left) and the corresponding state $y(u_*)$ (right) computed by CG on the stationarity system, shown for a representative mesh ($h=\meshhtoken $)}{figure.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods.}}{9}{table.4}\protected@file@percent }
+\newlabel{tab:mesh-indep-iters}{{4}{9}{Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods}{table.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Meshes used in the mesh-independence study.}}{9}{figure.4}\protected@file@percent }
+\newlabel{fig:mesh-grid}{{4}{9}{Meshes used in the mesh-independence study}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Mesh independence study: final objective value versus mesh size $h$ (left) and versus degrees of freedom (right), for all methods (CG, BB, GD, Nesterov).}}{10}{figure.5}\protected@file@percent }
+\newlabel{fig:mesh-indep}{{5}{10}{Mesh independence study: final objective value versus mesh size $h$ (left) and versus degrees of freedom (right), for all methods (CG, BB, GD, Nesterov)}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Mesh independence study: total time to tolerance versus mesh size $h$ (including estimate time where applicable).}}{10}{figure.6}\protected@file@percent }
+\newlabel{fig:mesh-indep-times}{{6}{10}{Mesh independence study: total time to tolerance versus mesh size $h$ (including estimate time where applicable)}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Gradient norm convergence $\|\nabla _U F(\mathbf  {u}_k)\|_U$ for each mesh (shown in a $4\times 2$ grid).}}{10}{figure.7}\protected@file@percent }
+\newlabel{fig:mesh-gradnorm-grid}{{7}{10}{Gradient norm convergence $\|\nabla _U F(\mathbf {u}_k)\|_U$ for each mesh (shown in a $4\times 2$ grid)}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov).}}{11}{figure.8}\protected@file@percent }
+\newlabel{fig:mesh-indep-iters}{{8}{11}{Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov)}{figure.8}{}}
+\gdef \@abspage@last{11}

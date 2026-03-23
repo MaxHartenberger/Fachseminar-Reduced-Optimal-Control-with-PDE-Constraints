@@ -379,6 +379,19 @@ For GD, the fixed step uses an estimated Lipschitz constant $L$ (power iteration
   \label{tab:numerics}
 \end{table}
 
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lrrrr}
+    \hline
+    Method & $t_L$ [s] & $t_m$ [s] & $t_{iter}$ [s] & $t_{total}$ [s] \\
+    \hline
+    \input{../results/mesh_h_0.02/timings_table.tex}\\
+    \hline
+  \end{tabular}
+  \caption{Timing breakdown on the representative mesh $h=0.02$. Here $t_L$ and $t_m$ denote time spent estimating spectral constants (if used), $t_{iter}$ is the optimization runtime excluding estimates, and $t_{total}=t_L+t_m+t_{iter}$.}
+  \label{tab:timings_h002}
+\end{table}
+
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.7\linewidth]{\meshplotsdir/grad_norm.png}
@@ -470,6 +483,15 @@ The resulting objective values and solution norms are summarized in Table~\ref{t
 \end{figure}
 
 Finally, the per-mesh convergence curves (Figure~\ref{fig:mesh-gradnorm-grid}) and the iteration summary (Table~\ref{tab:mesh-indep-iters} and Figure~\ref{fig:mesh-indep-iters}) indicate that the iteration counts are largely insensitive to the number of degrees of freedom in this experiment: BB terminates after $4$ iterations for all meshes, GD after $11$--$13$, Nesterov after $5$--$6$, and CG requires about $18$--$21$ Krylov steps to solve the stationarity system.
+
+In addition to iteration counts, we also compare the total wall-clock time to reach the stopping criterion for each method (including eigenvalue estimates for methods that require them).
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_total_times_vs_h.png}
+  \caption{Mesh independence study: total time to tolerance versus mesh size $h$ (including estimate time where applicable).}
+  \label{fig:mesh-indep-times}
+\end{figure}
 
 \begin{figure}[ht]
   \centering

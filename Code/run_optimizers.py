@@ -27,18 +27,26 @@ from typing import List, Dict, Any
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Support both invocation styles:
-# - as a module:  python -m Code.mesh_independence
-# - as a script:  python Code/mesh_independence.py
-try:
-    from .reduced_oc_model import ReducedOCModelExternal
-    from .optimizers import bb, gd_fixed, nesterov_constant_ml
-except ImportError:
-    REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    if REPO_ROOT not in sys.path:
-        sys.path.insert(0, REPO_ROOT)
-    from Code.reduced_oc_model import ReducedOCModelExternal
-    from Code.optimizers import bb, gd_fixed, nesterov_constant_ml
+
+def _import_model_and_optimizers():
+    """Import FEniCS-dependent components lazily.
+
+    This keeps `make_plots()` usable in environments without FEniCS, since
+    plotting only needs the JSON summary.
+    """
+    # Support both invocation styles:
+    # - as a module:  python -m Code.run_optimizers
+    # - as a script:  python Code/run_optimizers.py
+    try:
+        from .reduced_oc_model import ReducedOCModelExternal
+        from .optimizers import bb, gd_fixed, nesterov_constant_ml
+    except ImportError:
+        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        if repo_root not in sys.path:
+            sys.path.insert(0, repo_root)
+        from Code.reduced_oc_model import ReducedOCModelExternal
+        from Code.optimizers import bb, gd_fixed, nesterov_constant_ml
+    return ReducedOCModelExternal, bb, gd_fixed, nesterov_constant_ml
 
 
 def ensure_dir(path: str):
@@ -146,7 +154,7 @@ def norm_L2_from_M(vec: np.ndarray, M) -> float:
     return math.sqrt(max(val, 0.0))
 
 
-def cg_solve_with_gradnorm_history(model: ReducedOCModelExternal,
+def cg_solve_with_gradnorm_history(model,
                                   q_matvec,
                                   rhs: np.ndarray,
                                   rtol: float = 1e-3,
@@ -234,6 +242,7 @@ def run_one_mesh(h: float,
                  results_root: str = 'results',
                  per_mesh_plots: bool = True) -> Dict[str, Any]:
     """Load existing mesh for h, build model, compute u_* via CG, and collect metrics."""
+    ReducedOCModelExternal, bb, gd_fixed, nesterov_constant_ml = _import_model_and_optimizers()
     h_dir_token = _h_tokens(h)[0]
 
     mesh_dir = resolve_mesh_dir(mesh_root=mesh_root, h=h, mesh_prefix=mesh_prefix)
@@ -576,6 +585,28 @@ def make_plots(summary: List[Dict[str, Any]], plots_dir: str = 'plots'):
     plt.title('Mesh Independence: Total Time vs h')
     plt.tight_layout()
     plt.savefig(os.path.join(plots_dir, 'mesh_independence_total_times_vs_h.png'), dpi=150, bbox_inches='tight')
+    plt.close()
+
+    # Estimate time vs h (spectral preprocessing)
+    estimate_time_by_method: Dict[str, List[float]] = {m: [] for m in methods}
+    for e in summary_sorted:
+        timings = e.get('timings', {})
+        for m in methods:
+            tm = timings.get(m, {})
+            tL = float(tm.get('t_L', np.nan))
+            tm_ = float(tm.get('t_m', np.nan))
+            estimate_time_by_method[m].append(tL + tm_)
+
+    plt.figure(figsize=(6.5, 4.8))
+    for m in methods:
+        plt.plot(H, estimate_time_by_method[m], marker='o', label=m)
+    plt.xlabel('Global mesh size h')
+    plt.ylabel('Estimate time [s]')
+    plt.grid(True, ls='--', alpha=0.5)
+    plt.legend()
+    plt.title('Mesh Independence: Spectral Estimate Time vs h')
+    plt.tight_layout()
+    plt.savefig(os.path.join(plots_dir, 'mesh_independence_estimate_times_vs_h.png'), dpi=150, bbox_inches='tight')
     plt.close()
 
     # Iteration time vs h (excluding estimate times)

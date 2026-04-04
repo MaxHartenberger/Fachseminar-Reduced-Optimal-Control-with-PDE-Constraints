@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{siunitx}
 \usepackage{algorithm2e}
+\usepackage{float}
 
 \title{Reduced Optimal Control with PDE Constraint:\\Model, Discretization, and First-Order Methods}
 \author{Fachseminar}
@@ -349,7 +350,7 @@ Moreover, since $\nabla_U F(\mathbf{u})=M_U^{-1}(Q\mathbf{u}-\mathbf{b})=-M_U^{-
 \]
 which we record as the convergence curve in Figure~\ref{fig:convergence}.
 
-\begin{algorithm}[]
+\begin{algorithm}
 \caption{CG for $Q\mathbf{u}=\mathbf{b}$ (matrix-free)}\label{alg:cg}
 \KwData{model with $A^{-1}$ solves, matrices $B,M,M_U$, Hessian action $H$; $\texttt{rtol}>0$}
 \KwResult{$\mathbf{u}_*$}
@@ -359,21 +360,21 @@ Call CG to solve $Q\mathbf{u}=\mathbf{b}$ to relative tolerance $\texttt{rtol}=1
 \end{algorithm}
 
 \section{Numerical Results}
-We report results on a representative external mesh with size $h=\meshhtoken$ (here $n=3093$ control degrees of freedom). We use control region tag $\omega=2$ and Tikhonov parameter $\beta=10^{-3}$. The first-order methods (BB, GD, Nesterov) are initialized at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ and stopped when $\|\nabla_U F(\mathbf{u}_k)\|_U \le \texttt{tol}_{abs}+\texttt{tol}_{rel}\|\nabla_U F(\mathbf{0})\|_U$ with $\texttt{tol}_{abs}=10^{-5}$ and $\texttt{tol}_{rel}=10^{-3}$. In addition, we solve the SPD stationarity system $Q\mathbf{u}=\mathbf{b}$ with CG.
+We report results on a representative external mesh with size $h=\meshhtoken$ (here $n=3093$ control degrees of freedom). We use a Tikhonov parameter $\beta=10^{-3}$. The first-order methods (BB, GD, Nesterov) are initialized at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ and stopped when $\|\nabla_U F(\mathbf{u}_k)\|_U \le \texttt{tol}_{abs}+\texttt{tol}_{rel}\|\nabla_U F(\mathbf{0})\|_U$ with $\texttt{tol}_{abs}=10^{-5}$ and $\texttt{tol}_{rel}=10^{-3}$. In addition, we solve the SPD stationarity system $Q\mathbf{u}=\mathbf{b}$ with CG.
 
 \paragraph{Calculation and results for $m$ and $L$.}
 The smoothness/strong-convexity constants are defined as the extreme generalized eigenvalues of $(Q,M_U)$,
-\(Q\mathbf{v}=\lambda M_U\mathbf{v}\), i.e. $L=\lambda_{\max}$ and $m=\lambda_{\min}$. In the implementation, both are estimated with ARPACK (\texttt{eigsh}) applied to the generalized eigenproblem using a matrix-free $Q$-operator.
+\(Q\mathbf{v}=\lambda M_U\mathbf{v}\), i.e. $L=\lambda_{\max}$ and $m=\lambda_{\min}$. In the implementation, both are estimated with \texttt{scipy.sparse.linalg.eigsh} applied to the generalized eigenproblem using a matrix-free $Q$-operator.
 On the representative mesh $h=0.02$ we obtain
 \[
-  L \approx 1.3163607903\times 10^{-3},\qquad m \approx 1.0000000015\times 10^{-3},\qquad \kappa = L/m \approx 1.31636.
+  L \approx 1.31636\times 10^{-3},\qquad m \approx 1.0\times 10^{-3},\qquad \kappa = L/m \approx 1.31636.
 \]
 As expected for $Q=B^\top A^{-1}MA^{-1}B + \beta M_U$ with $\beta>0$, the smallest generalized eigenvalue is close to $\beta$.
 
 \paragraph{Final cost and iteration table.}
 Table~\ref{tab:numerics} compares final costs and iteration counts for the representative mesh. All methods reach essentially the same optimal value; differences are at the level of numerical tolerances.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabular}{lrr}
     \hline
@@ -382,14 +383,14 @@ Table~\ref{tab:numerics} compares final costs and iteration counts for the repre
     \input{../results/mesh_h_\meshhtoken/numerics_table.tex}\\
     \hline
   \end{tabular}
-  \caption{Representative-mesh results ($h=\meshhtoken$). All methods reach the same optimum up to numerical precision; BB attains the stopping criterion in the fewest first-order iterations, while CG solves the stationarity system in a modest number of Krylov steps.}
+  \caption{Representative-mesh results ($h=\meshhtoken$). All methods reach the same optimum up to numerical precision; GD and BB attain the stopping criterion in the fewest first-order iterations.}
   \label{tab:numerics}
 \end{table}
 
 \paragraph{Gradient norm convergence plot.}
 Figure~\ref{fig:convergence} shows the convergence histories in terms of the $U$-norm of the reduced gradient, $\|\nabla_U F(\mathbf{u}_k)\|_U$, which is the stopping quantity for BB/GD/Nesterov. For CG, we reconstruct the same quantity from the stationarity-system residual via $\|\nabla_U F(\mathbf{u}_k)\|_U=\sqrt{\mathbf{r}_k^\top M_U^{-1}\mathbf{r}_k}$; this additional $M_U^{-1}$-solve per CG iteration is computed only to enable a direct convergence-curve comparison with the first-order methods.
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{\meshplotsdir/grad_norm.png}
   \caption{Convergence of gradient norm for a representative mesh ($h=\meshhtoken$). The control-space norm $\|\cdot\|_U$ is induced by $M_U$. On this mesh, the BB and GD curves are nearly identical and may visually overlap.}
@@ -400,7 +401,7 @@ Figure~\ref{fig:convergence} shows the convergence histories in terms of the $U$
 We measure wall-clock time with \texttt{time.perf\_counter}: for GD and Nesterov we separate the time spent in spectral estimates ($t_L$ and $t_m$) from the subsequent iteration runtime ($t_{iter}$). Table~\ref{tab:timings_h002} reports these components and $t_{total}=t_L+t_m+t_{iter}$.
 For CG, we report the iteration time for solving $Q\mathbf{u}=\mathbf{b}$ and explicitly \emph{exclude} the additional work needed to record the gradient-norm history (one $M_U^{-1}$-solve per iteration to evaluate $\sqrt{\mathbf{r}_k^\top M_U^{-1}\mathbf{r}_k}$), since this diagnostic is used only for the convergence-plot comparison.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabular}{lrrrr}
     \hline
@@ -413,7 +414,7 @@ For CG, we report the iteration time for solving $Q\mathbf{u}=\mathbf{b}$ and ex
   \label{tab:timings_h002}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.47\linewidth]{\meshplotsdir/u_cg_3d.png}\hfill
   \includegraphics[width=0.47\linewidth]{\meshplotsdir/y_cg_3d.png}
@@ -422,15 +423,18 @@ For CG, we report the iteration time for solving $Q\mathbf{u}=\mathbf{b}$ and ex
 \end{figure}
 
 \paragraph{Interpretation.}
-On this quadratic reduced problem, CG achieves a high-accuracy solution of $Q\mathbf{u}=\mathbf{b}$ in a modest number of Krylov iterations, and its final cost matches the first-order methods. BB, GD($1/L$), and Nesterov reach the stopping threshold in only a few iterations on this mesh, but the overall runtime is influenced by the one-time spectral estimates needed for fixed-step GD and $(m,L)$-Nesterov (Table~\ref{tab:timings_h002}). The optimized control and state (Figure~\ref{fig:final_fields}) provide a qualitative view of the solution on the representative mesh.
+Table~\ref{tab:numerics} shows that all four approaches reach essentially the same minimizer (up to numerical precision), which is expected since the reduced problem is a strictly convex quadratic program with a unique solution. The convergence curves in Figure~\ref{fig:convergence} confirm that the first-order stopping quantity $\|\nabla_U F(\mathbf{u}_k)\|_U$ decays rapidly for BB, GD ($1/L$), and Nesterov on this problem instance (with BB and GD nearly indistinguishable on the representative mesh). From a runtime perspective, Table~\ref{tab:timings_h002} highlights the trade-off between iteration count and one-time preprocessing: fixed-step GD requires an estimate of $L$ and $(m,L)$-Nesterov requires estimates of both $m$ and $L$, so their total time includes the corresponding estimate costs ($t_L$ and $t_m$). In contrast, BB and CG avoid these estimates; on the representative mesh, BB achieves the smallest wall-clock time because it reaches the stopping criterion in very few iterations without any spectral precomputation.
+Finally, Figure~\ref{fig:final_fields} provides a qualitative visualization of the resulting optimal control and associated state.
+
+
 
 \section{Mesh Independence}
 We study how the discretized solution and the observed optimizer performance depend on mesh resolution. We use a fixed family of 
-\emph{pre-generated} triangular meshes of $\Omega=[0,1]^2$ with a circular control region $\omega$ (physical tag $\omega=2$) for
+\emph{pre-generated} triangular meshes of $\Omega=[0,1]^2$ with a circular control region $\omega$ for
 \(h\in\{0.06,\,0.04,\,0.03,\,0.02,\,0.015,\,0.012,\,0.01,\,0.008\}\);
 the meshes are visualized in Figure~\ref{fig:mesh-grid}.
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.24\linewidth}\centering
     \includegraphics[width=\linewidth]{\meshdir/mesh_h_0.06/mesh.png}\\[-2pt]
@@ -475,8 +479,8 @@ the meshes are visualized in Figure~\ref{fig:mesh-grid}.
 %On each mesh we solve the reduced problem with $\beta=10^{-3}$ and compare four methods: CG on the SPD stationarity system
 %\(Q\mathbf{u}=B^\top A^{-1}M\,\mathbf{y}_d\), BB, fixed-step GD ($\alpha=1/L$), and constant-parameter Nesterov. The first-order methods are stopped when $\|\nabla F(u_k)\|_U\le 10^{-8}$, while CG is run to a relative residual tolerance (here $\texttt{rtol}=10^{-8}$).
 
-The resulting objective values and solution norms are summarized in Table~\ref{tab:mesh-indep}. Under refinement, the quantities stabilize: for example, the optimal objective decreases from $F(u_*^{(0.06)})\approx 0.0165171$ to $F(u_*^{(0.008)})\approx 0.0160695$, while $\|u_*^{(h)}\|_U$ and $\|y(u_*^{(h)})\|_{L^2}$ approach limiting values. Figure~\ref{fig:mesh-indep} shows the same trend graphically, and also confirms that all methods reach essentially the same final objective on each mesh.
-\begin{table}[ht]
+The resulting objective values and solution norms are summarized in Table~\ref{tab:mesh-indep}. Here $u_*^{(h)}$ denotes the discrete minimizer on mesh size $h$, which we approximate by solving the stationarity system with CG. Under refinement, the reported quantities stabilize: $F(u_*^{(h)})$, $\|u_*^{(h)}\|_U$, and $\|y(u_*^{(h)})\|_{L^2}$ vary only mildly across the mesh family, indicating that the computed solution is close to a mesh-independent limit for this experiment. Figure~\ref{fig:mesh-indep} shows the same trend graphically and also suggests that all methods reach essentially the same final objective on each mesh (up to the chosen stopping criteria).
+\begin{table}[H]
   \centering
   \begin{tabular}{|r|r|r|r|r|}
     \hline
@@ -489,7 +493,7 @@ The resulting objective values and solution norms are summarized in Table~\ref{t
   \label{tab:mesh-indep}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.47\linewidth]{\plotsdir/mesh_independence_cost_vs_h.png}\hfill
   \includegraphics[width=0.47\linewidth]{\plotsdir/mesh_independence_cost_vs_ndofs.png}
@@ -497,25 +501,54 @@ The resulting objective values and solution norms are summarized in Table~\ref{t
   \label{fig:mesh-indep}
 \end{figure}
 
-Finally, the per-mesh convergence curves (Figure~\ref{fig:mesh-gradnorm-grid}) and the iteration summary (Table~\ref{tab:mesh-indep-iters} and Figure~\ref{fig:mesh-indep-iters}) indicate that the iteration counts are largely insensitive to the number of degrees of freedom in this experiment: BB terminates after $4$ iterations for all meshes, GD after $11$--$13$, Nesterov after $5$--$6$, and CG requires about $18$--$21$ Krylov steps to solve the stationarity system.
+Table~\ref{tab:mesh-indep-iters} and Figure~\ref{fig:mesh-indep-iters} summarize iteration counts across meshes. Note that BB/GD/Nesterov are stopped using the gradient-norm criterion $\|\nabla_U F(\mathbf{u}_k)\|_U\le\texttt{tol}$, whereas CG is stopped by a relative residual tolerance for the stationarity system $Q\mathbf{u}=\mathbf{b}$; therefore the iteration counts are not directly comparable across method families. Within this mesh range, the first-order iteration counts are fairly stable, while CG iterations show some variation with $h$.
 
-In addition to iteration counts, we also compare the total wall-clock time to reach the stopping criterion for each method (including eigenvalue estimates for methods that require them).
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|r|r|r|r|r|}
+    \hline
+    $h$ & CG ($u_*$) & BB & GD ($1/L$) & Nesterov \\
+    \hline
+    \input{../results/mesh_iterations_table.tex}\\
+    \hline
+  \end{tabular}
+  \caption{Iterations per mesh: CG iterations for the stationarity solve (to compute $u_*^{(h)}$) and iteration counts for the first-order methods.}
+  \label{tab:mesh-indep-iters}
+\end{table}
 
-\begin{figure}[ht]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_iterations_vs_h.png}
+  \caption{Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov).}
+  \label{fig:mesh-indep-iters}
+\end{figure}
+
+In addition to iteration counts, we compare wall-clock times to reach the respective stopping criteria. Figure~\ref{fig:mesh-indep-times} reports total time (including one-time spectral estimates where applicable). Figure~\ref{fig:mesh-indep-est-times} isolates the estimate time $t_L+t_m$, and Figure~\ref{fig:mesh-indep-iter-times} reports the iteration time excluding these estimate costs.
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_total_times_vs_h.png}
   \caption{Mesh independence study: total time to tolerance versus mesh size $h$ (including estimate time where applicable).}
   \label{fig:mesh-indep-times}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_estimate_times_vs_h.png}
+  \caption{Mesh independence study: time spent estimating spectral constants (here reported as $t_L+t_m$) versus mesh size $h$.}
+  \label{fig:mesh-indep-est-times}
+\end{figure}
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_iteration_times_vs_h.png}
   \caption{Mesh independence study: iteration time to tolerance versus mesh size $h$ (excluding spectral estimate time $t_L$ and $t_m$ where applicable).}
   \label{fig:mesh-indep-iter-times}
 \end{figure}
 
-\begin{figure}[ht]
+Finally, Figure~\ref{fig:mesh-gradnorm-grid} shows the per-mesh convergence curves $\|\nabla_U F(\mathbf{u}_k)\|_U$, illustrating that the qualitative convergence behavior remains similar across the mesh family.
+
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.24\linewidth}\centering
     \includegraphics[width=\linewidth]{\plotsdir/mesh_h_0.06/grad_norm.png}\\[-2pt]
@@ -557,27 +590,7 @@ In addition to iteration counts, we also compare the total wall-clock time to re
   \label{fig:mesh-gradnorm-grid}
 \end{figure}
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\linewidth]{\plotsdir/mesh_independence_iterations_vs_h.png}
-  \caption{Mesh independence study: iteration counts versus mesh size $h$ (CG iterations for the stationarity solve and first-order iterations for BB/GD/Nesterov).}
-  \label{fig:mesh-indep-iters}
-\end{figure}
-
 % Streamlined: omit extra plots (L vs h, gradnorm at optimum)
 
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{|r|r|r|r|r|}
-    \hline
-    $h$ & CG ($u_*$) & BB & GD($1/L$) & Nesterov \\
-    \hline
-    \input{../results/mesh_iterations_table.tex}\\
-    \hline
-  \end{tabular}
-  \caption{Iterations per mesh: CG iterations to obtain $u_*$ by normal equations, and iteration counts for first-order methods.}
-  \label{tab:mesh-indep-iters}
-\end{table}
 
 \end{document}

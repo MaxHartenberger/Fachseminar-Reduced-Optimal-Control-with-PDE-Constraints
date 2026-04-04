@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  23 MAR 2026 19:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  4 APR 2026 12:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -467,8 +467,16 @@ Package: relsize 2013/03/29 ver 4.1
 \algocf@algoframe=\box70
 \algocf@algobox=\box71
 )
+(/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count311
+\float@exts=\toks27
+\float@box=\box72
+\@float@everytoks=\toks28
+\@floatcapt=\box73
+)
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 26.
+h' as default language. on input line 27.
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2022/01/06 v1.3d Standard LaTeX Color (DPC)
@@ -479,7 +487,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 26
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 27
 .
 
 (/usr/share/texmf/tex/latex/lm/t1lmr.fd
@@ -487,30 +495,30 @@ File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count311
-\l__pdf_internal_box=\box72
+\l__color_backend_stack_int=\count312
+\l__pdf_internal_box=\box74
 )
 (./optimization_report.aux)
 \openout1 = `optimization_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 26.
-LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -548,17 +556,17 @@ LaTeX Font Info:    ... okay on input line 26.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count312
+\scratchcounter=\count313
 \scratchdimen=\dimen187
-\scratchbox=\box73
-\nofMPsegments=\count313
-\nofMParguments=\count314
-\everyMPshowfont=\toks27
-\MPscratchCnt=\count315
+\scratchbox=\box75
+\nofMPsegments=\count314
+\nofMParguments=\count315
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count316
 \MPscratchDim=\dimen188
-\MPnumerator=\count316
-\makeMPintoPDFobject=\count317
-\everyMPtoPDFconversion=\toks28
+\MPnumerator=\count317
+\makeMPintoPDFobject=\count318
+\everyMPtoPDFconversion=\toks30
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -568,7 +576,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 26.
+Package hyperref Info: Link coloring OFF on input line 27.
 
 (./optimization_report.out) (./optimization_report.out)
 \@outlinefile=\write3
@@ -581,60 +589,60 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 26.
+or `english'. on input line 27.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2
-8.
+9.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-8.
+9.
 
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-28.
+29.
 
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-28.
+29.
 
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 28.
+(Font)              <12> on input line 29.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 28.
+(Font)              <8> on input line 29.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 28.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
+(Font)              <6> on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 31.
+(Font)              <10> on input line 32.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 31.
+(Font)              <7> on input line 32.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 31.
+(Font)              <5> on input line 32.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 39.
+(Font)              <10.95> on input line 40.
 <../plots/mesh_h_0.02/y_d_3d.png, id=44, 396.0396pt x 355.5684pt>
 File: ../plots/mesh_h_0.02/y_d_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/y_d_3d.png>
-Package pdftex.def Info: ../plots/mesh_h_0.02/y_d_3d.png  used on input line 56
+Package pdftex.def Info: ../plots/mesh_h_0.02/y_d_3d.png  used on input line 57
 .
 (pdftex.def)             Requested size: 339.72592pt x 305.01242pt.
  [1
@@ -642,14 +650,20 @@ Package pdftex.def Info: ../plots/mesh_h_0.02/y_d_3d.png  used on input line 56
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf/fonts/enc/
 dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/sha
 re/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
-lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}] [2 <../plots/mes
-h_h_0.02/y_d_3d.png>] [3]
+lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}] [2
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.91 \end{align}
+                 <../plots/mesh_h_0.02/y_d_3d.png>] [3]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-57.
- (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
+58.
+
+(/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Overfull \hbox (20.51837pt too wide) in paragraph at lines 257--258
+Overfull \hbox (20.51837pt too wide) in paragraph at lines 258--259
 \T1/lmr/m/n/10.95 Unless stated oth-er-wise, we ini-tial-ize at $\OT1/lmr/bx/n/
 10.95 u[] \OT1/lmr/m/n/10.95 = \OMS/lmsy/m/n/10.95 r[]\OML/lmm/m/it/10.95 F\OT1
 /lmr/m/n/10.95 (\OT1/lmr/bx/n/10.95 0\OT1/lmr/m/n/10.95 )$ \T1/lmr/m/n/10.95 (a
@@ -660,179 +674,283 @@ k[] ^^T
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 258.
+(hyperref)                removing `math shift' on input line 259.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\alpha' on input line 258.
+(hyperref)                removing `\alpha' on input line 259.
 
-[4] [5]
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `htbp') on input line 352.
-
-[6] (../results/mesh_h_0.02/numerics_table.tex)
+[4] [5
+pdfTeX warning (ext4): destination with the same identifier (name{algocf.1}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.315 ...frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}.\]
+                                                  
+pdfTeX warning (ext4): destination with the same identifier (name{algocf.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.315 ...frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}.\]
+                                                  ] [6
+pdfTeX warning (ext4): destination with the same identifier (name{algocf.3}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.369 \[
+        ] (../results/mesh_h_0.02/numerics_table.tex)
 <../plots/mesh_h_0.02/grad_norm.png, id=148, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.02/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/grad_norm.png  used on input line
- 394.
+ 395.
 (pdftex.def)             Requested size: 317.07614pt x 225.52556pt.
-
-(../results/mesh_h_0.02/timings_table.tex)
-<../plots/mesh_h_0.02/u_cg_3d.png, id=150, 404.2302pt x 356.0502pt>
+ [7
+pdfTeX warning (ext4): destination with the same identifier (name{algocf.4}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.399 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.399 
+      ] (../results/mesh_h_0.02/timings_table.tex)
+<../plots/mesh_h_0.02/u_cg_3d.png, id=161, 404.2302pt x 356.0502pt>
 File: ../plots/mesh_h_0.02/u_cg_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/u_cg_3d.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/u_cg_3d.png  used on input line 4
-18.
+19.
 (pdftex.def)             Requested size: 212.89546pt x 187.52133pt.
-<../plots/mesh_h_0.02/y_cg_3d.png, id=151, 404.2302pt x 356.0502pt>
+<../plots/mesh_h_0.02/y_cg_3d.png, id=162, 404.2302pt x 356.0502pt>
 File: ../plots/mesh_h_0.02/y_cg_3d.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/y_cg_3d.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/y_cg_3d.png  used on input line 4
-19.
+20.
 (pdftex.def)             Requested size: 212.89546pt x 187.52133pt.
- [7]
-<../mesh/mesh_h_0.06/mesh.png, id=169, 344.487pt x 353.6412pt>
+ [8
+pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.424 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.424 
+       <../plots/mesh_h_0.02/grad_norm.png>]
+<../mesh/mesh_h_0.06/mesh.png, id=175, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.06/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.06/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.06/mesh.png  used on input line 436.
+Package pdftex.def Info: ../mesh/mesh_h_0.06/mesh.png  used on input line 440.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.04/mesh.png, id=170, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.04/mesh.png, id=176, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.04/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.04/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.04/mesh.png  used on input line 440.
+Package pdftex.def Info: ../mesh/mesh_h_0.04/mesh.png  used on input line 444.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.03/mesh.png, id=171, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.03/mesh.png, id=177, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.03/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.03/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.03/mesh.png  used on input line 444.
+Package pdftex.def Info: ../mesh/mesh_h_0.03/mesh.png  used on input line 448.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.02/mesh.png, id=172, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.02/mesh.png, id=178, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.02/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.02/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.02/mesh.png  used on input line 448.
+Package pdftex.def Info: ../mesh/mesh_h_0.02/mesh.png  used on input line 452.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.015/mesh.png, id=173, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.015/mesh.png, id=179, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.015/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.015/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.015/mesh.png  used on input line 455.
+Package pdftex.def Info: ../mesh/mesh_h_0.015/mesh.png  used on input line 459.
 
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.012/mesh.png, id=174, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.012/mesh.png, id=180, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.012/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.012/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.012/mesh.png  used on input line 459.
+Package pdftex.def Info: ../mesh/mesh_h_0.012/mesh.png  used on input line 463.
 
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.01/mesh.png, id=175, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.01/mesh.png, id=181, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.01/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.01/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.01/mesh.png  used on input line 463.
+Package pdftex.def Info: ../mesh/mesh_h_0.01/mesh.png  used on input line 467.
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.008/mesh.png, id=176, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.008/mesh.png, id=182, 344.487pt x 353.6412pt>
 File: ../mesh/mesh_h_0.008/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.008/mesh.png>
-Package pdftex.def Info: ../mesh/mesh_h_0.008/mesh.png  used on input line 467.
+Package pdftex.def Info: ../mesh/mesh_h_0.008/mesh.png  used on input line 471.
 
 (pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-
+ [9
+pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.478 
+       <../plots/mesh_h_0.02/u_cg_3d.png> <../plots/mesh_h_0.02/y_cg_3d.png>]
 (../results/mesh_independence_table.tex)
-<../plots/mesh_independence_cost_vs_h.png, id=179, 461.5644pt x 339.1872pt>
+<../plots/mesh_independence_cost_vs_h.png, id=194, 461.5644pt x 339.1872pt>
 File: ../plots/mesh_independence_cost_vs_h.png Graphic file (type png)
 <use ../plots/mesh_independence_cost_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_cost_vs_h.png  used on inpu
-t line 494.
+t line 498.
 (pdftex.def)             Requested size: 212.89546pt x 156.44722pt.
-<../plots/mesh_independence_cost_vs_ndofs.png, id=180, 461.5644pt x 339.1872pt>
+<../plots/mesh_independence_cost_vs_ndofs.png, id=195, 461.5644pt x 339.1872pt>
 
 File: ../plots/mesh_independence_cost_vs_ndofs.png Graphic file (type png)
 <use ../plots/mesh_independence_cost_vs_ndofs.png>
 Package pdftex.def Info: ../plots/mesh_independence_cost_vs_ndofs.png  used on 
-input line 495.
+input line 499.
 (pdftex.def)             Requested size: 212.89546pt x 156.44722pt.
- [8 <../plots/mesh_h_0.02/grad_norm.png>]
-<../plots/mesh_independence_total_times_vs_h.png, id=197, 461.5644pt x 339.1872
+ [10
+pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.503 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.503 
+       <../mesh/mesh_h_0.06/mesh.png> <../mesh/mesh_h_0.04/mesh.png> <../mesh/m
+esh_h_0.03/mesh.png> <../mesh/mesh_h_0.02/mesh.png> <../mesh/mesh_h_0.015/mesh.
+png> <../mesh/mesh_h_0.012/mesh.png> <../mesh/mesh_h_0.01/mesh.png> <../mesh/me
+sh_h_0.008/mesh.png>] (../results/mesh_iterations_table.tex)
+<../plots/mesh_independence_iterations_vs_h.png, id=213, 461.5644pt x 339.1872p
+t>
+File: ../plots/mesh_independence_iterations_vs_h.png Graphic file (type png)
+<use ../plots/mesh_independence_iterations_vs_h.png>
+Package pdftex.def Info: ../plots/mesh_independence_iterations_vs_h.png  used o
+n input line 521.
+(pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
+ [11
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.525 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.525 
+       <../plots/mesh_independence_cost_vs_h.png> <../plots/mesh_independence_c
+ost_vs_ndofs.png>]
+<../plots/mesh_independence_total_times_vs_h.png, id=225, 461.5644pt x 339.1872
 pt>
 File: ../plots/mesh_independence_total_times_vs_h.png Graphic file (type png)
 <use ../plots/mesh_independence_total_times_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_total_times_vs_h.png  used 
-on input line 506.
+on input line 530.
 (pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
-<../plots/mesh_independence_iteration_times_vs_h.png, id=198, 461.5644pt x 339.
+<../plots/mesh_independence_estimate_times_vs_h.png, id=226, 461.5644pt x 339.1
+872pt>
+File: ../plots/mesh_independence_estimate_times_vs_h.png Graphic file (type png
+)
+<use ../plots/mesh_independence_estimate_times_vs_h.png>
+Package pdftex.def Info: ../plots/mesh_independence_estimate_times_vs_h.png  us
+ed on input line 537.
+(pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
+ [12
+pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.541 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.541 
+       <../plots/mesh_independence_iterations_vs_h.png> <../plots/mesh_independ
+ence_total_times_vs_h.png>]
+<../plots/mesh_independence_iteration_times_vs_h.png, id=236, 461.5644pt x 339.
 1872pt>
 File: ../plots/mesh_independence_iteration_times_vs_h.png Graphic file (type pn
 g)
 <use ../plots/mesh_independence_iteration_times_vs_h.png>
 Package pdftex.def Info: ../plots/mesh_independence_iteration_times_vs_h.png  u
-sed on input line 513.
+sed on input line 544.
 (pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
-<../plots/mesh_h_0.06/grad_norm.png, id=199, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.06/grad_norm.png, id=238, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.06/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.06/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.06/grad_norm.png  used on input line
- 521.
+ 554.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.04/grad_norm.png, id=200, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.04/grad_norm.png, id=239, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.04/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.04/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.04/grad_norm.png  used on input line
- 525.
+ 558.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.03/grad_norm.png, id=201, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.03/grad_norm.png, id=240, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.03/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.03/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.03/grad_norm.png  used on input line
- 529.
+ 562.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
 File: ../plots/mesh_h_0.02/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.02/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.02/grad_norm.png  used on input line
- 533.
+ 566.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.015/grad_norm.png, id=202, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.015/grad_norm.png, id=241, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.015/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.015/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.015/grad_norm.png  used on input lin
-e 540.
+e 573.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.012/grad_norm.png, id=203, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.012/grad_norm.png, id=242, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.012/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.012/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.012/grad_norm.png  used on input lin
-e 544.
+e 577.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.01/grad_norm.png, id=204, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.01/grad_norm.png, id=243, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.01/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.01/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.01/grad_norm.png  used on input line
- 548.
+ 581.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_h_0.008/grad_norm.png, id=205, 497.2176pt x 353.6412pt>
+<../plots/mesh_h_0.008/grad_norm.png, id=244, 497.2176pt x 353.6412pt>
 File: ../plots/mesh_h_0.008/grad_norm.png Graphic file (type png)
 <use ../plots/mesh_h_0.008/grad_norm.png>
 Package pdftex.def Info: ../plots/mesh_h_0.008/grad_norm.png  used on input lin
-e 552.
+e 585.
 (pdftex.def)             Requested size: 108.71478pt x 77.32104pt.
-<../plots/mesh_independence_iterations_vs_h.png, id=206, 461.5644pt x 339.1872p
-t>
-File: ../plots/mesh_independence_iterations_vs_h.png Graphic file (type png)
-<use ../plots/mesh_independence_iterations_vs_h.png>
-Package pdftex.def Info: ../plots/mesh_independence_iterations_vs_h.png  used o
-n input line 562.
-(pdftex.def)             Requested size: 317.07614pt x 233.0043pt.
- (../results/mesh_iterations_table.tex) [9 <../plots/mesh_h_0.02/u_cg_3d.png> <
-../plots/mesh_h_0.02/y_cg_3d.png>] [10 <../mesh/mesh_h_0.06/mesh.png> <../mesh/
-mesh_h_0.04/mesh.png> <../mesh/mesh_h_0.03/mesh.png> <../mesh/mesh_h_0.02/mesh.
-png> <../mesh/mesh_h_0.015/mesh.png> <../mesh/mesh_h_0.012/mesh.png> <../mesh/m
-esh_h_0.01/mesh.png> <../mesh/mesh_h_0.008/mesh.png> <../plots/mesh_independenc
-e_cost_vs_h.png> <../plots/mesh_independence_cost_vs_ndofs.png>] [11 <../plots/
-mesh_independence_total_times_vs_h.png> <../plots/mesh_independence_iteration_t
-imes_vs_h.png>] [12 <../plots/mesh_h_0.06/grad_norm.png> <../plots/mesh_h_0.04/
-grad_norm.png> <../plots/mesh_h_0.03/grad_norm.png> <../plots/mesh_h_0.015/grad
-_norm.png> <../plots/mesh_h_0.012/grad_norm.png> <../plots/mesh_h_0.01/grad_nor
-m.png> <../plots/mesh_h_0.008/grad_norm.png> <../plots/mesh_independence_iterat
-ions_vs_h.png>] (./optimization_report.aux)
+ [13
+pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.592 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.592 
+       <../plots/mesh_independence_estimate_times_vs_h.png> <../plots/mesh_inde
+pendence_iteration_times_vs_h.png>] [14
+pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.596 \end{document}
+                     <../plots/mesh_h_0.06/grad_norm.png> <../plots/mesh_h_0.04
+/grad_norm.png> <../plots/mesh_h_0.03/grad_norm.png> <../plots/mesh_h_0.015/gra
+d_norm.png> <../plots/mesh_h_0.012/grad_norm.png> <../plots/mesh_h_0.01/grad_no
+rm.png> <../plots/mesh_h_0.008/grad_norm.png>] (./optimization_report.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -841,13 +959,13 @@ Package rerunfilecheck Info: File `optimization_report.out' has not changed.
 (rerunfilecheck)             Checksum: 2F6373FFBF4B2248FA32DF16F9CAFC52;2427.
  ) 
 Here is how much of TeX's memory you used:
- 16444 strings out of 474222
- 317628 string characters out of 5748733
+ 16527 strings out of 474222
+ 319162 string characters out of 5748733
  1941975 words of memory out of 5000000
- 38371 multiletter control sequences out of 15000+600000
+ 38447 multiletter control sequences out of 15000+600000
  660310 words of font info for 115 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,17n,79p,643b,915s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,17n,79p,1095b,915s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
 pe1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx8.pfb></us
 r/share/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/pu
@@ -862,10 +980,10 @@ c/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/t
 exmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lm
 tt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on optimization_report.pdf (12 pages, 3852752 bytes).
+Output written on optimization_report.pdf (14 pages, 3903820 bytes).
 PDF statistics:
- 369 PDF objects out of 1000 (max. 8388607)
- 258 compressed objects within 3 object streams
- 89 named destinations out of 1000 (max. 500000)
- 201 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 387 PDF objects out of 1000 (max. 8388607)
+ 272 compressed objects within 3 object streams
+ 92 named destinations out of 1000 (max. 500000)
+ 206 words of extra memory for PDF output out of 10000 (max. 10000000)
 

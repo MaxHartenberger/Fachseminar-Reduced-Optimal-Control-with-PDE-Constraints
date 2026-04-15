@@ -23,11 +23,11 @@
 
 \begin{frame}
   \centering
-  {\LARGE Reduced Optimal Control with PDE Constraint\par}
+  {\LARGE Reduced Optimal Control with PDE Constraints\par}
   \vspace{2mm}
   {\large Model, Discretization, and First-Order Methods\par}
   \vspace{6mm}
-  {\normalsize Fachseminar (Mathematics Seminar)\par}
+  {\normalsize Fachseminar\par}
   \vspace{2mm}
   {\normalsize \today\par}
 \end{frame}
@@ -48,29 +48,34 @@
 Goal: Find a control $u$ such that the state $y$ matches a desired profile $y_d$.
 
 \medskip
-PDE constraint (Poisson):
+PDE constraint:
 \[
   -\Delta y = \chi_{\omega}\,u \quad \text{in }\Omega,\qquad y=0\quad\text{on }\partial\Omega.
 \]
 
-Cost (Tikhonov):
+Cost:
 \[
   J(y,u)=\tfrac12\|y-y_d\|_{L^2(\Omega)}^2+\tfrac{\beta}{2}\|u\|_{L^2(\Omega)}^2,\qquad \beta>0.
 \]
 
 \begin{itemize}
-  \item $\Omega=[0,1]^2$ (polygonal), control acts only on a tagged subdomain $\omega\subset\Omega$.
+  \item $\Omega=[0,1]^2$, control acts only on a subdomain $\omega\subset\Omega$.
   \item Spaces: $V=H_0^1(\Omega)$, $U=L^2(\Omega)$.
 \end{itemize}
+
+In our computations, $\omega$ is the disk
+\[
+  \omega := \big\{x\in\Omega : (x_1-0.5)^2+(x_2-0.5)^2 \le 0.1^2\big\}.
+\]
 \end{frame}
 
 \begin{frame}{Target potential $y_d$}
 \[
-  y_d(x)=0.5-\max\big(|x_1-0.5|,\,|x_2-0.5|\big)\in L^2(\Omega).
+  y_d(x)=0.5-\max\big(|x_1-0.5|,\,|x_2-0.5|\big).
 \]
 
 \begin{center}
-\includegraphics[width=0.62\linewidth]{\meshplotsdir/y_d_3d.png}
+\includegraphics[height=0.62\textheight,keepaspectratio]{\meshplotsdir/y_d_3d.png}
 \end{center}
 \end{frame}
 
@@ -78,9 +83,10 @@ Cost (Tikhonov):
 
 \begin{frame}{Variational formulation}
 Define
-\[
-  a(y,v)=\int_\Omega \nabla y\cdot\nabla v\,dx,\qquad b(u,v)=\int_\omega u\,v\,dx.
-\]
+\begin{align*}
+  a(y,v) &= \int_{\Omega} \nabla y\cdot\nabla v\, dx\quad\text{for }y,v\in V,\\
+  b(u,v) &= \int_{\omega} u\, v\, dx\quad\text{for }u\in U,\ v\in V.
+\end{align*}
 State: given $u\in U$, find $y\in V$ such that
 \[
   a(y,v)=b(u,v)\quad\forall v\in V.
@@ -91,10 +97,16 @@ Objective:
 \]
 \end{frame}
 
-\begin{frame}{Discretization (P1) and discrete objective}
-Let $V_h\subset H_0^1(\Omega)$ be the conforming P1 space with basis $(\varphi_i)_{i=1}^n$.
+\begin{frame}{Discretization and discrete objective}
+Let $V_h\subset H_0^1(\Omega)$ be the conforming P1 space with basis $(\varphi_i)_{i=1}^n$.\\
 
-\medskip
+\centering
+\includegraphics[height=0.74\textheight,keepaspectratio]{\meshdir/mesh_h_\meshhtoken/mesh.png}
+\\
+{\footnotesize Triangulation with subdomain $\omega$.}
+\end{frame}
+
+\begin{frame}{Discretization and discrete objective}
 Assemble
 \begin{align*}
   A_{ij}&=\int_\Omega \nabla\varphi_j\cdot\nabla\varphi_i\,dx, &
@@ -103,7 +115,10 @@ Assemble
   (M_U)_{ij}&=\int_\Omega \varphi_j\varphi_i\,dx.
 \end{align*}
 
-Discrete state: $A\bm y=B\bm u$ (Dirichlet BCs enforced in the solve).
+Discrete state: 
+\[
+  A\bm y=B\bm u.
+\]
 
 Discrete objective:
 \[
@@ -112,6 +127,18 @@ Discrete objective:
 \end{frame}
 
 \section{Reduced Problem (Eliminate State)}
+
+\begin{frame}{Reduced functional $F(\bm u)$}
+Eliminate the state via the discrete PDE constraint
+\[
+  A\bm y = B\bm u,\qquad \bm y(\bm u)=A^{-1}B\bm u.
+\]
+Insert $\bm y(\bm u)$ into $J$ to obtain the reduced objective
+\[
+  F(\bm u)=\tfrac12\big(\bm y(\bm u)-\bm y_d\big)^\top M\big(\bm y(\bm u)-\bm y_d\big)
+  +\tfrac{\beta}{2}\,\bm u^\top M_U\bm u.
+\]
+\end{frame}
 
 \begin{frame}{$U$-gradient and Riesz map}
 We equip $U_h\cong\mathbb{R}^n$ with the mass-matrix inner product
@@ -128,7 +155,7 @@ If $\nabla F(\bm u)$ denotes the coordinate gradient (Euclidean inner product), 
 \]
 \end{frame}
 
-\begin{frame}{Adjoint formula (discrete)}
+\begin{frame}{Adjoint formula}
 Eliminate state: $\bm y(\bm u)=A^{-1}B\bm u$. Solve
 \[
   A\bm y=B\bm u,\qquad A\bm p=M(\bm y-\bm y_d).
@@ -191,7 +218,7 @@ Iteration (fixed step):
 \]
 
 \medskip
-Stopping criterion (report):
+Stopping criterion:
 \[
   \|\nabla_U F(\bm u_k)\|_U \le \texttt{tol}_{abs}+\texttt{tol}_{rel}\,\|\nabla_U F(\bm 0)\|_U,
 \]

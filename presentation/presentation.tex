@@ -168,7 +168,7 @@ Then
 \end{frame}
 
 \begin{frame}{Optimality condition}
-The reduced functional $F(\bm u)$ is strictly convex quadratic, hence has a unique minimizer $\bm u_*$. The first-order condition is
+The reduced functional $F(\bm u)$ is strictly convex, hence has a unique minimizer $\bm u_*$. The first-order condition is
 \[
   \nabla_U F(\bm u_*)=\bm 0.
 \]
@@ -243,7 +243,7 @@ Update: $\bm u_{k+1}=\bm u_k-\alpha_k\nabla_U F(\bm u_k)$ (alternating BB1/BB2).
 Stopping criterion: same $\|\nabla_U F\|_U$ rule as GD.
 \end{frame}
 
-\begin{frame}{Nesterov acceleration (strongly convex)}
+\begin{frame}{Nesterov acceleration}
 With $\kappa=L/m$, define
 \[
   \beta_N=\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1},\qquad
@@ -262,7 +262,7 @@ Solve the SPD linear system
   Q\bm u=\bm b,\qquad \bm b=B^\top A^{-1}M\bm y_d.
 \]
 
-Stopping criterion (report):
+Stopping criterion:
 \[
   \|\bm r_k\|_2\le \texttt{rtol}\,\|\bm b\|_2,\qquad \texttt{rtol}=10^{-4},\qquad \bm r_k=\bm b-Q\bm u_k.
 \]
@@ -278,7 +278,7 @@ Link to the $U$-gradient: since $\nabla F(\bm u_k)=\bm r_k$ for this quadratic p
 
 \begin{frame}{Setup and representative solution ($h=\meshhtoken$)}
 \begin{itemize}
-  \item Parameters: $\beta=10^{-3}$, $\omega$ tagged as physical region $2$.
+  \item Parameters: $\beta=10^{-3}$
   \item Mesh: representative run shown for $h=\meshhtoken$.
 \end{itemize}
 
@@ -326,29 +326,29 @@ $h$ & $L_{\mathrm{est}}$ & $m_{\mathrm{est}}$ & $\kappa=L/m$\\
 
 \begin{frame}{Time measurements ($h=\meshhtoken$)}
 \small
-Measured timings (seconds) from the mesh-independence summary for $h=\meshhtoken$.
+Measured timings (seconds) for $h=\meshhtoken$.
 
 \medskip
 \begin{center}
-\begin{tabular}{|l|r|r|r|}
-\hline
-method & $t_{\mathrm{total}}$ & $t_{\mathrm{iter}}$ & $t_{L,m}$\\
-\hline
-\input{\resultsdir/method_timings_h_0.02.tex}\\
-\hline
+\begin{tabular}{lrrrr}
+  \hline
+  Method & $t_L$ [s] & $t_m$ [s] & $t_{\mathrm{iter}}$ [s] & $t_{\mathrm{total}}$ [s] \\
+  \hline
+  \input{\resultsdir/mesh_h_\meshhtoken/timings_table.tex}\\
+  \hline
 \end{tabular}
 \end{center}
 
 \medskip
-Here $t_{L,m}=t_L+t_m$ is the overhead for estimating $L$ and $m$ (when applicable).
+Here $t_{\mathrm{total}}=t_L+t_m+t_{\mathrm{iter}}$.
 \end{frame}
 
 \begin{frame}{Interpretation}
 \begin{itemize}
-  \item All methods reach essentially the same minimum value of $F$ on the same mesh.
-  \item CG solves the stationarity system efficiently (few iterations) and provides a natural baseline.
-  \item BB and Nesterov reduce the iteration count compared to plain fixed-step GD.
-  \item Estimating $L$ (and $m$ for Nesterov) introduces additional overhead; this affects wall time.
+  \item The reduced problem is a strictly convex quadratic program, so all methods converge to the same minimizer.
+  \item The gradient-norm histories show rapid decay for BB, GD ($1/L$), and Nesterov; on this mesh BB and GD nearly overlap.
+  \item Runtime reflects a trade-off between iterations and preprocessing: GD needs an $L$ estimate and Nesterov needs both $(m,L)$ (costs $t_L$ and $t_m$).
+  \item BB and CG avoid spectral estimates; on the representative mesh, BB achieves the smallest wall-clock time.
 \end{itemize}
 \end{frame}
 
@@ -391,6 +391,13 @@ Here $t_{L,m}=t_L+t_m$ is the overhead for estimating $L$ and $m$ (when applicab
   \centering
   \includegraphics[width=\linewidth]{\plotsdir/mesh_independence_iteration_times_vs_h.png}
 \end{columns}
+\end{frame}
+
+\begin{frame}{Acknowledgements / Tools}
+\begin{itemize}
+  \item Implementation and experimentation were carried out in Visual Studio Code.
+  \item GitHub Copilot (free for students) was used as an AI assistant during development, in particular to speed up coding and help understand FEniCS-related implementation details.
+\end{itemize}
 \end{frame}
 
 \end{document}

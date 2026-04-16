@@ -113,9 +113,16 @@ def build_mesh(cx=0.5, cy=0.5, r=0.1, h=0.03, refine_circle=True, outdir="mesh/o
             ),
         )
 
-    # Save a PNG of the triangular mesh
+    # Save a PNG of the triangular mesh (omega highlighted in red)
     try:
-        _plot_mesh_png(points=msh.points, triangles=tri, outpath=os.path.join(plots_dir, "mesh.png"), h=h)
+        _plot_mesh_png(
+            points=msh.points,
+            triangles=tri,
+            outpath=os.path.join(plots_dir, "mesh.png"),
+            h=h,
+            tri_tags=tri_data,
+            omega_id=2,
+        )
     except Exception as e:
         print(f"Warning: could not save mesh PNG: {e}")
 
@@ -123,16 +130,41 @@ def build_mesh(cx=0.5, cy=0.5, r=0.1, h=0.03, refine_circle=True, outdir="mesh/o
     print(f"Written: {msh_path}\n  -> {outdir}/mesh_cells.xdmf\n  -> {outdir}/mesh_facets.xdmf")
 
 
-def _plot_mesh_png(points, triangles, outpath: str, h: float | None = None):
+def _plot_mesh_png(points, triangles, outpath: str, h: float | None = None, tri_tags=None, omega_id: int = 2):
     import matplotlib.tri as mtri
+    from matplotlib.colors import ListedColormap
+    from matplotlib.patches import Patch
 
     tri = mtri.Triangulation(points[:, 0], points[:, 1], triangles)
     plt.figure(figsize=(5, 5))
-    plt.triplot(tri, color='0.4', linewidth=0.5)
-    if h is None:
-        plt.title('Mesh of $[0,1]^2$')
+    if tri_tags is not None and len(tri_tags) == len(triangles):
+        in_omega = (np.asarray(tri_tags) == int(omega_id)).astype(float)
+        cmap = ListedColormap(["#f5f5f5", "#d62728"])
+        plt.tripcolor(
+            tri,
+            facecolors=in_omega,
+            cmap=cmap,
+            vmin=0.0,
+            vmax=1.0,
+            edgecolors='0.4',
+            linewidth=0.45,
+            alpha=1.0,
+        )
+        plt.legend(
+            handles=[
+                Patch(facecolor="#d62728", edgecolor='0.4', label=r'$\omega$'),
+                Patch(facecolor="#f5f5f5", edgecolor='0.4', label=r'$\Omega\setminus\omega$'),
+            ],
+            loc='upper right',
+            frameon=True,
+            fontsize=9,
+        )
     else:
-        plt.title(rf'Mesh of $[0,1]^2$ ($h={h:g}$)')
+        plt.triplot(tri, color='0.4', linewidth=0.5)
+    if h is None:
+        plt.title('Mesh of $[0,1]^2$ with $\\omega$')
+    else:
+        plt.title(rf'Mesh of $[0,1]^2$ with $\\omega$ ($h={h:g}$)')
     plt.xlabel('x'); plt.ylabel('y')
     plt.gca().set_aspect('equal', adjustable='box')
     plt.tight_layout()

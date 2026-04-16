@@ -61,21 +61,6 @@ def to_function(V, vec: np.ndarray):
     return f
 
 
-def plot_mesh(mesh, outpath: str, title: str = 'Mesh of $[0,1]^2$'):
-    import matplotlib.tri as mtri
-    coords = mesh.coordinates()
-    cells = mesh.cells()
-    tri = mtri.Triangulation(coords[:, 0], coords[:, 1], cells)
-    plt.figure(figsize=(5, 5))
-    plt.triplot(tri, color='0.4', linewidth=0.5)
-    plt.title(title)
-    plt.xlabel('x'); plt.ylabel('y')
-    plt.gca().set_aspect('equal', adjustable='box')
-    plt.tight_layout()
-    plt.savefig(outpath, dpi=150, bbox_inches='tight')
-    plt.close()
-
-
 def plot_function(fun, title: str, outpath: str):
     import matplotlib.tri as mtri
     import fenics as fe
@@ -273,8 +258,20 @@ def run_one_mesh(h: float,
     # Ensure a mesh visualization exists alongside the mesh files.
     # This does NOT regenerate meshes; it only renders an image from the existing XDMF mesh.
     try:
+        try:
+            from .gmsh_mesh import _plot_mesh_png
+        except ImportError:
+            from Code.gmsh_mesh import _plot_mesh_png
+
         mesh_png_path = os.path.join(mesh_dir, 'mesh.png')
-        plot_mesh(model.mesh, mesh_png_path, title=f"Mesh (h={h_dir_token})")
+        _plot_mesh_png(
+            points=model.mesh.coordinates(),
+            triangles=model.mesh.cells(),
+            outpath=mesh_png_path,
+            h=float(h),
+            tri_tags=model.subdomains.array(),
+            omega_id=int(omega_id),
+        )
     except Exception as e:
         print(f"Warning: could not write mesh.png for h={h}: {e}")
 

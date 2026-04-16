@@ -10,6 +10,23 @@
 \usepackage{siunitx}
 \usepackage{hyperref}
 
+% Theme + colors
+\usetheme{Madrid}
+
+% Light-blue accent (used for titles, bullets, links)
+\definecolor{accentblue}{RGB}{70,130,180} % SteelBlue
+\setbeamercolor{structure}{fg=accentblue}
+\setbeamercolor{title}{fg=accentblue}
+\setbeamercolor{frametitle}{fg=accentblue,bg=accentblue!8}
+\setbeamercolor{block title}{fg=white,bg=accentblue}
+\setbeamercolor{block body}{bg=accentblue!5}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accentblue,
+  urlcolor=accentblue
+}
+
 % Keep paths simple: presentation/ is a sibling of plots/, mesh/, results/.
 \newcommand{\plotsdir}{../plots}
 \newcommand{\resultsdir}{../results}
@@ -378,7 +395,7 @@ Here $t_{\mathrm{total}}=t_L+t_m+t_{\mathrm{iter}}$.
 
 \begin{frame}{Iterations vs. $h$}
 \centering
-\includegraphics[width=0.8\linewidth]{\plotsdir/mesh_independence_iterations_vs_h.png}
+\includegraphics[width=0.65\linewidth]{\plotsdir/mesh_independence_iterations_vs_h.png}
 \end{frame}
 
 \begin{frame}{Timings vs. $h$}
@@ -397,6 +414,7 @@ Here $t_{\mathrm{total}}=t_L+t_m+t_{\mathrm{iter}}$.
 \begin{itemize}
   \item Implementation and experimentation were carried out in Visual Studio Code.
   \item GitHub Copilot (free for students) was used as an AI assistant during development, in particular to speed up coding and help understand FEniCS-related implementation details.
+  \item GitHub: \href{https://github.com/MaxHartenberger/}{github.com/MaxHartenberger}
 \end{itemize}
 \end{frame}
 

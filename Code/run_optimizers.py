@@ -61,6 +61,53 @@ def to_function(V, vec: np.ndarray):
     return f
 
 
+def plot_mesh(mesh, outpath: str, title: str = 'Mesh of $[0,1]^2$', subdomains=None, omega_id: int = 2):
+    import matplotlib.tri as mtri
+    from matplotlib.colors import ListedColormap
+    from matplotlib.patches import Patch
+    coords = mesh.coordinates()
+    cells = mesh.cells()
+    tri = mtri.Triangulation(coords[:, 0], coords[:, 1], cells)
+    plt.figure(figsize=(5, 5))
+    colored = False
+    if subdomains is not None:
+        try:
+            tags = np.asarray(subdomains.array())
+            if tags.shape[0] == cells.shape[0]:
+                in_omega = (tags == int(omega_id)).astype(float)
+                cmap = ListedColormap(["#f5f5f5", "#d62728"])
+                plt.tripcolor(
+                    tri,
+                    facecolors=in_omega,
+                    cmap=cmap,
+                    vmin=0.0,
+                    vmax=1.0,
+                    edgecolors='0.4',
+                    linewidth=0.45,
+                    alpha=1.0,
+                )
+                plt.legend(
+                    handles=[
+                        Patch(facecolor="#d62728", edgecolor='0.4', label=r'$\omega$'),
+                        Patch(facecolor="#f5f5f5", edgecolor='0.4', label=r'$\Omega\setminus\omega$'),
+                    ],
+                    loc='upper right',
+                    frameon=True,
+                    fontsize=9,
+                )
+                colored = True
+        except Exception:
+            colored = False
+    if not colored:
+        plt.triplot(tri, color='0.4', linewidth=0.5)
+    plt.title(title)
+    plt.xlabel('x'); plt.ylabel('y')
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.tight_layout()
+    plt.savefig(outpath, dpi=150, bbox_inches='tight')
+    plt.close()
+
+
 def plot_function(fun, title: str, outpath: str):
     import matplotlib.tri as mtri
     import fenics as fe
@@ -258,19 +305,13 @@ def run_one_mesh(h: float,
     # Ensure a mesh visualization exists alongside the mesh files.
     # This does NOT regenerate meshes; it only renders an image from the existing XDMF mesh.
     try:
-        try:
-            from .gmsh_mesh import _plot_mesh_png
-        except ImportError:
-            from Code.gmsh_mesh import _plot_mesh_png
-
         mesh_png_path = os.path.join(mesh_dir, 'mesh.png')
-        _plot_mesh_png(
-            points=model.mesh.coordinates(),
-            triangles=model.mesh.cells(),
-            outpath=mesh_png_path,
-            h=float(h),
-            tri_tags=model.subdomains.array(),
-            omega_id=int(omega_id),
+        plot_mesh(
+            model.mesh,
+            mesh_png_path,
+            title=rf"Mesh with $\omega$ (h={h_dir_token})",
+            subdomains=model.subdomains,
+            omega_id=omega_id,
         )
     except Exception as e:
         print(f"Warning: could not write mesh.png for h={h}: {e}")

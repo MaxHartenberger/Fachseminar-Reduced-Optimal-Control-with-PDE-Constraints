@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  15 APR 2026 10:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.16)  16 APR 2026 10:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -743,49 +743,49 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
                                                   \__shipout_drop_firstpage_...
 l.424 
        <../plots/mesh_h_0.02/grad_norm.png>]
-<../mesh/mesh_h_0.06/mesh.png, id=175, 344.487pt x 353.6412pt>
+<../mesh/mesh_h_0.06/mesh.png, id=175, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.06/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.06/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.06/mesh.png  used on input line 440.
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.04/mesh.png, id=176, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.04/mesh.png, id=176, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.04/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.04/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.04/mesh.png  used on input line 444.
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.03/mesh.png, id=177, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.03/mesh.png, id=177, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.03/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.03/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.03/mesh.png  used on input line 448.
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.02/mesh.png, id=178, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.02/mesh.png, id=178, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.02/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.02/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.02/mesh.png  used on input line 452.
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.015/mesh.png, id=179, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.015/mesh.png, id=179, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.015/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.015/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.015/mesh.png  used on input line 459.
 
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.012/mesh.png, id=180, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.012/mesh.png, id=180, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.012/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.012/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.012/mesh.png  used on input line 463.
 
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.01/mesh.png, id=181, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.01/mesh.png, id=181, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.01/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.01/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.01/mesh.png  used on input line 467.
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
-<../mesh/mesh_h_0.008/mesh.png, id=182, 344.487pt x 353.6412pt>
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
+<../mesh/mesh_h_0.008/mesh.png, id=182, 343.5234pt x 353.1594pt>
 File: ../mesh/mesh_h_0.008/mesh.png Graphic file (type png)
 <use ../mesh/mesh_h_0.008/mesh.png>
 Package pdftex.def Info: ../mesh/mesh_h_0.008/mesh.png  used on input line 471.
 
-(pdftex.def)             Requested size: 108.71478pt x 111.60262pt.
+(pdftex.def)             Requested size: 108.71478pt x 111.7631pt.
  [9
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
 s been already used, duplicate ignored
@@ -980,7 +980,7 @@ c/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/t
 exmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lm
 tt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on optimization_report.pdf (14 pages, 3903963 bytes).
+Output written on optimization_report.pdf (14 pages, 4066473 bytes).
 PDF statistics:
  387 PDF objects out of 1000 (max. 8388607)
  272 compressed objects within 3 object streams

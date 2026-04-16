@@ -12,7 +12,7 @@
 *.synctex.gz
 
 # Python caches
-__pycache__/
+Code/__pycache__/
 *.pyc
 
 # VS Code

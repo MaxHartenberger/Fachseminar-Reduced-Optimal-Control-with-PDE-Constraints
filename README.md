@@ -1,4 +1,4 @@
-# Fachseminar — PDE-Constrained Optimization
+# Fachseminar — Reduced Optimal Control with PDE Constraints
 
 This repository studies a linear-quadratic optimal control problem with an elliptic PDE on the unit square.  
 Discretization is done with FEniCS (P1 FEM), meshes are generated with Gmsh, and optimization is evaluated with:

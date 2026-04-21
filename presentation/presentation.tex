@@ -42,11 +42,13 @@
   \centering
   {\LARGE Reduced Optimal Control with PDE Constraints\par}
   \vspace{2mm}
-  {\large Model, Discretization, and First-Order Methods\par}
+  {\large Model, Discretization, and Optimization Methods\par}
+  \vspace{2mm}
+  {\normalsize Maximilian Hartenberger\par}
   \vspace{6mm}
   {\normalsize Fachseminar\par}
   \vspace{2mm}
-  {\normalsize \today\par}
+  {\normalsize April 16, 2026\par}
 \end{frame}
 
 \begin{frame}{Outline}
@@ -248,9 +250,9 @@ Idea: Use a secant-based scalar step size in the $U$-metric.
 \medskip
 With $\bm s_k=\bm u_k-\bm u_{k-1}$ and $\bm d_k=\nabla_U F(\bm u_k)-\nabla_U F(\bm u_{k-1})$,
 \[
-  \alpha_k^{\mathrm{BB1}}=\frac{\langle \bm d_k,\bm d_k\rangle_U}{\langle \bm s_k,\bm d_k\rangle_U},
+  \alpha_k^{\mathrm{BB1}}=\frac{\langle \bm s_k,\bm s_k\rangle_U}{\langle \bm s_k,\bm d_k\rangle_U},
   \qquad
-  \alpha_k^{\mathrm{BB2}}=\frac{\langle \bm s_k,\bm s_k\rangle_U}{\langle \bm s_k,\bm d_k\rangle_U}.
+  \alpha_k^{\mathrm{BB2}}=\frac{\langle \bm s_k,\bm d_k\rangle_U}{\langle \bm d_k,\bm d_k\rangle_U}.
 \]
 
 \medskip
@@ -285,7 +287,12 @@ Stopping criterion:
 \]
 
 \medskip
-Link to the $U$-gradient: since $\nabla F(\bm u_k)=\bm r_k$ for this quadratic problem,
+Link to the $U$-gradient: for the quadratic problem,
+\[
+  \nabla F(\bm u)=Q\bm u-\bm b=-\bm r,\qquad
+  \nabla_U F(\bm u)=M_U^{-1}(Q\bm u-\bm b)=-M_U^{-1}\bm r.
+\]
+Thus
 \[
   \|\nabla_U F(\bm u_k)\|_U = \sqrt{\bm r_k^\top M_U^{-1}\bm r_k}.
 \]
@@ -363,8 +370,7 @@ Here $t_{\mathrm{total}}=t_L+t_m+t_{\mathrm{iter}}$.
 \begin{frame}{Interpretation}
 \begin{itemize}
   \item The reduced problem is a strictly convex quadratic program, so all methods converge to the same minimizer.
-  \item The gradient-norm histories show rapid decay for BB, GD ($1/L$), and Nesterov; on this mesh BB and GD nearly overlap.
-  \item Runtime reflects a trade-off between iterations and preprocessing: GD needs an $L$ estimate and Nesterov needs both $(m,L)$ (costs $t_L$ and $t_m$).
+  \item The gradient-norm histories converge in one iteration for BB, GD ($1/L$), and Nesterov.
   \item BB and CG avoid spectral estimates; on the representative mesh, BB achieves the smallest wall-clock time.
 \end{itemize}
 \end{frame}
@@ -410,6 +416,31 @@ Here $t_{\mathrm{total}}=t_L+t_m+t_{\mathrm{iter}}$.
 \end{columns}
 \end{frame}
 
+\begin{frame}{Main findings}
+\begin{itemize}
+  \item The reduced problem is strictly convex quadratic, and all methods reach essentially the same final objective.
+  \item Across the mesh family, objective values and norms are stable (mesh-independence trend).
+  \item BB and CG do not require spectral estimates; GD/Nesterov pay one-time costs for $L$ or $(m,L)$.
+  \item In these experiments, first-order methods converge in very few updates from $\bm u_0=\nabla_U F(\bm 0)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Limitations and future work}
+\begin{itemize}
+  \item Unconstrained control (no box constraints such as $u_a\le u\le u_b$).
+  \item Linear Poisson PDE only; no nonlinear state equations.
+  \item No dedicated preconditioner study for CG / Krylov methods.
+\end{itemize}
+
+\medskip
+Possible next steps:
+\begin{itemize}
+  \item Add control constraints and projection/semi-smooth Newton methods.
+  \item Extend to nonlinear PDE constraints.
+  \item Compare preconditioned Krylov solvers and matrix-free variants.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Acknowledgements / Tools}
 \begin{itemize}
   \item Implementation and experimentation were carried out in Visual Studio Code.
@@ -417,5 +448,45 @@ Here $t_{\mathrm{total}}=t_L+t_m+t_{\mathrm{iter}}$.
   \item GitHub: \href{https://github.com/MaxHartenberger/}{github.com/MaxHartenberger}
 \end{itemize}
 \end{frame}
+
+\appendix
+\section*{Backup}
+
+\begin{frame}{Backup: residual and $U$-gradient relation}
+For the quadratic reduced problem,
+\[
+  \nabla F(\bm u)=Q\bm u-\bm b,\qquad \bm r=\bm b-Q\bm u=-\nabla F(\bm u).
+\]
+Hence
+\[
+  \nabla_U F(\bm u)=M_U^{-1}(Q\bm u-\bm b)=-M_U^{-1}\bm r,
+\]
+and therefore
+\[
+  \|\nabla_U F(\bm u)\|_U=\sqrt{\bm r^\top M_U^{-1}\bm r}.
+\]
+Iteration counting convention in plots/tables:
+\begin{itemize}
+  \item BB/GD/Nesterov: number of performed updates
+  \item CG: number of Krylov updates
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Key settings used in all experiments}
+\small
+\begin{itemize}
+  \item Tikhonov parameter: $\beta=10^{-3}$
+  \item Control region: disk centered at $(0.5,0.5)$ with radius $0.1$
+  \item Mesh family: $h\in\{0.06,0.04,0.03,0.02,0.015,0.012,0.01,0.008\}$
+  \item Initial iterate (all methods, including CG): $\bm u_0=\nabla_U F(\bm 0)$
+  \item Stopping rules:
+  \begin{itemize}
+    \item BB/GD/Nesterov: $\|\nabla_U F(\bm u_k)\|_U \le \texttt{tol}_{abs}+\texttt{tol}_{rel}\|\nabla_U F(\bm 0)\|_U$
+    \item CG: $\|\bm r_k\|_2\le \texttt{rtol}\,\|\bm b\|_2$, with $\bm r_k=\bm b-Q\bm u_k$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
 
 \end{document}

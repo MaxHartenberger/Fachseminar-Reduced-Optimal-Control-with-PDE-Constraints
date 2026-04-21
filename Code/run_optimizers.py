@@ -334,6 +334,7 @@ def run_one_mesh(h: float,
 
     # Compute CG-based u_* (normal equations Q u = B^T A^{-1} M y_d)
     n = model.n
+    u0 = model.grad_U(np.zeros(n))
     def q_matvec(v: np.ndarray) -> np.ndarray:
         return model.MU @ model.hess_U(v)
     z = model.M @ model.y_d
@@ -345,10 +346,10 @@ def run_one_mesh(h: float,
         model=model,
         q_matvec=q_matvec,
         rhs=rhs,
-        rtol=1e-4,
+        rtol=1e-3,
         atol=0.0,
         maxiter=None,
-        x0=None,
+        x0=u0,
     )
     t_cg_total = time.perf_counter() - t0
     # Exclude gradient-norm evaluation overhead (computed only for comparison).
@@ -392,7 +393,6 @@ def run_one_mesh(h: float,
     }
     # Run optimizers for iteration counts and per-mesh plots
     try:
-        u0 = model.grad_U(np.zeros(n))
         tol_abs = 1e-5
         tol_rel = 1e-3
 
@@ -417,7 +417,6 @@ def run_one_mesh(h: float,
         u_gd, h_gd = gd_fixed(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_fixed)
         t_gd_iter = time.perf_counter() - t0
 
-        # Only use the strongly-convex constant-parameter variant (m,L) and label it "Nesterov".
         t0 = time.perf_counter()
         u_nesterov, h_nesterov = nesterov_constant_ml(model, u0=u0, tol_abs=tol_abs, tol_rel=tol_rel, max_iter=500, L=L_fixed, m=m_ml)
         t_nes_iter = time.perf_counter() - t0
@@ -445,9 +444,9 @@ def run_one_mesh(h: float,
 
         entry['iterations'] = {
             'CG': int(iters_cg),
-            'BB': int(len(h_bb['cost'])),
-            'GD': int(len(h_gd['cost'])),
-            'Nesterov': int(len(h_nesterov['cost']))
+            'BB': int(h_bb.get('updates', len(h_bb['cost']))),
+            'GD': int(h_gd.get('updates', len(h_gd['cost']))),
+            'Nesterov': int(h_nesterov.get('updates', len(h_nesterov['cost'])))
         }
 
         entry['final_costs'] = {

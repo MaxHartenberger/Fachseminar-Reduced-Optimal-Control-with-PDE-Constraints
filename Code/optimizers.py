@@ -43,6 +43,7 @@ def bb(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000):
         'grad_norm': [model.norm_U(g_m1)],
         'cost': [model.cost(u_m1)],
         'u_seq': [u_m1.copy()],
+        'updates': 0,
     }
 
     k = 0
@@ -55,10 +56,13 @@ def bb(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000):
             alpha = 1.0
         else:
             if k % 2 == 0:
-                alpha = model.dot_U(d, d) / sd
+                # Step-length form (update uses u_{k+1} = u_k - alpha_k g_k):
+                # alpha = <s,d>/<d,d>
+                alpha = sd / max(model.dot_U(d, d), 1e-30)
             else:
-                alpha = sd / max(model.dot_U(s, s), 1e-30)
-        u_next = u - (1.0 / alpha) * g
+                # alpha = <s,s>/<s,d>
+                alpha = model.dot_U(s, s) / sd
+        u_next = u - alpha * g
 
         u_m1, u = u, u_next
         g_m1, g = g, model.grad_U(u)
@@ -66,6 +70,7 @@ def bb(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000):
         hist['cost'].append(model.cost(u))
         hist['u_seq'].append(u.copy())
         k += 1
+        hist['updates'] = k
 
     return u, hist
 
@@ -86,6 +91,7 @@ def gd_fixed(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000
         'cost': [],
         'L': L,
         'u_seq': [],
+        'updates': 0,
     }
 
     stop_thr = _stop_threshold(model, tol=tol, tol_abs=tol_abs, tol_rel=tol_rel)
@@ -99,6 +105,7 @@ def gd_fixed(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, max_iter=1000
         if gn <= stop_thr:
             break
         u = u - alpha * g
+        hist['updates'] += 1
 
     return u, hist
 
@@ -107,6 +114,9 @@ def nesterov_constant_ml(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, m
     """Nesterov with constant parameters for strongly convex QP.
 
     Uses alpha = 1/L and beta = (sqrt(kappa)-1)/(sqrt(kappa)+1), kappa = L/m,
+    with update
+        y_k = u_k + beta (u_k - u_{k-1}),
+        u_{k+1} = y_k - alpha * grad_U(u_k),
     where L and m are the largest/smallest generalized eigenvalues of (Q, M_U).
     If L or m is not provided, they are computed via model.estimate_L() and model.estimate_m().
     """
@@ -135,20 +145,23 @@ def nesterov_constant_ml(model, u0=None, tol=1e-8, tol_abs=None, tol_rel=None, m
         'beta': beta,
         'kappa': kappa,
         'u_seq': [],
+        'updates': 0,
     }
 
     stop_thr = _stop_threshold(model, tol=tol, tol_abs=tol_abs, tol_rel=tol_rel)
 
     for _ in range(max_iter):
-        y = u + beta * (u - u_prev)
-        g = model.grad_U(y)
+        g = model.grad_U(u)
         gn = model.norm_U(g)
         hist['grad_norm'].append(gn)
         hist['cost'].append(model.cost(u))
         hist['u_seq'].append(u.copy())
         if gn <= stop_thr:
             break
+
+        y = u + beta * (u - u_prev)
         u_next = y - alpha * g
         u_prev, u = u, u_next
+        hist['updates'] += 1
 
     return u, hist

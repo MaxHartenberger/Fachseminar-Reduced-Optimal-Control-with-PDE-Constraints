@@ -13,9 +13,9 @@
 \usepackage{algorithm2e}
 \usepackage{float}
 
-\title{Reduced Optimal Control with PDE Constraints:\\Model, Discretization, and First-Order Methods}
+\title{Reduced Optimal Control with PDE Constraints:\\Model, Discretization, and Optimization Methods}
 \author{Fachseminar}
-\date{\today}
+\date{April 16, 2026}
 
 % Output locations
 \newcommand{\plotsdir}{../plots}
@@ -29,11 +29,11 @@
 \RestyleAlgo{ruled}
 
 \begin{abstract}
-We study a linear-quadratic optimal control problem governed by the Poisson equation with homogeneous Dirichlet boundary conditions. The control acts as a volumetric source restricted to a tagged subdomain $\omega\subset\Omega$, and a Tikhonov term with parameter $\beta$ regularizes the control in the $L^2(\Omega)$ metric. After P1 finite element discretization on a sequence of pre-generated meshes, we eliminate the state and work with the reduced functional $F(u)$, whose gradient is expressed through an adjoint solve and the control-space mass matrix.
+We study a linear-quadratic optimal control problem constrained by the Poisson equation with homogeneous Dirichlet boundary conditions. The control acts as a volumetric source on a subdomain $\omega\subset\Omega$. Using P1 finite elements on a family of pre-generated meshes, we eliminate the state and obtain a reduced functional $F(u)$ whose $U$-gradient is computed via an adjoint solve and the control-space mass matrix.
 
-On each mesh we compute the minimizer $u_*$ in two ways: (i) by solving the symmetric positive definite stationarity system with the Conjugate Gradient method (CG), and (ii) by applying first-order optimization methods to the reduced problem, namely Barzilai--Borwein (BB), fixed-step gradient descent with step size $1/L$, and a constant-parameter Nesterov scheme based on $(m,L)$. We report convergence histories in terms of the $U$-norm of the reduced gradient, as well as a mesh-independence study comparing objective values, norms of $u_*$ and $y(u_*)$, and iteration counts across mesh sizes.
+For each mesh, we solve the reduced problem in two ways: (i) by Conjugate Gradients (CG) on the SPD stationarity system $Q\mathbf u=\mathbf b$, and (ii) by first-order reduced-space methods (Barzilai--Borwein, fixed-step gradient descent with step size $1/L$, and constant-parameter Nesterov based on $(m,L)$). We report convergence histories in $\|\nabla_U F(\mathbf u_k)\|_U$, final objective values, iteration counts, and timing components, and we perform a mesh-independence study over multiple mesh sizes.
 
-The results show stable optimal values as the mesh is refined and highlight the efficiency advantage of CG for the quadratic reduced problem, while BB and accelerated gradient methods provide competitive first-order baselines.
+The experiments show consistent final objective values across methods and stable objective/norm quantities under mesh refinement. On the representative mesh, first-order methods reach the stopping criterion in very few updates from the chosen initialization, while CG provides the corresponding stationarity-system reference solution.
 \end{abstract}
 
 \section{Problem Statement}
@@ -62,7 +62,7 @@ which belongs to \(L^2(\Omega)\). The control enters only on \(\omega\) via \(\c
 \section{Variational Formulation and Discretization}
 \paragraph{Weak formulation.} Define the bilinear and linear forms
 \begin{align}
-  a(y,v) &= \int_{\Omega} \nabla y\cdot\nabla v\, dx\quad\text{for }y,v\in V, & b(u,v) &= \int_{\omega} u\, v\, dx\quad\text{for }v\in U, v\in V.
+  a(y,v) &= \int_{\Omega} \nabla y\cdot\nabla v\, dx\quad\text{for }y,v\in V, & b(u,v) &= \int_{\omega} u\, v\, dx\quad\text{for }u\in U,\ v\in V.
 \end{align}
 For any \(u\in L^2(\Omega)\), the weak state equation reads: find \(y\in V\) such that
 \begin{equation}
@@ -252,7 +252,7 @@ This operator is self-adjoint and SPD with respect to $\langle\cdot,\cdot\rangle
 \begin{equation}
   Q\mathbf{v} = \lambda M_U\mathbf{v}, \qquad m=\lambda_{\min},\; L=\lambda_{\max},
 \end{equation}
-equivalently the extreme eigenvalues of the SPD matrix $M_U^{-1/2}QM_U^{-1/2}$. Their ratio $\kappa=L/m$ is the condition number that governs convergence rates of GD and Nesterov in the next section.
+equivalently the extreme eigenvalues of the SPD matrix $M_U^{-1/2}QM_U^{-1/2}$. Their ratio $\kappa=L/m$ is the condition number.
 
 \section{Optimization Methods}
 Unless stated otherwise, we initialize at $\mathbf{u}_0=\nabla_U F(\mathbf{0})$ (as in the code) and stop when $\|\nabla_U F(\mathbf{u}_k)\|_U\le\texttt{tol}_{abs}+\texttt{tol}_{rel}\|\nabla_U F(\mathbf{0})\|_U$ with $\texttt{tol}_{abs}=10^{-5}$ and $\texttt{tol}_{rel}=10^{-3}$ or a maximum number of 1000 iterations is reached.
@@ -279,11 +279,11 @@ Estimate $L$ by power iteration; $\alpha \gets 1/L$\;
 \subsection{Steepest Descent with Barzilai-Borwein stepsize strategy (BB)}
 BB methods approximate the inverse curvature along the last step by selecting the steplength from secant information in the \(U\)-inner product. Define \(\mathbf{s}_k=\mathbf{u}_k-\mathbf{u}_{k-1}\), \(\mathbf{d}_k=\nabla_U F(\mathbf{u}_k)-\nabla_U F(\mathbf{u}_{k-1})\), and the \(U\)-inner product \(\langle \cdot, \cdot \rangle_U\). The two classical choices are
 \begin{align}
-  \alpha_k^{\text{BB1}} &= \frac{\langle \mathbf{d}_k, \mathbf{d}_k \rangle_U}{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}, &
-  \alpha_k^{\text{BB2}} &= \frac{\langle \mathbf{s}_k, \mathbf{s}_k \rangle_U}{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}.
+  \alpha_k^{\text{BB1}} &= \frac{\langle \mathbf{s}_k, \mathbf{s}_k \rangle_U}{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}, &
+  \alpha_k^{\text{BB2}} &= \frac{\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U}{\langle \mathbf{d}_k, \mathbf{d}_k \rangle_U}.
 \end{align}
 We alternate BB1/BB2 per iteration and fall back to \(\alpha_k=1\) if \(\big|\langle \mathbf{s}_k, \mathbf{d}_k \rangle_U\big|\) is numerically tiny. The update is
-\(\mathbf{u}_{k+1} = \mathbf{u}_k - (1/\alpha_k)\, \nabla_U F(\mathbf{u}_k)\).
+\(\mathbf{u}_{k+1} = \mathbf{u}_k - \alpha_k\, \nabla_U F(\mathbf{u}_k)\).
 
 \begin{algorithm}
 \caption{Steepest Descent with Barzilai-Borwein stepsize strategy}\label{alg:bb}
@@ -298,12 +298,12 @@ $\mathbf{u}_0 \gets \mathbf{u}_0=\nabla_U F(\mathbf{0})$\; $\mathbf{g}_0 \gets \
     $\alpha_k \gets 1$\;
   }{
     \eIf{$k$ is even}{
-      $\alpha_k \gets \langle \mathbf{d}_k, \mathbf{d}_k \rangle_U / s\!d$\;
+      $\alpha_k \gets s\!d / \max\{\langle \mathbf{d}_k, \mathbf{d}_k \rangle_U, \varepsilon\}$\;
     }{
-      $\alpha_k \gets s\!d / \max\{\langle \mathbf{s}_k, \mathbf{s}_k \rangle_U, \varepsilon\}$\;
+      $\alpha_k \gets \langle \mathbf{s}_k, \mathbf{s}_k \rangle_U / s\!d$\;
     }
   }
-  $\mathbf{u}_{k+1} \gets \mathbf{u}_k - (1/\alpha_k)\, \mathbf{g}_k$\;
+  $\mathbf{u}_{k+1} \gets \mathbf{u}_k - \alpha_k\, \mathbf{g}_k$\;
   $\mathbf{u}_{k-1} \gets \mathbf{u}_k$; $\mathbf{g}_{k-1} \gets \mathbf{g}_k$\;
   $\mathbf{u}_k \gets \mathbf{u}_{k+1}$; $\mathbf{g}_k \gets \nabla_U F(\mathbf{u}_k)$\;
 }
@@ -316,7 +316,7 @@ Set
 Then the constant-parameter Nesterov scheme reads
 \begin{align}
   \mathbf{y}_k &= \mathbf{u}_k + \beta(\mathbf{u}_k - \mathbf{u}_{k-1}), &
-  \mathbf{u}_{k+1} &= \mathbf{y}_k - \alpha \nabla_U F(\mathbf{y}_k).
+  \mathbf{u}_{k+1} &= \mathbf{y}_k - \alpha \nabla_U F(\mathbf{u}_k).
 \end{align}
 
 \begin{algorithm}
@@ -327,13 +327,14 @@ Estimate $(L,m)$ from generalized eigenpairs of $(Q, M_U)$; $\alpha \gets 1/L$; 
 
 $\mathbf{u}_{-1} \gets \mathbf{u}_0$; $\mathbf{u} \gets \mathbf{u}_0$\;
 \For{$k=0,1,\dots$}{
-  $\mathbf{y} \gets \mathbf{u} + \beta (\mathbf{u} - \mathbf{u}_{k-1})$\; $\mathbf{g} \gets \nabla_U F(\mathbf{y})$; $g_n \gets \|\mathbf{g}\|_U$\;
+  $\mathbf{g} \gets \nabla_U F(\mathbf{u})$; $g_n \gets \|\mathbf{g}\|_U$\;
   \If{$g_n \le \texttt{tol}$}{break}
+  $\mathbf{y} \gets \mathbf{u} + \beta (\mathbf{u} - \mathbf{u}_{k-1})$\;
   $\mathbf{u}_{k+1} \gets \mathbf{y} - \alpha\, \mathbf{g}$\;
 }
 \end{algorithm}
 
-\subsection{Conjugate Gradient method (CG) for the Stationarity System}
+\subsection{Conjugate Gradient method (CG)}
 The reduced problem is strictly convex and quadratic. The first-order optimality condition $\nabla_U F(\mathbf{u}_*)=0$ can be written as an SPD linear system in the control unknowns,
 \begin{equation}
   Q\mathbf{u}_* = B^\top A^{-1} M\mathbf{y}_d, \qquad Q := B^\top A^{-1} M A^{-1} B + \beta M_U.
@@ -383,7 +384,7 @@ Table~\ref{tab:numerics} compares final costs and iteration counts for the repre
     \input{../results/mesh_h_\meshhtoken/numerics_table.tex}\\
     \hline
   \end{tabular}
-  \caption{Representative-mesh results ($h=\meshhtoken$). All methods reach the same optimum up to numerical precision; GD and BB attain the stopping criterion in the fewest first-order iterations.}
+  \caption{Representative-mesh results ($h=\meshhtoken$). All methods reach the same optimum up to numerical precision; GD, BB, and Nesterov attain the stopping criterion in only one iteration.}
   \label{tab:numerics}
 \end{table}
 
@@ -393,7 +394,7 @@ Figure~\ref{fig:convergence} shows the convergence histories in terms of the $U$
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{\meshplotsdir/grad_norm.png}
-  \caption{Convergence of gradient norm for a representative mesh ($h=\meshhtoken$). The control-space norm $\|\cdot\|_U$ is induced by $M_U$. On this mesh, the BB and GD curves are nearly identical and may visually overlap.}
+  \caption{Convergence of gradient norm for a representative mesh ($h=\meshhtoken$). The control-space norm $\|\cdot\|_U$ is induced by $M_U$. The GD, BB, and Nesterov curves are nearly identical and may visually overlap.}
   \label{fig:convergence}
 \end{figure}
 
@@ -423,8 +424,11 @@ For CG, we report the iteration time for solving $Q\mathbf{u}=\mathbf{b}$ and ex
 \end{figure}
 
 \paragraph{Interpretation.}
-Table~\ref{tab:numerics} shows that all four approaches reach essentially the same minimizer (up to numerical precision), which is expected since the reduced problem is a strictly convex quadratic program with a unique solution. The convergence curves in Figure~\ref{fig:convergence} confirm that the first-order stopping quantity $\|\nabla_U F(\mathbf{u}_k)\|_U$ decays rapidly for BB, GD ($1/L$), and Nesterov on this problem instance (with BB and GD nearly indistinguishable on the representative mesh). From a runtime perspective, Table~\ref{tab:timings_h002} highlights the trade-off between iteration count and one-time preprocessing: fixed-step GD requires an estimate of $L$ and $(m,L)$-Nesterov requires estimates of both $m$ and $L$, so their total time includes the corresponding estimate costs ($t_L$ and $t_m$). In contrast, BB and CG avoid these estimates; on the representative mesh, BB achieves the smallest wall-clock time because it reaches the stopping criterion in very few iterations without any spectral precomputation.
-Finally, Figure~\ref{fig:final_fields} provides a qualitative visualization of the resulting optimal control and associated state.
+Table~\ref{tab:numerics} shows that all four methods reach essentially the same minimizer (up to numerical precision), as expected for a strictly convex quadratic problem with a unique solution. Figure~\ref{fig:convergence} confirms rapid decay of the first-order stopping quantity $\|\nabla_U F(\mathbf{u}_k)\|_U$ for GD, BB, and Nesterov; on the representative mesh, the three curves are nearly indistinguishable.
+
+Table~\ref{tab:timings_h002} highlights the runtime trade-off between iteration count and one-time preprocessing. Fixed-step GD requires an estimate of $L$, and Nesterov requires estimates of both $m$ and $L$, so their totals include $t_L$ and $t_m$. BB and CG avoid this preprocessing. On the representative mesh, BB achieves the smallest wall-clock time because it satisfies the stopping criterion in one iteration without spectral precomputation.
+
+Figure~\ref{fig:final_fields} provides a qualitative view of the resulting optimal control and associated state.
 
 
 
@@ -476,10 +480,8 @@ the meshes are visualized in Figure~\ref{fig:mesh-grid}.
   \label{fig:mesh-grid}
 \end{figure}
 
-%On each mesh we solve the reduced problem with $\beta=10^{-3}$ and compare four methods: CG on the SPD stationarity system
-%\(Q\mathbf{u}=B^\top A^{-1}M\,\mathbf{y}_d\), BB, fixed-step GD ($\alpha=1/L$), and constant-parameter Nesterov. The first-order methods are stopped when $\|\nabla F(u_k)\|_U\le 10^{-8}$, while CG is run to a relative residual tolerance (here $\texttt{rtol}=10^{-8}$).
 
-The resulting objective values and solution norms are summarized in Table~\ref{tab:mesh-indep}. Here $u_*^{(h)}$ denotes the discrete minimizer on mesh size $h$, which we approximate by solving the stationarity system with CG. Under refinement, the reported quantities stabilize: $F(u_*^{(h)})$, $\|u_*^{(h)}\|_U$, and $\|y(u_*^{(h)})\|_{L^2}$ vary only mildly across the mesh family, indicating that the computed solution is close to a mesh-independent limit for this experiment. Figure~\ref{fig:mesh-indep} shows the same trend graphically and also suggests that all methods reach essentially the same final objective on each mesh (up to the chosen stopping criteria).
+Table~\ref{tab:mesh-indep} summarizes objective values and solution norms across meshes. Here $u_*^{(h)}$ denotes the discrete minimizer for mesh size $h$, approximated by solving the stationarity system with CG. Under refinement, $F(u_*^{(h)})$, $\|u_*^{(h)}\|_U$, and $\|y(u_*^{(h)})\|_{L^2}$ vary only mildly, indicating proximity to a mesh-independent limit in this experiment. Figure~\ref{fig:mesh-indep} shows the same trend graphically and indicates that all methods attain essentially the same final objective on each mesh (up to stopping tolerances).
 \begin{table}[H]
   \centering
   \begin{tabular}{|r|r|r|r|r|}
@@ -501,18 +503,18 @@ The resulting objective values and solution norms are summarized in Table~\ref{t
   \label{fig:mesh-indep}
 \end{figure}
 
-Table~\ref{tab:mesh-indep-iters} and Figure~\ref{fig:mesh-indep-iters} summarize iteration counts across meshes. Note that BB/GD/Nesterov are stopped using the gradient-norm criterion $\|\nabla_U F(\mathbf{u}_k)\|_U\le\texttt{tol}$, whereas CG is stopped by a relative residual tolerance for the stationarity system $Q\mathbf{u}=\mathbf{b}$; therefore the iteration counts are not directly comparable across method families. Within this mesh range, the first-order iteration counts are fairly stable, while CG iterations show some variation with $h$.
+Table~\ref{tab:mesh-indep-iters} and Figure~\ref{fig:mesh-indep-iters} summarize iteration counts across meshes. For BB/GD/Nesterov, counts refer to update steps. These counts are not directly comparable to CG counts because the stopping rules differ: first-order methods use $\|\nabla_U F(\mathbf{u}_k)\|_U\le\texttt{tol}$, whereas CG uses a relative residual criterion for $Q\mathbf{u}=\mathbf{b}$. Over the tested mesh range, first-order counts remain fairly stable, while CG counts vary moderately with $h$.
 
 \begin{table}[H]
   \centering
   \begin{tabular}{|r|r|r|r|r|}
     \hline
-    $h$ & CG ($u_*$) & BB & GD ($1/L$) & Nesterov \\
+    $h$ & CG & BB & GD & Nesterov \\
     \hline
     \input{../results/mesh_iterations_table.tex}\\
     \hline
   \end{tabular}
-  \caption{Iterations per mesh: CG iterations for the stationarity solve (to compute $u_*^{(h)}$) and iteration counts for the first-order methods.}
+  \caption{Iterations per mesh: CG iterations for the stationarity solve and iteration counts for the first-order methods.}
   \label{tab:mesh-indep-iters}
 \end{table}
 
@@ -586,11 +588,8 @@ Finally, Figure~\ref{fig:mesh-gradnorm-grid} shows the per-mesh convergence curv
     {\small $h=0.008$}
   \end{minipage}
 
-  \caption{Gradient norm convergence $\|\nabla_U F(\mathbf{u}_k)\|_U$ for each mesh (shown in a $4\times2$ grid).}
+  \caption{Gradient norm convergence $\|\nabla_U F(\mathbf{u}_k)\|_U$ for each mesh.}
   \label{fig:mesh-gradnorm-grid}
 \end{figure}
-
-% Streamlined: omit extra plots (L vs h, gradnorm at optimum)
-
 
 \end{document}
